@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity$PlaceholderFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/monday"
+                style="@style/BabyBlueWeekday">
+
+                <TextView android:text="@string/monday" style="@style/Header" android:layout_margin="10dp" />
+
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mondayListView"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/tuesday"
+                style="@style/WhiteWeekday">
+
+                <TextView android:text="@string/tuesday" style="@style/Header" android:layout_margin="10dp" />
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tuesdayListView"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/wednesday"
+                style="@style/BabyBlueWeekday">
+
+                <TextView android:text="@string/wednesday" style="@style/Header" android:layout_margin="10dp" />
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/wednesdayListView"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/thursday"
+                style="@style/WhiteWeekday">
+
+                <TextView android:text="@string/thursday" style="@style/Header" android:layout_margin="10dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/friday"
+                style="@style/BabyBlueWeekday">
+
+                <TextView android:text="@string/friday" style="@style/Header" android:layout_margin="10dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/saturday"
+                style="@style/WhiteWeekday">
+
+                <TextView android:text="@string/saturday" style="@style/Header" android:layout_margin="10dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/sunday"
+                style="@style/BabyBlueWeekday">
+
+                <TextView android:text="@string/sunday" style="@style/Header" android:layout_margin="10dp"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>

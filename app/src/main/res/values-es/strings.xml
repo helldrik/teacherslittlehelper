@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TeachersLittleHelper</string>
+    <string name="hello_world">Hola Mundo!</string>
+    <string name="action_settings">Adjustes</string>
+
+    <string name="monday">Lunes</string>
+    <string name="tuesday">Martes</string>
+    <string name="wednesday">Miercoles</string>
+    <string name="thursday">Jueves</string>
+    <string name="friday">Viernes</string>
+    <string name="saturday">Sabado</string>
+    <string name="sunday">Domingo</string>
+
+</resources>
