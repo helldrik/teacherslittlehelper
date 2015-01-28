@@ -55,6 +55,11 @@
                 style="@style/WhiteWeekday">
 
                 <TextView android:text="@string/thursday" style="@style/Header" android:layout_margin="10dp"/>
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/thursdayListView"
+                    android:layout_weight="1" />
 
             </LinearLayout>
             <LinearLayout
@@ -62,6 +67,11 @@
                 style="@style/BabyBlueWeekday">
 
                 <TextView android:text="@string/friday" style="@style/Header" android:layout_margin="10dp"/>
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fridayListView"
+                    android:layout_weight="1" />
 
             </LinearLayout>
             <LinearLayout
@@ -69,6 +79,11 @@
                 style="@style/WhiteWeekday">
 
                 <TextView android:text="@string/saturday" style="@style/Header" android:layout_margin="10dp"/>
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/saturdayListView"
+                    android:layout_weight="1" />
 
             </LinearLayout>
             <LinearLayout
@@ -76,6 +91,11 @@
                 style="@style/BabyBlueWeekday">
 
                 <TextView android:text="@string/sunday" style="@style/Header" android:layout_margin="10dp"/>
+                <ListView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sundayListView"
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
