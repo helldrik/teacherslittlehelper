@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="@color/lightBlue">
 
-    <TextView android:text="@string/hello_world" style="@style/Header" android:layout_margin="10dp" />
+    <TextView android:id="@+id/classTitle" android:text="@string/hello_world" style="@style/Header" android:layout_margin="10dp" />
 
 
 </LinearLayout>

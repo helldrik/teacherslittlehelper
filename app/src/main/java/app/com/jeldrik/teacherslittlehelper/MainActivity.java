@@ -126,7 +126,8 @@ public class MainActivity extends ActionBarActivity {
                     }
 
 
-                    ArrayAdapter adapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
+                    //ArrayAdapter adapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
+                    MyAdapter adapter=new MyAdapter(getActivity(),testData);
 
                     listView.setOnTouchListener(new View.OnTouchListener() {
                         // Setting on Touch Listener for handling the touch inside ScrollView
