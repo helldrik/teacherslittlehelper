@@ -7,11 +7,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -76,20 +81,36 @@ public class MainActivity extends ActionBarActivity {
                 mViewHolder = new ViewHolder();
                 for (int i = 0; i < 7; i++) {
 
-                    if (i == 0)
+                    ListView listView=null;
+
+                    if (i == 0) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.monday);
-                    else if (i == 1)
+                        listView= (ListView)rootView.findViewById(R.id.mondayListView);
+                    }
+                    else if (i == 1) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.tuesday);
-                    else if (i == 2)
+                        listView = (ListView) rootView.findViewById(R.id.tuesdayListView);
+                    }
+                    else if (i == 2) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.wednesday);
-                    else if (i == 3)
+                        listView = (ListView) rootView.findViewById(R.id.wednesdayListView);
+                    }
+                    else if (i == 3) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.thursday);
-                    else if (i == 4)
+                        listView = (ListView) rootView.findViewById(R.id.thursdayListView);
+                    }
+                    else if (i == 4){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.friday);
-                    else if (i == 5)
+                        listView = (ListView) rootView.findViewById(R.id.fridayListView);
+                    }
+                    else if (i == 5){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.saturday);
-                    else if (i == 6)
+                        listView = (ListView) rootView.findViewById(R.id.saturdayListView);
+                    }
+                    else if (i == 6){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.sunday);
+                        listView = (ListView) rootView.findViewById(R.id.sundayListView);
+                    }
 
                     mViewHolder.weekdays[i].setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -97,8 +118,28 @@ public class MainActivity extends ActionBarActivity {
                             Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
                         }
                     });
-                    rootView.setTag(mViewHolder);
+
+                    String[] testData={"Class 1","Class 2", "Class 3"};
+                    ArrayList <String> list = new ArrayList<String>();
+                    for (int u = 0; u < testData.length; ++u) {
+                        list.add(testData[u]);
+                    }
+
+
+                    ArrayAdapter adapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
+
+                    listView.setOnTouchListener(new View.OnTouchListener() {
+                        // Setting on Touch Listener for handling the touch inside ScrollView
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // Disallow the touch request for parent scroll on touch of child view
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            return false;
+                        }
+                    });
+                    listView.setAdapter(adapter);
                 }
+                rootView.setTag(mViewHolder);
             }
             else {
                 mViewHolder=(ViewHolder)rootView.getTag();
