@@ -78,6 +78,33 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+//for testing two way view
+            ArrayList<String> items = new ArrayList<String>();
+            items.add("Item 1");
+            items.add("Item 2");
+            items.add("Item 3");
+            items.add("Item 4");
+            items.add("Item 1");
+            items.add("Item 2");
+            items.add("Item 3");
+            items.add("Item 4");
+            items.add("Item 1");
+            items.add("Item 2");
+            items.add("Item 3");
+            items.add("Item 4");
+            items.add("Item 1");
+            items.add("Item 2");
+            items.add("Item 3");
+            items.add("Item 4");
+            items.add("Item 1");
+            items.add("Item 2");
+            items.add("Item 3");
+            items.add("Item 4");
+
+            ArrayAdapter<String> aItems = new ArrayAdapter<String>(getActivity(), R.layout.simple_list_item_1, items);
+            TwoWayView lvTest = (TwoWayView)rootView.findViewById(R.id.lvItems);
+            lvTest.setAdapter(aItems);
+//-------------------------
 
             if(mViewHolder==null) {
                 mViewHolder = new ViewHolder();
