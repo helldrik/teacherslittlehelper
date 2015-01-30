@@ -1,1 +1,3 @@
 include ':app'
+//include':libraries:SunshineGithub:app'
+include 'org.lucasr.twowayview:twowayview:0.1.4'

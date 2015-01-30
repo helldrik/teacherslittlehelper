@@ -16,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.lucasr.twowayview.TwoWayView;
+
 import java.util.ArrayList;
 
 
