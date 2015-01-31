@@ -11,7 +11,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -85,37 +87,60 @@ public class MainActivity extends ActionBarActivity {
                 for (int i = 0; i < 7; i++) {
 
                     TwoWayView listView=null;
-
+                    Button addClassBtn=null;
 
                     if (i == 0) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.monday);
                         listView= (TwoWayView)rootView.findViewById(R.id.mondayListView);
+                        addClassBtn=(Button)rootView.findViewById(R.id.addMondayClass);
                     }
                     else if (i == 1) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.tuesday);
                         listView = (TwoWayView) rootView.findViewById(R.id.tuesdayListView);
+                        addClassBtn=(Button)rootView.findViewById(R.id.addTuesdayClass);
                     }
                     else if (i == 2) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.wednesday);
                         listView = (TwoWayView) rootView.findViewById(R.id.wednesdayListView);
+                        addClassBtn=(Button)rootView.findViewById(R.id.addWednesdayClass);
                     }
                     else if (i == 3) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.thursday);
                         listView = (TwoWayView) rootView.findViewById(R.id.thursdayListView);
+                        addClassBtn=(Button)rootView.findViewById(R.id.addThursdayClass);
                     }
                     else if (i == 4){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.friday);
                         listView = (TwoWayView) rootView.findViewById(R.id.fridayListView);
+                        addClassBtn=(Button)rootView.findViewById(R.id.addFridayClass);
                     }
                     else if (i == 5){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.saturday);
                         listView = (TwoWayView) rootView.findViewById(R.id.saturdayListView);
+                        addClassBtn=(Button)rootView.findViewById(R.id.addSaturdayClass);
                     }
                     else if (i == 6){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.sunday);
                         listView = (TwoWayView) rootView.findViewById(R.id.sundayListView);
+                        addClassBtn=(Button)rootView.findViewById(R.id.addSundayClass);
                     }
 
+                    addClassBtn.setOnClickListener(new Button.OnClickListener(){
+
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    listView.setOnItemClickListener(new TwoWayView.OnItemClickListener(){
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Toast.makeText(getActivity(),Integer.toString(position),Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    //ClickListener for weekdays
                     mViewHolder.weekdays[i].setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

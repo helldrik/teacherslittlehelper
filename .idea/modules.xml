@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/org.lucasr.twowayview/twowayview/0.1.4/0.1.4.iml" filepath="$PROJECT_DIR$/org.lucasr.twowayview/twowayview/0.1.4/0.1.4.iml" />
       <module fileurl="file://$PROJECT_DIR$/TeachersLittleHelper.iml" filepath="$PROJECT_DIR$/TeachersLittleHelper.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

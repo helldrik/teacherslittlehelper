@@ -6,7 +6,7 @@
     </style>
     <style name="WeekListStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_height">150dp</item>
         <item name="android:orientation">vertical</item>
         <item name="android:clickable">true</item>
     </style>
@@ -22,10 +22,17 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/Brown</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16dp</item>
     </style>
 
     <style name="TwoWayView">
         <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="AddClassBtn">
+        <item name="android:layout_gravity">right</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentRight">true</item>
     </style>
 
 </resources>

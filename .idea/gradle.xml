@@ -9,6 +9,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/org.lucasr.twowayview" />
+            <option value="$PROJECT_DIR$/org.lucasr.twowayview/twowayview" />
+            <option value="$PROJECT_DIR$/org.lucasr.twowayview/twowayview/0.1.4" />
           </set>
         </option>
       </GradleProjectSettings>
