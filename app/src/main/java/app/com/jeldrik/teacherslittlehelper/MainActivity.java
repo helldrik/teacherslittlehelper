@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,9 +62,13 @@ public class MainActivity extends ActionBarActivity {
 
     static class ViewHolder {
         LinearLayout[] weekdays;
+        TwoWayView[] listView;
+        Button[] addClassBtn;
 
         public ViewHolder(){
             weekdays=new LinearLayout[7];
+            listView=new TwoWayView[7];
+            addClassBtn=new Button[7];
         }
     }
     /**
@@ -86,57 +91,97 @@ public class MainActivity extends ActionBarActivity {
                 mViewHolder = new ViewHolder();
                 for (int i = 0; i < 7; i++) {
 
-                    TwoWayView listView=null;
-                    Button addClassBtn=null;
-
                     if (i == 0) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.monday);
-                        listView= (TwoWayView)rootView.findViewById(R.id.mondayListView);
-                        addClassBtn=(Button)rootView.findViewById(R.id.addMondayClass);
+                        mViewHolder.listView[i]= (TwoWayView)rootView.findViewById(R.id.mondayListView);
+                        mViewHolder.addClassBtn[i]=(Button)rootView.findViewById(R.id.addMondayClass);
                     }
                     else if (i == 1) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.tuesday);
-                        listView = (TwoWayView) rootView.findViewById(R.id.tuesdayListView);
-                        addClassBtn=(Button)rootView.findViewById(R.id.addTuesdayClass);
+                        mViewHolder.listView[i] = (TwoWayView) rootView.findViewById(R.id.tuesdayListView);
+                        mViewHolder.addClassBtn[i]=(Button)rootView.findViewById(R.id.addTuesdayClass);
                     }
                     else if (i == 2) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.wednesday);
-                        listView = (TwoWayView) rootView.findViewById(R.id.wednesdayListView);
-                        addClassBtn=(Button)rootView.findViewById(R.id.addWednesdayClass);
+                        mViewHolder.listView[i] = (TwoWayView) rootView.findViewById(R.id.wednesdayListView);
+                        mViewHolder.addClassBtn[i]=(Button)rootView.findViewById(R.id.addWednesdayClass);
                     }
                     else if (i == 3) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.thursday);
-                        listView = (TwoWayView) rootView.findViewById(R.id.thursdayListView);
-                        addClassBtn=(Button)rootView.findViewById(R.id.addThursdayClass);
+                        mViewHolder.listView[i] = (TwoWayView) rootView.findViewById(R.id.thursdayListView);
+                        mViewHolder.addClassBtn[i]=(Button)rootView.findViewById(R.id.addThursdayClass);
                     }
                     else if (i == 4){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.friday);
-                        listView = (TwoWayView) rootView.findViewById(R.id.fridayListView);
-                        addClassBtn=(Button)rootView.findViewById(R.id.addFridayClass);
+                        mViewHolder.listView[i] = (TwoWayView) rootView.findViewById(R.id.fridayListView);
+                        mViewHolder.addClassBtn[i]=(Button)rootView.findViewById(R.id.addFridayClass);
                     }
                     else if (i == 5){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.saturday);
-                        listView = (TwoWayView) rootView.findViewById(R.id.saturdayListView);
-                        addClassBtn=(Button)rootView.findViewById(R.id.addSaturdayClass);
+                        mViewHolder.listView[i] = (TwoWayView) rootView.findViewById(R.id.saturdayListView);
+                        mViewHolder.addClassBtn[i]=(Button)rootView.findViewById(R.id.addSaturdayClass);
                     }
                     else if (i == 6){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.sunday);
-                        listView = (TwoWayView) rootView.findViewById(R.id.sundayListView);
-                        addClassBtn=(Button)rootView.findViewById(R.id.addSundayClass);
+                        mViewHolder.listView[i] = (TwoWayView) rootView.findViewById(R.id.sundayListView);
+                        mViewHolder.addClassBtn[i]=(Button)rootView.findViewById(R.id.addSundayClass);
                     }
 
-                    addClassBtn.setOnClickListener(new Button.OnClickListener(){
+                    ArrayList <String> list=null;
+                    if (savedInstanceState != null) {
+                        list = savedInstanceState.getStringArrayList("Day" + i);
+                        if (list == null) {
+                            String[] testData = {"Class 1", "Class 2", "Class 3", "Class 1", "Class 2", "Class 3"};
+                            list = new ArrayList<String>();
+                            for (int u = 0; u < testData.length; ++u) {
+                                list.add(testData[u]);
+                            }
+                        }
+                    }
+                    else{
+                        String[] testData = {"Class 1", "Class 2", "Class 3", "Class 1", "Class 2", "Class 3"};
+                        list = new ArrayList<String>();
+                        for (int u = 0; u < testData.length; ++u) {
+                            list.add(testData[u]);
+                        }
+                    }
+                    //ArrayAdapter adapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
+                    MyAdapter adapter=new MyAdapter(getActivity(),list);
+
+
+                    mViewHolder.listView[i].setOnTouchListener(new View.OnTouchListener() {
+                        // Setting on Touch Listener for handling the touch inside ScrollView
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            // Disallow the touch request for parent scroll on touch of child view
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            return false;
+                        }
+                    });
+
+                    mViewHolder.listView[i].setAdapter(adapter);
+
+
+                    mViewHolder.addClassBtn[i].setOnClickListener(new Button.OnClickListener() {
 
                         @Override
                         public void onClick(View v) {
                             Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
+                            TwoWayView listView = (TwoWayView) getActivity().findViewById(R.id.mondayListView);
+                            MyAdapter adapter = (MyAdapter) listView.getAdapter();
+                            if (adapter != null) {
+                                adapter.add("New Class");
+                                Log.v("MainActivity", "Count: " + Integer.toString(adapter.getCount()));
+                            }
                         }
                     });
 
-                    listView.setOnItemClickListener(new TwoWayView.OnItemClickListener(){
+                    //clicking on a particular class
+                    mViewHolder.listView[i].setOnItemClickListener(new TwoWayView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Toast.makeText(getActivity(),Integer.toString(position),Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), Integer.toString(position) + " " + parent.getResources().getResourceName(parent.getId()), Toast.LENGTH_LONG).show();
+
                         }
                     });
 
@@ -147,37 +192,32 @@ public class MainActivity extends ActionBarActivity {
                             Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
                         }
                     });
-
-                    String[] testData={"Class 1","Class 2", "Class 3","Class 1","Class 2", "Class 3"};
-                    ArrayList <String> list = new ArrayList<String>();
-                    for (int u = 0; u < testData.length; ++u) {
-                        list.add(testData[u]);
-                    }
-
-
-                    //ArrayAdapter adapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
-                    MyAdapter adapter=new MyAdapter(getActivity(),testData);
-
-                    listView.setOnTouchListener(new View.OnTouchListener() {
-                        // Setting on Touch Listener for handling the touch inside ScrollView
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            // Disallow the touch request for parent scroll on touch of child view
-                            v.getParent().requestDisallowInterceptTouchEvent(true);
-                            return false;
-                        }
-                    });
-                    listView.setAdapter(adapter);
                 }
-                rootView.setTag(mViewHolder);
+                container.setTag(mViewHolder);
             }
             else {
-                mViewHolder=(ViewHolder)rootView.getTag();
+                mViewHolder=(ViewHolder)container.getTag();
                 Toast.makeText(getActivity(),"gettag called",Toast.LENGTH_LONG).show();
             }
 
             return rootView;
         }
 
+        public void onSaveInstanceState(Bundle savedState){
+            super.onSaveInstanceState(savedState);
+            if(mViewHolder!=null) {
+                for (int i = 0; i < 7; i++) {
+                    MyAdapter adapter=(MyAdapter)mViewHolder.listView[i].getAdapter();
+                    ArrayList<String> values=new ArrayList<String>();
+                    for (int u = 0; u < adapter.getCount(); u++)
+                        values.add((String) adapter.getItem(u));
+
+                    savedState.putStringArrayList("Day"+i,values);
+                }
+
+            }
+        }
+
     }
+
 }
