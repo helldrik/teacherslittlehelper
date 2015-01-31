@@ -78,67 +78,42 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-//for testing two way view
-            ArrayList<String> items = new ArrayList<String>();
-            items.add("Item 1");
-            items.add("Item 2");
-            items.add("Item 3");
-            items.add("Item 4");
-            items.add("Item 1");
-            items.add("Item 2");
-            items.add("Item 3");
-            items.add("Item 4");
-            items.add("Item 1");
-            items.add("Item 2");
-            items.add("Item 3");
-            items.add("Item 4");
-            items.add("Item 1");
-            items.add("Item 2");
-            items.add("Item 3");
-            items.add("Item 4");
-            items.add("Item 1");
-            items.add("Item 2");
-            items.add("Item 3");
-            items.add("Item 4");
 
-            ArrayAdapter<String> aItems = new ArrayAdapter<String>(getActivity(), R.layout.simple_list_item_1, items);
-            TwoWayView lvTest = (TwoWayView)rootView.findViewById(R.id.lvItems);
-            lvTest.setAdapter(aItems);
-//-------------------------
 
             if(mViewHolder==null) {
                 mViewHolder = new ViewHolder();
                 for (int i = 0; i < 7; i++) {
 
-                    ListView listView=null;
+                    TwoWayView listView=null;
+
 
                     if (i == 0) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.monday);
-                        listView= (ListView)rootView.findViewById(R.id.mondayListView);
+                        listView= (TwoWayView)rootView.findViewById(R.id.mondayListView);
                     }
                     else if (i == 1) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.tuesday);
-                        listView = (ListView) rootView.findViewById(R.id.tuesdayListView);
+                        listView = (TwoWayView) rootView.findViewById(R.id.tuesdayListView);
                     }
                     else if (i == 2) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.wednesday);
-                        listView = (ListView) rootView.findViewById(R.id.wednesdayListView);
+                        listView = (TwoWayView) rootView.findViewById(R.id.wednesdayListView);
                     }
                     else if (i == 3) {
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.thursday);
-                        listView = (ListView) rootView.findViewById(R.id.thursdayListView);
+                        listView = (TwoWayView) rootView.findViewById(R.id.thursdayListView);
                     }
                     else if (i == 4){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.friday);
-                        listView = (ListView) rootView.findViewById(R.id.fridayListView);
+                        listView = (TwoWayView) rootView.findViewById(R.id.fridayListView);
                     }
                     else if (i == 5){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.saturday);
-                        listView = (ListView) rootView.findViewById(R.id.saturdayListView);
+                        listView = (TwoWayView) rootView.findViewById(R.id.saturdayListView);
                     }
                     else if (i == 6){
                         mViewHolder.weekdays[i] = (LinearLayout) rootView.findViewById(R.id.sunday);
-                        listView = (ListView) rootView.findViewById(R.id.sundayListView);
+                        listView = (TwoWayView) rootView.findViewById(R.id.sundayListView);
                     }
 
                     mViewHolder.weekdays[i].setOnClickListener(new View.OnClickListener() {
@@ -148,7 +123,7 @@ public class MainActivity extends ActionBarActivity {
                         }
                     });
 
-                    String[] testData={"Class 1","Class 2", "Class 3"};
+                    String[] testData={"Class 1","Class 2", "Class 3","Class 1","Class 2", "Class 3"};
                     ArrayList <String> list = new ArrayList<String>();
                     for (int u = 0; u < testData.length; ++u) {
                         list.add(testData[u]);

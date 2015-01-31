@@ -18,11 +18,16 @@
 
                 <TextView android:text="@string/monday" style="@style/Header" android:layout_margin="10dp" />
 
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <org.lucasr.twowayview.TwoWayView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/mondayListView"
-                    android:layout_weight="1" />
+                    style="@style/TwoWayView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="false"
+                    tools:context=".MainActivity" />
 
 
             </LinearLayout>
@@ -31,11 +36,16 @@
                 style="@style/WhiteWeekday">
 
                 <TextView android:text="@string/tuesday" style="@style/Header" android:layout_margin="10dp" />
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <org.lucasr.twowayview.TwoWayView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/tuesdayListView"
-                    android:layout_weight="1" />
+                    style="@style/TwoWayView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="false"
+                    tools:context=".MainActivity" />
 
             </LinearLayout>
             <LinearLayout
@@ -43,11 +53,16 @@
                 style="@style/BabyBlueWeekday">
 
                 <TextView android:text="@string/wednesday" style="@style/Header" android:layout_margin="10dp" />
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <org.lucasr.twowayview.TwoWayView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/wednesdayListView"
-                    android:layout_weight="1" />
+                    style="@style/TwoWayView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="false"
+                    tools:context=".MainActivity" />
 
             </LinearLayout>
             <LinearLayout
@@ -55,11 +70,16 @@
                 style="@style/WhiteWeekday">
 
                 <TextView android:text="@string/thursday" style="@style/Header" android:layout_margin="10dp"/>
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <org.lucasr.twowayview.TwoWayView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/thursdayListView"
-                    android:layout_weight="1" />
+                    style="@style/TwoWayView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="false"
+                    tools:context=".MainActivity" />
 
             </LinearLayout>
             <LinearLayout
@@ -67,11 +87,16 @@
                 style="@style/BabyBlueWeekday">
 
                 <TextView android:text="@string/friday" style="@style/Header" android:layout_margin="10dp"/>
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <org.lucasr.twowayview.TwoWayView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/fridayListView"
-                    android:layout_weight="1" />
+                    style="@style/TwoWayView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="false"
+                    tools:context=".MainActivity" />
 
             </LinearLayout>
             <LinearLayout
@@ -79,11 +104,16 @@
                 style="@style/WhiteWeekday">
 
                 <TextView android:text="@string/saturday" style="@style/Header" android:layout_margin="10dp"/>
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <org.lucasr.twowayview.TwoWayView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/saturdayListView"
-                    android:layout_weight="1" />
+                    style="@style/TwoWayView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawSelectorOnTop="false"
+                    tools:context=".MainActivity" />
 
             </LinearLayout>
             <LinearLayout
@@ -91,32 +121,21 @@
                 style="@style/BabyBlueWeekday">
 
                 <TextView android:text="@string/sunday" style="@style/Header" android:layout_margin="10dp"/>
-                <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/sundayListView"
-                    android:layout_weight="1"
-                    />
-
-            </LinearLayout>
-            <LinearLayout
-                style="@style/WhiteWeekday">
-
                 <org.lucasr.twowayview.TwoWayView
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/lvItems"
+                    android:id="@+id/sundayListView"
                     style="@style/TwoWayView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:drawSelectorOnTop="false"
                     tools:context=".MainActivity" />
-                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </ScrollView>
-
 
 </RelativeLayout>
