@@ -166,12 +166,35 @@ public class MainActivity extends ActionBarActivity {
 
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
-                            TwoWayView listView = (TwoWayView) getActivity().findViewById(R.id.mondayListView);
+                            //Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
+                            TwoWayView listView=null;
+                            String viewName=v.getResources().getResourceName(v.getId());
+                            if(viewName.contains("Monday")){
+                                listView = (TwoWayView) getActivity().findViewById(R.id.mondayListView);
+                            }
+                            else if(viewName.contains("Tuesday")){
+                                listView = (TwoWayView) getActivity().findViewById(R.id.tuesdayListView);
+                            }
+                            else if(viewName.contains("Wednesday")){
+                                listView = (TwoWayView) getActivity().findViewById(R.id.wednesdayListView);
+                            }
+                            else if(viewName.contains("Thursday")){
+                                listView = (TwoWayView) getActivity().findViewById(R.id.thursdayListView);
+                            }
+                            else if(viewName.contains("Friday")){
+                                listView = (TwoWayView) getActivity().findViewById(R.id.fridayListView);
+                            }
+                            else if(viewName.contains("Saturday")){
+                                listView = (TwoWayView) getActivity().findViewById(R.id.saturdayListView);
+                            }
+                            else if(viewName.contains("Sunday")){
+                                listView = (TwoWayView) getActivity().findViewById(R.id.sundayListView);
+                            }
                             MyAdapter adapter = (MyAdapter) listView.getAdapter();
                             if (adapter != null) {
                                 adapter.add("New Class");
-                                Log.v("MainActivity", "Count: " + Integer.toString(adapter.getCount()));
+                                //TODO: implementing newClassFragment
+                                //Log.v("MainActivity", "Count: " + Integer.toString(adapter.getCount()));
                             }
                         }
                     });
@@ -180,6 +203,7 @@ public class MainActivity extends ActionBarActivity {
                     mViewHolder.listView[i].setOnItemClickListener(new TwoWayView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            //TODO: implementing classFragment
                             Toast.makeText(getActivity(), Integer.toString(position) + " " + parent.getResources().getResourceName(parent.getId()), Toast.LENGTH_LONG).show();
 
                         }
