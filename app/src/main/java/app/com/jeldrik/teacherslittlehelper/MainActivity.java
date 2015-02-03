@@ -1,5 +1,6 @@
 package app.com.jeldrik.teacherslittlehelper;
 
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -74,7 +75,7 @@ public class MainActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends Fragment implements NewClassFragment.OnFragmentInteractionListener {
 
         ViewHolder mViewHolder;
 
@@ -242,6 +243,10 @@ public class MainActivity extends ActionBarActivity {
             }
         }
 
+        @Override
+        public void onFragmentInteraction(String msg) {
+            Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
+        }
     }
 
 }
