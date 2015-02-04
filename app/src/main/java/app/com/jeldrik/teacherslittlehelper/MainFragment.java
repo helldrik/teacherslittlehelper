@@ -150,44 +150,39 @@ public class MainFragment extends Fragment {
 
 
             mAddClassBtn[i].setOnClickListener(new Button.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
-                    TwoWayView listView=null;
+                    //Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
+
                     String viewName=v.getResources().getResourceName(v.getId());
+                    String day="";
                     if(viewName.contains("Monday")){
-                        listView = (TwoWayView) getActivity().findViewById(R.id.mondayListView);
+                        day="Monday";
                     }
                     else if(viewName.contains("Tuesday")){
-                        listView = (TwoWayView) getActivity().findViewById(R.id.tuesdayListView);
+                        day="Tuesday";
                     }
                     else if(viewName.contains("Wednesday")){
-                        listView = (TwoWayView) getActivity().findViewById(R.id.wednesdayListView);
+                        day="Wednesday";
                     }
                     else if(viewName.contains("Thursday")){
-                        listView = (TwoWayView) getActivity().findViewById(R.id.thursdayListView);
+                        day="Thursday";
                     }
                     else if(viewName.contains("Friday")){
-                        listView = (TwoWayView) getActivity().findViewById(R.id.fridayListView);
+                        day="Friday";
                     }
                     else if(viewName.contains("Saturday")){
-                        listView = (TwoWayView) getActivity().findViewById(R.id.saturdayListView);
+                        day="Saturday";
                     }
                     else if(viewName.contains("Sunday")){
-                        listView = (TwoWayView) getActivity().findViewById(R.id.sundayListView);
+                        day="Sunday";
                     }
-                    MyAdapter adapter = (MyAdapter) listView.getAdapter();
-                    if (adapter != null) {
-                        adapter.add("New Class");
-                        //TODO: implementing newClassFragment
-                        Fragment newClassFragment= new NewClassFragment();
-                        FragmentTransaction transaction=getFragmentManager().beginTransaction();
-                        transaction.replace(R.id.mainFragment,newClassFragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
+                     Fragment newClassFragment=NewClassFragment.newInstance(day);
+                     FragmentTransaction transaction=getFragmentManager().beginTransaction();
+                     transaction.replace(R.id.mainFragment,newClassFragment);
+                     transaction.addToBackStack(null);
+                     transaction.commit();
                         //Log.v("MainActivity", "Count: " + Integer.toString(adapter.getCount()));
-                    }
                 }
             });
 
@@ -209,6 +204,42 @@ public class MainFragment extends Fragment {
                 }
             });
         }
+    }
+    public void addNewClassToAdapter(String day,String title){
+        //TODO: ckeck out why you can not call findByID to find views here
+        TwoWayView listView=null;
+        switch(day){
+            case "Monday":
+                listView = mListView[0];
+                break;
+            case "Tuesday":
+                listView = mListView[1];
+                break;
+            case "Wednesday":
+                listView = mListView[2];
+                break;
+            case "Thursday":
+                listView = mListView[3];
+                break;
+            case "Friday":
+                listView = mListView[4];
+                break;
+            case "Saturday":
+                listView = mListView[5];
+                break;
+            case "Sunday":
+                listView = mListView[6];
+                break;
+        }
+        try {
+            MyAdapter adapter = (MyAdapter)listView.getAdapter();
+            if (adapter != null) {
+                adapter.add(title);
+            }
+        }catch(NullPointerException e){
+            Log.e("MainFragment","ListView is null "+e);
+        }
+
     }
 }
 

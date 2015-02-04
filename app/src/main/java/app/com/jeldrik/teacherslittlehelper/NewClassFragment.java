@@ -1,6 +1,7 @@
 package app.com.jeldrik.teacherslittlehelper;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,8 +9,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 
 /**
@@ -24,11 +27,9 @@ public class NewClassFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mDay;
 
     private OnFragmentInteractionListener mListener;
     private Button mBtn;
@@ -39,15 +40,13 @@ public class NewClassFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment NewClassFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static NewClassFragment newInstance(String param1, String param2) {
+    public static NewClassFragment newInstance(String param1) {
         NewClassFragment fragment = new NewClassFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,8 +59,7 @@ public class NewClassFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mDay = getArguments().getString(ARG_PARAM1);
         }
     }
 
@@ -77,7 +75,11 @@ public class NewClassFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 EditText txt=(EditText)mRootView.findViewById(R.id.newClassTitle);
-                mListener.onFragmentInteraction(txt.getText().toString());
+                //Hiding the keyboard
+                InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(txt.getWindowToken(), 0);
+
+                mListener.onFragmentInteraction(mDay,txt.getText().toString());
                 FragmentManager fm=getActivity().getSupportFragmentManager();
                 fm.popBackStack();
             }
@@ -121,7 +123,7 @@ public class NewClassFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(String msg);
+        public void onFragmentInteraction(String day,String msg);
     }
 
 }

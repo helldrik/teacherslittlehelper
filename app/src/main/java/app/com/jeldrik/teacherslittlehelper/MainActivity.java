@@ -28,13 +28,15 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity implements NewClassFragment.OnFragmentInteractionListener {
 
+    MainFragment mainFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainFragment=new MainFragment();
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mainFragment, new MainFragment())
+                    .add(R.id.mainFragment, mainFragment)
                     .commit();
         }
     }
@@ -63,8 +65,9 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
 
     @Override
-    public void onFragmentInteraction(String msg) {
-        Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
+    public void onFragmentInteraction(String day,String msg) {
+        //Toast.makeText(this,day+" "+msg,Toast.LENGTH_LONG).show();
+        mainFragment.addNewClassToAdapter(day,msg);
     }
 
 }
