@@ -3,8 +3,25 @@
     android:layout_height="match_parent"
     tools:context="app.com.jeldrik.teacherslittlehelper.NewClassFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal|top"
+        android:padding="10dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/newClassTitle"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/createClassBtn"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/sphere50px"/>
+    </LinearLayout>
 </FrameLayout>

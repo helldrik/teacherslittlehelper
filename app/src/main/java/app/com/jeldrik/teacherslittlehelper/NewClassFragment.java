@@ -3,10 +3,13 @@ package app.com.jeldrik.teacherslittlehelper;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 
 /**
@@ -28,6 +31,8 @@ public class NewClassFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private Button mBtn;
+    View mRootView;
 
     /**
      * Use this factory method to create a new instance of
@@ -64,7 +69,21 @@ public class NewClassFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_class, container, false);
+        mRootView =inflater.inflate(R.layout.fragment_new_class, container, false);
+
+        mBtn=(Button)mRootView.findViewById(R.id.createClassBtn);
+        mBtn.setOnClickListener(new Button.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                EditText txt=(EditText)mRootView.findViewById(R.id.newClassTitle);
+                mListener.onFragmentInteraction(txt.getText().toString());
+                FragmentManager fm=getActivity().getSupportFragmentManager();
+                fm.popBackStack();
+            }
+        });
+        return mRootView;
+
     }
 /*
     // TODO: Rename method, update argument and hook method into UI event
