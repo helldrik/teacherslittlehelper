@@ -1,6 +1,7 @@
 package app.com.jeldrik.teacherslittlehelper;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,5 +32,11 @@ public class MyAdapter extends ArrayAdapter {
         textView.setText(values.get(position));
 
         return rowView;
+    }
+
+    public void remove(int position){
+        Log.v("MyAdapter","removing "+values.get(position));
+        values.remove(position);
+        this.notifyDataSetChanged();
     }
 }

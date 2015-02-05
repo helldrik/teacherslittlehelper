@@ -153,30 +153,8 @@ public class MainFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
+                    String day=getDay(v.getResources().getResourceName(v.getId()));
 
-                    String viewName=v.getResources().getResourceName(v.getId());
-                    String day="";
-                    if(viewName.contains("Monday")){
-                        day="Monday";
-                    }
-                    else if(viewName.contains("Tuesday")){
-                        day="Tuesday";
-                    }
-                    else if(viewName.contains("Wednesday")){
-                        day="Wednesday";
-                    }
-                    else if(viewName.contains("Thursday")){
-                        day="Thursday";
-                    }
-                    else if(viewName.contains("Friday")){
-                        day="Friday";
-                    }
-                    else if(viewName.contains("Saturday")){
-                        day="Saturday";
-                    }
-                    else if(viewName.contains("Sunday")){
-                        day="Sunday";
-                    }
                      Fragment newClassFragment=NewClassFragment.newInstance(day);
                      FragmentTransaction transaction=getFragmentManager().beginTransaction();
                      transaction.replace(R.id.mainFragment,newClassFragment);
@@ -191,7 +169,13 @@ public class MainFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //TODO: implementing classFragment
-                    Toast.makeText(getActivity(), Integer.toString(position) + " " + parent.getResources().getResourceName(parent.getId()), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(), Integer.toString(position) + " " + parent.getResources().getResourceName(parent.getId()), Toast.LENGTH_LONG).show();
+                    String day=getDay(parent.getResources().getResourceName(parent.getId()));
+                    Fragment classFragment=ClassFragment.newInstance(day,position);
+                    FragmentTransaction transaction=getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.mainFragment,classFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
 
                 }
             });
@@ -240,6 +224,66 @@ public class MainFragment extends Fragment {
             Log.e("MainFragment","ListView is null "+e);
         }
 
+    }
+    public void deleteClassfromAdapter(String day,int position){
+        TwoWayView listView=null;
+        switch(day){
+            case "Monday":
+                listView = mListView[0];
+                break;
+            case "Tuesday":
+                listView = mListView[1];
+                break;
+            case "Wednesday":
+                listView = mListView[2];
+                break;
+            case "Thursday":
+                listView = mListView[3];
+                break;
+            case "Friday":
+                listView = mListView[4];
+                break;
+            case "Saturday":
+                listView = mListView[5];
+                break;
+            case "Sunday":
+                listView = mListView[6];
+                break;
+        }
+        try {
+            MyAdapter adapter = (MyAdapter)listView.getAdapter();
+            if (adapter != null) {
+                adapter.remove(position);
+            }
+        }catch(NullPointerException e){
+            Log.e("MainFragment","ListView is null "+e);
+        }
+
+    }
+    private String getDay(String viewName){
+        String day="";
+        if(viewName.toLowerCase().contains("monday")){
+            day="Monday";
+        }
+        else if(viewName.toLowerCase().contains("tuesday")){
+            day="Tuesday";
+        }
+        else if(viewName.toLowerCase().contains("wednesday")){
+            day="Wednesday";
+        }
+        else if(viewName.toLowerCase().contains("thursday")){
+            day="Thursday";
+        }
+        else if(viewName.toLowerCase().contains("friday")){
+            day="Friday";
+        }
+        else if(viewName.toLowerCase().contains("saturday")){
+            day="Saturday";
+        }
+        else if(viewName.toLowerCase().contains("sunday")){
+            day="Sunday";
+        }
+        return day;
     }
 }
 

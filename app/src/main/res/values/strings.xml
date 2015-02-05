@@ -12,6 +12,7 @@
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
     <string name="add_class">Add Class</string>
+    <string name="delete_Class">Delete Class</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

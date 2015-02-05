@@ -26,7 +26,7 @@ import org.lucasr.twowayview.TwoWayView;
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity implements NewClassFragment.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity implements NewClassFragment.OnAddNewClassListener, ClassFragment.OnDeleteListener {
 
     MainFragment mainFragment;
     @Override
@@ -65,9 +65,13 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
 
     @Override
-    public void onFragmentInteraction(String day,String msg) {
+    public void onAddNewClass(String day,String msg) {
         //Toast.makeText(this,day+" "+msg,Toast.LENGTH_LONG).show();
         mainFragment.addNewClassToAdapter(day,msg);
     }
 
+    @Override
+    public void onDelete(String day, int position) {
+        mainFragment.deleteClassfromAdapter(day,position);
+    }
 }
