@@ -1,19 +1,46 @@
 package app.com.jeldrik.teacherslittlehelper.data;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
+
+import static app.com.jeldrik.teacherslittlehelper.data.DbContract.*;
+
 
 /**
  * Created by jeldrik on 06/02/15.
  */
 public class ClassContentProvider extends ContentProvider {
 
-    DbHelper mdataBase;
+    private static final int CLASS=1;
+    private static final int CLASS_ID=2;
+    private static final int STUDENT=3;
+    private static final int STUDENT_ID=4;
+    private static final int CLASSCONTENT=5;
+    private static final int CLASSCONTENT_ID=6;
+
+    private static final UriMatcher mUriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
+
+    // The # sign will match numbers
+    static {
+        mUriMatcher.addURI(AUTHORITY,PATH_CLASS,CLASS);
+        mUriMatcher.addURI(AUTHORITY,PATH_CLASS+"/#",CLASS_ID);
+
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT,STUDENT);
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT+"/#",STUDENT_ID);
+
+        mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT,CLASSCONTENT);
+        mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT+"/#",CLASSCONTENT_ID);
+    }
+
+    SQLiteDatabase mdataBase;
     @Override
     public boolean onCreate() {
-        mdataBase=new DbHelper(getContext());
         return true;
     }
 
@@ -29,8 +56,37 @@ public class ClassContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        ContentValues vals=values;
 
-        ContentValues vals=new ContentValues(7);
+        if(vals==null)
+            return null;
+
+        String table="";
+        mdataBase=new DbHelper(getContext()).getWritableDatabase();
+
+        switch(mUriMatcher.match(uri)) {
+            case CLASS:
+                Log.v("ContentProvider","Insert data into class table");
+                table=ClassEntry.TABLE_NAME;
+                break;
+            case STUDENT:
+                Log.v("ContentProvider","Insert data into student table");
+                table=StudentEntry.TABLE_NAME;
+                break;
+            case CLASSCONTENT:
+                Log.v("ContentProvider","Insert data into classcontent table");
+                table=ClassContentEntry.TABLE_NAME;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+
+        }
+        long rowId=mdataBase.insert(table,null,values);
+        Uri noteUri=null;
+        if(rowId>0)
+            noteUri= ContentUris.withAppendedId(uri,rowId);
+
+        return noteUri;
 /*
         vals.put(DbContract.ClassEntry.COLUMN_TITLE,"the Title");
         vals.put(DbContract.ClassEntry.COLUMN_TIME,"17:00");
@@ -55,16 +111,35 @@ public class ClassContentProvider extends ContentProvider {
         vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS, 1);
         myDataBase.insert(DbContract.StudentEntry.TABLE_NAME,null,vals);
  */
-        return null;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        switch(mUriMatcher.match(uri)) {
+            case CLASS:
+                break;
+            case STUDENT:
+                break;
+            case CLASSCONTENT:
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
         return 0;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        switch(mUriMatcher.match(uri)) {
+            case CLASS:
+                break;
+            case STUDENT:
+                break;
+            case CLASSCONTENT:
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
         return 0;
     }
 }

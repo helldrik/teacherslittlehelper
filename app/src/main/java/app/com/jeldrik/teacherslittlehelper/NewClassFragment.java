@@ -1,11 +1,15 @@
 package app.com.jeldrik.teacherslittlehelper;
 
 import android.app.Activity;
+
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
 
 /**
@@ -24,11 +31,10 @@ import android.widget.ListView;
  * create an instance of this fragment.
  */
 public class NewClassFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+    // TODO: Edit the layout to adjust hours picking (spinner?) and day selection (checkboxes?)
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
 
-    // TODO: Rename and change types of parameters
     private String mDay;
 
     private OnAddNewClassListener mListener;
@@ -42,7 +48,7 @@ public class NewClassFragment extends Fragment {
      * @param param1 Parameter 1.
      * @return A new instance of fragment NewClassFragment.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static NewClassFragment newInstance(String param1) {
         NewClassFragment fragment = new NewClassFragment();
         Bundle args = new Bundle();
@@ -74,14 +80,41 @@ public class NewClassFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                EditText txt=(EditText)mRootView.findViewById(R.id.newClassTitle);
-                //Hiding the keyboard
-                InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                mgr.hideSoftInputFromWindow(txt.getWindowToken(), 0);
 
-                mListener.onAddNewClass(mDay,txt.getText().toString());
-                FragmentManager fm=getActivity().getSupportFragmentManager();
-                fm.popBackStack();
+                EditText title=(EditText)mRootView.findViewById(R.id.newClassTitle);
+                EditText days=(EditText)mRootView.findViewById(R.id.newClassDays);
+                EditText time=(EditText)mRootView.findViewById(R.id.newClassStartTime);
+                EditText duration=(EditText)mRootView.findViewById(R.id.newClassDuration);
+                EditText level=(EditText)mRootView.findViewById(R.id.newClassLevel);
+                EditText location=(EditText)mRootView.findViewById(R.id.newClassLocation);
+                EditText info=(EditText)mRootView.findViewById(R.id.newClassInfo);
+
+                if(title.getText().toString().matches("")||days.getText().toString().matches("")||time.getText().toString().matches("")||
+                        duration.getText().toString().matches("")||location.getText().toString().matches(""))
+                    Toast.makeText(getActivity(),R.string.notAllFieldsFilledOutWarning,Toast.LENGTH_LONG).show();
+                else {
+                    ContentValues vals = new ContentValues(7);
+                    vals.put(DbContract.ClassEntry.COLUMN_TITLE, title.getText().toString());
+                    vals.put(DbContract.ClassEntry.COLUMN_TIME, time.getText().toString());
+                    vals.put(DbContract.ClassEntry.COLUMN_DATE, days.getText().toString());
+                    vals.put(DbContract.ClassEntry.COLUMN_DURATION, Integer.parseInt(duration.getText().toString()));
+                    vals.put(DbContract.ClassEntry.COLUMN_LOCATION, location.getText().toString());
+                    vals.put(DbContract.ClassEntry.COLUMN_LEVEL, level.getText().toString());
+                    vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO, info.getText().toString());
+
+                    ContentResolver resolver = getActivity().getContentResolver();
+                    Uri returnUri = resolver.insert(DbContract.ClassEntry.CONTENT_URI, vals);
+                    Log.v("MainActivity", returnUri.toString());
+
+
+                    //Hiding the keyboard
+                    InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    mgr.hideSoftInputFromWindow(title.getWindowToken(), 0);
+
+                    mListener.onAddNewClass(mDay, title.getText().toString());
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack();
+                }
             }
         });
         return mRootView;

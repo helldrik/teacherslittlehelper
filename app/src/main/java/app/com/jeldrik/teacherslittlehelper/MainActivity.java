@@ -1,5 +1,6 @@
 package app.com.jeldrik.teacherslittlehelper;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -45,14 +46,14 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     .add(R.id.mainFragment, mainFragment)
                     .commit();
         }
-        SQLiteDatabase myDataBase=new DbHelper(this).getReadableDatabase();
+     /*    SQLiteDatabase myDataBase=new DbHelper(this).getReadableDatabase();
 
-      /*  Cursor cursor=myDataBase.query(DbContract.ClassEntry.TABLE_NAME,new String[]{DbContract.ClassEntry.COLUMN_TITLE,DbContract.ClassEntry.COLUMN_LOCATION},null,null,null,null,null);
+       Cursor cursor=myDataBase.query(DbContract.ClassEntry.TABLE_NAME,new String[]{DbContract.ClassEntry.COLUMN_TITLE,DbContract.ClassEntry.COLUMN_LOCATION},null,null,null,null,null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
             Log.v("MYCURSOR",cursor.getString(0)+" location: "+cursor.getString(1));
             cursor.moveToNext();
-        }*/
+        }
         String q="Select student.studentName,class.title from student inner join class on student.classID=class._id;";
         Cursor cursor=myDataBase.rawQuery(q,null);
         if(cursor.moveToFirst()) {
@@ -63,6 +64,20 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         }
 
         myDataBase.close();
+
+        ContentValues vals=new ContentValues(7);
+        vals.put(DbContract.ClassEntry.COLUMN_TITLE,"the Title2");
+        vals.put(DbContract.ClassEntry.COLUMN_TIME,"19:00");
+        vals.put(DbContract.ClassEntry.COLUMN_DATE,"Monday");
+        vals.put(DbContract.ClassEntry.COLUMN_DURATION, 60);
+        vals.put(DbContract.ClassEntry.COLUMN_LOCATION,"Madrid");
+        vals.put(DbContract.ClassEntry.COLUMN_LEVEL,"A2");
+        vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO,"no extra infos");
+
+        ContentResolver resolver=getContentResolver();
+        Uri returnUri=resolver.insert(DbContract.ClassEntry.CONTENT_URI,vals);
+        Log.v("MainActivity",returnUri.toString());
+         */
     }
 
 
