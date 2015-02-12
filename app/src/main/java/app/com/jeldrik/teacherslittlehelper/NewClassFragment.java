@@ -104,14 +104,15 @@ public class NewClassFragment extends Fragment {
 
                     ContentResolver resolver = getActivity().getContentResolver();
                     Uri returnUri = resolver.insert(DbContract.ClassEntry.CONTENT_URI, vals);
-                    Log.v("MainActivity", returnUri.toString());
+                    int id=Integer.parseInt(returnUri.getLastPathSegment());
+                    Log.v("MainActivity", "The ID: "+returnUri.getLastPathSegment());
 
 
                     //Hiding the keyboard
                     InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     mgr.hideSoftInputFromWindow(title.getWindowToken(), 0);
 
-                    mListener.onAddNewClass(mDay, title.getText().toString());
+                    mListener.onAddNewClass(mDay, title.getText().toString(),time.getText().toString(),id);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();
                 }
@@ -156,7 +157,7 @@ public class NewClassFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnAddNewClassListener {
-        public void onAddNewClass(String day,String msg);
+        public void onAddNewClass(String day,String title,String time, int id);
     }
 
 }

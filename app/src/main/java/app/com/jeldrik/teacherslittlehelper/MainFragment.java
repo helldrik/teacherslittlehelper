@@ -88,7 +88,16 @@ public class MainFragment extends Fragment {
 
     public void onSaveInstanceState(Bundle savedState){
         super.onSaveInstanceState(savedState);
-        
+        //TODO:Adjust for usage of ClassAdapterValues instead of String
+
+        for (int i = 0; i < 7; i++) {
+            MyAdapter adapter=(MyAdapter)mListView[i].getAdapter();
+            ArrayList<MyAdapter.ClassAdapterValues> values=new ArrayList<MyAdapter.ClassAdapterValues>();
+            for (int u = 0; u < adapter.getCount(); u++)
+                values.add((MyAdapter.ClassAdapterValues) adapter.getItem(u));
+            savedState.putParcelableArrayList("Day"+i,values);
+        }
+       /*
         for (int i = 0; i < 7; i++) {
             MyAdapter adapter=(MyAdapter)mListView[i].getAdapter();
             ArrayList<String> values=new ArrayList<String>();
@@ -96,6 +105,7 @@ public class MainFragment extends Fragment {
                 values.add((String) adapter.getItem(u));
             savedState.putStringArrayList("Day"+i,values);
         }
+        */
     }
     @Override
     public void onPause()
@@ -108,21 +118,23 @@ public class MainFragment extends Fragment {
             Log.v(TAG,"mAdapter  created");
             mAdapter = new MyAdapter[7];
             for (int i = 0; i < 7; i++) {
-                ArrayList<String> list = null;
+                ArrayList<MyAdapter.ClassAdapterValues> list = null;
                 if (savedInstanceState != null) {
-                    list = savedInstanceState.getStringArrayList("Day" + i);
+                    list = savedInstanceState.getParcelableArrayList("Day" + i);
                     if (list == null) {
                         String[] testData = {"Class 1", "Class 2", "Class 3", "Class 1", "Class 2", "Class 3"};
-                        list = new ArrayList<String>();
+                        list = new ArrayList<MyAdapter.ClassAdapterValues>();
                         for (int u = 0; u < testData.length; ++u) {
-                            list.add(testData[u]);
+                            MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(testData[u],u+"30",-1);
+                            list.add(obj);
                         }
                     }
                 } else {
                     String[] testData = {"Class 1", "Class 2", "Class 3", "Class 1", "Class 2", "Class 3"};
-                    list = new ArrayList<String>();
+                    list = new ArrayList<MyAdapter.ClassAdapterValues>();
                     for (int u = 0; u < testData.length; ++u) {
-                        list.add(testData[u]);
+                        MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(testData[u],u+"30",-1);
+                        list.add(obj);
                     }
                 }
                 //ArrayAdapter adapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
@@ -189,7 +201,7 @@ public class MainFragment extends Fragment {
             });
         }
     }
-    public void addNewClassToAdapter(String day,String title){
+    public void addNewClassToAdapter(String day,String title,String time, int id){
         //TODO: ckeck out why you can not call findByID to find views here
         TwoWayView listView=null;
         switch(day){
@@ -218,7 +230,8 @@ public class MainFragment extends Fragment {
         try {
             MyAdapter adapter = (MyAdapter)listView.getAdapter();
             if (adapter != null) {
-                adapter.add(title);
+                MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(title,time,id);
+                adapter.add(obj);
             }
         }catch(NullPointerException e){
             Log.e("MainFragment","ListView is null "+e);

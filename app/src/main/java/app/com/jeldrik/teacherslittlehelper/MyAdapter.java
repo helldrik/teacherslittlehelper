@@ -1,6 +1,8 @@
 package app.com.jeldrik.teacherslittlehelper;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.sql.CallableStatement;
 import java.util.ArrayList;
 
 /**
@@ -15,9 +18,9 @@ import java.util.ArrayList;
  */
 public class MyAdapter extends ArrayAdapter {
     private final Context context;
-    private final ArrayList<String> values;
+    private final ArrayList<ClassAdapterValues> values;
 
-    public MyAdapter(Context context, ArrayList<String> values) {
+    public MyAdapter(Context context, ArrayList<ClassAdapterValues> values) {
         super(context, R.layout.class_item, values);
         this.context = context;
         this.values = values;
@@ -29,7 +32,7 @@ public class MyAdapter extends ArrayAdapter {
         View rowView = inflater.inflate(R.layout.class_item, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.classTitle);
 
-        textView.setText(values.get(position));
+        textView.setText(values.get(position).title+" "+values.get(position)._id);
 
         return rowView;
     }
@@ -38,5 +41,50 @@ public class MyAdapter extends ArrayAdapter {
         Log.v("MyAdapter","removing "+values.get(position));
         values.remove(position);
         this.notifyDataSetChanged();
+    }
+
+    //implements Parcelable to be able to store it in Savedinstancestate bundle
+    static class ClassAdapterValues implements Parcelable{
+        String title;
+        String time;
+        int _id;
+
+        public ClassAdapterValues(String title,String time,int _id){
+            this._id=_id;
+            this.time=time;
+            this.title=title;
+        }
+
+        public ClassAdapterValues(Parcel in){
+            title=in.readString();
+            time=in.readString();
+            _id=in.readInt();
+        }
+
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(title);
+            dest.writeString(time);
+            dest.writeInt(_id);
+
+        }
+        public static final Creator CREATOR= new Creator(){
+
+            @Override
+            public ClassAdapterValues createFromParcel(Parcel source) {
+                return null;
+            }
+
+            @Override
+            public ClassAdapterValues[] newArray(int size) {
+                return new ClassAdapterValues[size];
+            }
+        };
     }
 }

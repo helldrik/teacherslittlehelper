@@ -41,6 +41,9 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainFragment=new MainFragment();
+        if(savedInstanceState!=null)
+            mainFragment=(MainFragment)getSupportFragmentManager().getFragment(savedInstanceState,"mainFragment");
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.mainFragment, mainFragment)
@@ -104,13 +107,25 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
 
     @Override
-    public void onAddNewClass(String day,String msg) {
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Save the fragment's instance
+        getSupportFragmentManager().putFragment(outState,"mainFragment",mainFragment);
+    }
+
+    @Override
+    public void onAddNewClass(String day,String title, String time, int id) {
         //Toast.makeText(this,day+" "+msg,Toast.LENGTH_LONG).show();
-        mainFragment.addNewClassToAdapter(day,msg);
+        mainFragment.addNewClassToAdapter(day,title,time,id);
     }
 
     @Override
     public void onDelete(String day, int position) {
-        mainFragment.deleteClassfromAdapter(day,position);
+        try {
+            mainFragment.deleteClassfromAdapter(day, position);
+        }catch(Exception e){
+            Log.e("MainActivity","Something went wrong her: "+e);
+            Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();
+        }
     }
 }
