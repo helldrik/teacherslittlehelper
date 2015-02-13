@@ -114,9 +114,9 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
 
     @Override
-    public void onAddNewClass(String day,String title, String time, int id) {
+    public void onAddNewClass(ArrayList days,String title, String time, int id) {
         //Toast.makeText(this,day+" "+msg,Toast.LENGTH_LONG).show();
-        mainFragment.addNewClassToAdapter(day,title,time,id);
+        mainFragment.addNewClassToAdapter(days,title,time,id);
     }
 
     @Override

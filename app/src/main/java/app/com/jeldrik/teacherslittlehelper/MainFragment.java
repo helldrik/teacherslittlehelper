@@ -1,5 +1,8 @@
 package app.com.jeldrik.teacherslittlehelper;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,9 +16,16 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import app.com.jeldrik.teacherslittlehelper.data.ClassContentProvider;
+import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
 /**
  * Created by jeldrik on 03/02/15.
@@ -115,30 +125,46 @@ public class MainFragment extends Fragment {
 
     private void createAdapters(Bundle savedInstanceState){
         if(mAdapter==null) {
-            Log.v(TAG,"mAdapter  created");
+            ArrayList<MyAdapter.ClassAdapterValues> list = new ArrayList<MyAdapter.ClassAdapterValues>();
             mAdapter = new MyAdapter[7];
-            for (int i = 0; i < 7; i++) {
-                ArrayList<MyAdapter.ClassAdapterValues> list = null;
-                if (savedInstanceState != null) {
+            if (savedInstanceState != null) {
+                for (int i = 0; i < 7; i++) {
                     list = savedInstanceState.getParcelableArrayList("Day" + i);
-                    if (list == null) {
-                        String[] testData = {"Class 1", "Class 2", "Class 3", "Class 1", "Class 2", "Class 3"};
-                        list = new ArrayList<MyAdapter.ClassAdapterValues>();
-                        for (int u = 0; u < testData.length; ++u) {
-                            MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(testData[u],u+"30",-1);
-                            list.add(obj);
-                        }
-                    }
-                } else {
-                    String[] testData = {"Class 1", "Class 2", "Class 3", "Class 1", "Class 2", "Class 3"};
-                    list = new ArrayList<MyAdapter.ClassAdapterValues>();
-                    for (int u = 0; u < testData.length; ++u) {
-                        MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(testData[u],u+"30",-1);
-                        list.add(obj);
-                    }
+                    mAdapter[i] = new MyAdapter(getActivity(), list);
                 }
-                //ArrayAdapter adapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,list);
-                mAdapter[i] = new MyAdapter(getActivity(), list);
+            }else {
+                ContentResolver resolver = getActivity().getContentResolver();
+                Cursor cursor= resolver.query(DbContract.CLASS_DAY_TITLE_HOUR_ID, new String[]{DbContract.ClassEntry._ID, DbContract.ClassEntry.COLUMN_TITLE, DbContract.ClassEntry.COLUMN_TIME, DbContract.ClassEntry.COLUMN_DATE}, null, null, null);
+                cursor.moveToFirst();
+                //the arraylists of every day a saved in a list
+                ArrayList<List<MyAdapter.ClassAdapterValues>> listGroup= new ArrayList<List<MyAdapter.ClassAdapterValues>>(7);
+                for(int i=0;i<7;i++) {
+                    listGroup.add(new ArrayList<MyAdapter.ClassAdapterValues>());
+                }
+
+                while(!cursor.isAfterLast()){
+                    int id=cursor.getInt(0);
+                    String title=cursor.getString(1);
+                    String time=cursor.getString(2);
+                    try {
+                        JSONObject json = new JSONObject(cursor.getString(3));
+                        JSONArray jarr=json.optJSONArray("selectedDays");
+                        if (jarr != null) {
+                            for (int i=0;i<jarr.length();i++){
+                                MyAdapter.ClassAdapterValues obj = new MyAdapter.ClassAdapterValues(title,time,id);
+                                Log.v("MYCURSOR",id+" "+title+" "+time+" "+jarr.get(i));
+                                ArrayList<MyAdapter.ClassAdapterValues> tempList=(ArrayList)listGroup.get(jarr.getInt(i));
+                                tempList.add(obj);
+                                listGroup.set(jarr.getInt(i),tempList);
+                            }
+                        }
+                    }catch (JSONException e){Log.e("MainFragment","No valid JsonObject or wrong type in createAdapters() "+e);}
+
+                    cursor.moveToNext();
+                }
+                for (int i=0;i<7;i++) {
+                    mAdapter[i] = new MyAdapter(getActivity(), (ArrayList)listGroup.get(i));
+                }
             }
         }
         else{
@@ -201,40 +227,17 @@ public class MainFragment extends Fragment {
             });
         }
     }
-    public void addNewClassToAdapter(String day,String title,String time, int id){
-        //TODO: ckeck out why you can not call findByID to find views here
-        TwoWayView listView=null;
-        switch(day){
-            case "Monday":
-                listView = mListView[0];
-                break;
-            case "Tuesday":
-                listView = mListView[1];
-                break;
-            case "Wednesday":
-                listView = mListView[2];
-                break;
-            case "Thursday":
-                listView = mListView[3];
-                break;
-            case "Friday":
-                listView = mListView[4];
-                break;
-            case "Saturday":
-                listView = mListView[5];
-                break;
-            case "Sunday":
-                listView = mListView[6];
-                break;
-        }
-        try {
-            MyAdapter adapter = (MyAdapter)listView.getAdapter();
-            if (adapter != null) {
-                MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(title,time,id);
-                adapter.add(obj);
+    public void addNewClassToAdapter(ArrayList<Integer>days,String title,String time, int id){
+        for(int i=0;i<days.size();i++){
+            try {
+                MyAdapter adapter = (MyAdapter)mListView[days.get(i)].getAdapter();
+                if (adapter != null) {
+                    MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(title,time,id);
+                    adapter.add(obj);
+                }
+            }catch(NullPointerException e){
+                Log.e("MainFragment","ListView is null "+e);
             }
-        }catch(NullPointerException e){
-            Log.e("MainFragment","ListView is null "+e);
         }
 
     }

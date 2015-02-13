@@ -19,7 +19,7 @@ public class ClassContentProvider extends ContentProvider {
 
     private static final int CLASS=1;
     private static final int CLASS_ID=2;
-    private static final int CLASS_TITLE_HOUR_ID=101;
+    private static final int CLASS_DAY_TITLE_HOUR_ID=101;
     private static final int STUDENT=3;
     private static final int STUDENT_ID=4;
     private static final int CLASSCONTENT=5;
@@ -31,6 +31,8 @@ public class ClassContentProvider extends ContentProvider {
     static {
         mUriMatcher.addURI(AUTHORITY,PATH_CLASS,CLASS);
         mUriMatcher.addURI(AUTHORITY,PATH_CLASS+"/#",CLASS_ID);
+
+        mUriMatcher.addURI(AUTHORITY,"CLASS_DAY_TITLE_HOUR_ID",CLASS_DAY_TITLE_HOUR_ID);
 
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT,STUDENT);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT+"/#",STUDENT_ID);
@@ -54,7 +56,7 @@ public class ClassContentProvider extends ContentProvider {
 
 
                 break;
-            case CLASS_TITLE_HOUR_ID:
+            case CLASS_DAY_TITLE_HOUR_ID:
                 cursor = mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{ClassEntry._ID, DbContract.ClassEntry.COLUMN_TITLE, ClassEntry.COLUMN_TIME, ClassEntry.COLUMN_DATE}, null, null, null, null, null);
                 break;
             case STUDENT:

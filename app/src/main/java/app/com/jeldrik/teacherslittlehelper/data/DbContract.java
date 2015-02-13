@@ -16,6 +16,7 @@ public class DbContract {
     // Use AUTHORITY to create the base of all URI's which apps will use to contact
     // the content provider.
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    public static final Uri CLASS_DAY_TITLE_HOUR_ID= BASE_CONTENT_URI.buildUpon().appendPath("CLASS_DAY_TITLE_HOUR_ID").build();
 
     // Possible paths (appended to base content URI for possible URI's)
     // For instance, content://com.example.android.sunshine.app/weather/ is a valid path for

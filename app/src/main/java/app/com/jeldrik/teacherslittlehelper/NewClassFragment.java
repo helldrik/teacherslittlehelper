@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,7 +43,8 @@ public class NewClassFragment extends Fragment {
     public static final String TAG="NEWCLASSFRAGMENT";
     private String mDay;
     //saving the selected weekdays that get chosen in DialogFragment
-    private String selectedDays;
+    private String mSelectedDays;
+    private ArrayList<Integer> mSelectedDaysAsArray;
 
     private OnAddNewClassListener mListener;
     private Button mBtn;
@@ -54,7 +56,7 @@ public class NewClassFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      */
     public interface OnAddNewClassListener {
-        public void onAddNewClass(String day,String title,String time, int id);
+        public void onAddNewClass(ArrayList days,String title,String time, int id);
     }
 
     /**
@@ -114,14 +116,14 @@ public class NewClassFragment extends Fragment {
                 EditText location=(EditText)mRootView.findViewById(R.id.newClassLocation);
                 EditText info=(EditText)mRootView.findViewById(R.id.newClassInfo);
 
-                if(title.getText().toString().matches("")||selectedDays==null||time.getText().toString().matches("")||
+                if(title.getText().toString().matches("")||mSelectedDays==null||time.getText().toString().matches("")||
                         duration.getText().toString().matches("")||location.getText().toString().matches(""))
                     Toast.makeText(getActivity(),R.string.notAllFieldsFilledOutWarning,Toast.LENGTH_LONG).show();
                 else {
                     ContentValues vals = new ContentValues(7);
                     vals.put(DbContract.ClassEntry.COLUMN_TITLE, title.getText().toString());
                     vals.put(DbContract.ClassEntry.COLUMN_TIME, time.getText().toString());
-                    vals.put(DbContract.ClassEntry.COLUMN_DATE, selectedDays);
+                    vals.put(DbContract.ClassEntry.COLUMN_DATE, mSelectedDays);
                     vals.put(DbContract.ClassEntry.COLUMN_DURATION, Integer.parseInt(duration.getText().toString()));
                     vals.put(DbContract.ClassEntry.COLUMN_LOCATION, location.getText().toString());
                     vals.put(DbContract.ClassEntry.COLUMN_LEVEL, level.getText().toString());
@@ -137,7 +139,7 @@ public class NewClassFragment extends Fragment {
                     InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     mgr.hideSoftInputFromWindow(title.getWindowToken(), 0);
 
-                    mListener.onAddNewClass(mDay, title.getText().toString(),time.getText().toString(),id);
+                    mListener.onAddNewClass(mSelectedDaysAsArray, title.getText().toString(),time.getText().toString(),id);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();
                 }
@@ -148,7 +150,7 @@ public class NewClassFragment extends Fragment {
     }
     //---------------------------------------------------------------------------------------------
     //called from DialogFragment through MainActivity
-    public void setSelectedWeekdays(ArrayList<String>data){
+    public void setSelectedWeekdays(ArrayList<Integer>data){
         JSONObject jDays=new JSONObject();
         JSONArray jarr=new JSONArray(data);
         try {
@@ -156,8 +158,8 @@ public class NewClassFragment extends Fragment {
         }catch(JSONException e){
             Log.e(TAG, "Something went wrong with forming JsonObject "+e);
         }
-
-        String arrayList = jDays.toString();
+        mSelectedDaysAsArray=data;
+        mSelectedDays = jDays.toString();
 
         /*
         JSONObject json = new JSONObject(stringreadfromsqlite);
@@ -217,10 +219,10 @@ public class NewClassFragment extends Fragment {
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ArrayList<String> selectedDays= new ArrayList<String>();
+                            ArrayList<Integer> selectedDays= new ArrayList<Integer>();
                             for (int i = 0; i < mdays.length; i++) {
                                 if (mselections[i])
-                                    selectedDays.add(mdays[i]);
+                                    selectedDays.add(i);
                             }
                             ((MainActivity) getActivity()).forwardDataFromDialogFragmentToFragment(NewClassFragment.TAG, selectedDays);
                         }
