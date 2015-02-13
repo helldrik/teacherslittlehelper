@@ -35,4 +35,9 @@
         <item name="android:layout_alignParentRight">true</item>
     </style>
 
+    <style name="AddClass">
+
+
+    </style>
+
 </resources>

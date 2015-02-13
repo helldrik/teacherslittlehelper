@@ -4,16 +4,15 @@
     tools:context="app.com.jeldrik.teacherslittlehelper.NewClassFragment">
 
 
-    <LinearLayout
+    <TableLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center_horizontal|top"
         android:padding="20dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
+
+        <TableRow
+            android:layout_height="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -23,15 +22,12 @@
                 />
 
             <EditText
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/newClassTitle"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+            android:layout_height="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,16 +36,14 @@
                 android:text="@string/newClassDays"
             />
 
-            <EditText
-                android:layout_width="match_parent"
+            <Button
                 android:layout_height="wrap_content"
                 android:id="@+id/newClassDays"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
+                android:text="Choose Days"
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+            android:layout_height="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -59,15 +53,12 @@
                 />
 
             <EditText
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/newClassStartTime"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+            android:layout_height="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -77,16 +68,13 @@
                 />
 
             <EditText
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/newClassDuration"
                 android:inputType="numberDecimal"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+            android:layout_height="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -96,15 +84,12 @@
                 />
 
             <EditText
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/newClassLocation"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:orientation="horizontal">
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+            android:layout_height="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -114,15 +99,12 @@
                 />
 
             <EditText
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/newClassLevel"
-                android:layout_gravity="center_horizontal" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+            android:layout_height="40dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -132,7 +114,6 @@
                 />
 
             <EditText
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:ems="10"
@@ -141,15 +122,17 @@
                 android:layout_weight="1" />
 
 
-        </LinearLayout>
-        <Button
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:id="@+id/createClassBtn"
-            android:layout_margin="20dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/sphere50px"
-            android:text="@string/newClassBtn"/>
-    </LinearLayout>
+        </TableRow>
+        <TableRow android:gravity="center_horizontal" android:layout_marginTop="20dp">
+            <Button
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/createClassBtn"
+                android:textColor="@color/White"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/sphere50px"
+                android:text="@string/newClassBtn"/>
+        </TableRow>
+    </TableLayout>
 
 </FrameLayout>

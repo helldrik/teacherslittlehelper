@@ -19,6 +19,7 @@ public class ClassContentProvider extends ContentProvider {
 
     private static final int CLASS=1;
     private static final int CLASS_ID=2;
+    private static final int CLASS_TITLE_HOUR_ID=101;
     private static final int STUDENT=3;
     private static final int STUDENT_ID=4;
     private static final int CLASSCONTENT=5;
@@ -46,7 +47,27 @@ public class ClassContentProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        mdataBase=new DbHelper(getContext()).getReadableDatabase();
+        Cursor cursor=null;
+        switch(mUriMatcher.match(uri)) {
+            case CLASS:
+
+
+                break;
+            case CLASS_TITLE_HOUR_ID:
+                cursor = mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{ClassEntry._ID, DbContract.ClassEntry.COLUMN_TITLE, ClassEntry.COLUMN_TIME, ClassEntry.COLUMN_DATE}, null, null, null, null, null);
+                break;
+            case STUDENT:
+
+                break;
+            case CLASSCONTENT:
+
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown URI " + uri);
+        }
+
+        return cursor;
     }
 
     @Override

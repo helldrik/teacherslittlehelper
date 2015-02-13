@@ -128,4 +128,14 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();
         }
     }
+    public void forwardDataFromDialogFragmentToFragment(String TAG, ArrayList data){
+        switch (TAG){
+            case NewClassFragment.TAG:
+                NewClassFragment frag=(NewClassFragment)getSupportFragmentManager().findFragmentByTag(TAG);
+                frag.setSelectedWeekdays(data);
+                break;
+            default:
+                Log.e("MainActivity","could not find Fragment "+TAG);
+        }
+    }
 }

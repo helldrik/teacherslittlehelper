@@ -169,7 +169,7 @@ public class MainFragment extends Fragment {
 
                      Fragment newClassFragment=NewClassFragment.newInstance(day);
                      FragmentTransaction transaction=getFragmentManager().beginTransaction();
-                     transaction.replace(R.id.mainFragment,newClassFragment);
+                     transaction.replace(R.id.mainFragment,newClassFragment,NewClassFragment.TAG);
                      transaction.addToBackStack(null);
                      transaction.commit();
                         //Log.v("MainActivity", "Count: " + Integer.toString(adapter.getCount()));
