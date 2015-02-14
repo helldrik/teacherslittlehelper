@@ -53,8 +53,16 @@ public class ClassContentProvider extends ContentProvider {
         Cursor cursor=null;
         switch(mUriMatcher.match(uri)) {
             case CLASS:
-
-
+                break;
+            case CLASS_ID:
+                String id=uri.getLastPathSegment();
+                cursor=mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{DbContract.ClassEntry.COLUMN_DATE,
+                        DbContract.ClassEntry.COLUMN_DURATION,
+                        DbContract.ClassEntry.COLUMN_EXTRA_INFO,
+                        DbContract.ClassEntry.COLUMN_LEVEL,
+                        DbContract.ClassEntry.COLUMN_LOCATION,
+                        DbContract.ClassEntry.COLUMN_TIME,
+                        DbContract.ClassEntry.COLUMN_TITLE},ClassEntry._ID+" =?", new String[]{id}, null, null, null);
                 break;
             case CLASS_DAY_TITLE_HOUR_ID:
                 cursor = mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{ClassEntry._ID, DbContract.ClassEntry.COLUMN_TITLE, ClassEntry.COLUMN_TIME, ClassEntry.COLUMN_DATE}, null, null, null, null, null);
@@ -138,8 +146,12 @@ public class ClassContentProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
+        int affectedRows=0;
         switch(mUriMatcher.match(uri)) {
-            case CLASS:
+            case CLASS_ID:
+                String id=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.delete(ClassEntry.TABLE_NAME,ClassEntry._ID+"=?",new String[]{id});
                 break;
             case STUDENT:
                 break;
@@ -148,7 +160,7 @@ public class ClassContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
-        return 0;
+        return affectedRows;
     }
 
     @Override

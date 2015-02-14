@@ -3,17 +3,183 @@
     android:layout_height="match_parent"
     tools:context="app.com.jeldrik.teacherslittlehelper.ClassFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/classFragmentTitle"
-        android:text="@string/hello_blank_fragment" />
+   <LinearLayout
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:orientation="horizontal"
+       >
 
-    <Button
-        android:layout_width="wrap_content"
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/classfragment_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_margin="5dp"
+            android:paddingTop="10dp"
+            android:text="@string/hello_blank_fragment"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete_Class"
+            android:id="@+id/deleteClassButton"
+            android:layout_gravity="right|top"
+            android:layout_weight="1"/>
+
+   </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/delete_Class"
-        android:id="@+id/deleteClassButton"
-        android:layout_gravity="right|top" />
+        android:layout_marginTop="50dp">
+
+        <TableLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|top"
+            android:padding="20dp">
+
+            <TableRow
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:background="@color/LightGrey">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassDays"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassDays"
+                    android:id="@+id/classFragment_days"
+                    android:layout_weight="1"
+                    />
+
+            </TableRow>
+            <TableRow
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:background="@color/LightGrey"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassHour"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassHour"
+                    android:id="@+id/classFragment_hour"
+                    android:layout_weight="1"
+                    />
+            </TableRow>
+            <TableRow
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:background="@color/LightGrey">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassDuration"
+
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassDuration"
+                    android:id="@+id/classFragment_duration"
+                    android:layout_weight="1"
+                    />
+            </TableRow>
+            <TableRow
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:background="@color/LightGrey">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassLocation"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassLocation"
+                    android:id="@+id/classFragment_location"
+                    android:layout_weight="1"
+                    />
+            </TableRow>
+            <TableRow
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:background="@color/LightGrey">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassLevel"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassLevel"
+                    android:id="@+id/classFragment_level"
+                    android:layout_weight="1"
+                    />
+            </TableRow>
+            <TableRow
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:background="@color/LightGrey">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassInfo"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassInfo"
+                    android:id="@+id/classFragment_info"
+                    android:layout_weight="1"
+                    />
+
+
+            </TableRow>
+
+        </TableLayout>
+
+
+        </ScrollView>
 
 </FrameLayout>

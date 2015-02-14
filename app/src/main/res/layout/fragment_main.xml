@@ -22,13 +22,7 @@
                     android:orientation="horizontal">
 
                     <TextView android:text="@string/monday" style="@style/Header" android:layout_margin="10dp" />
-                    <Button
-                        style="@style/AddClassBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_class"
-                        android:id="@+id/addMondayClass"
-                     />
+
                 </RelativeLayout>
 
                 <org.lucasr.twowayview.TwoWayView
@@ -54,13 +48,7 @@
                     android:orientation="horizontal">
 
                     <TextView android:text="@string/tuesday" style="@style/Header" android:layout_margin="10dp" />
-                    <Button
-                        style="@style/AddClassBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_class"
-                        android:id="@+id/addTuesdayClass"
-                        />
+
                 </RelativeLayout>
 
                 <org.lucasr.twowayview.TwoWayView
@@ -85,13 +73,7 @@
                     android:orientation="horizontal">
 
                     <TextView android:text="@string/wednesday" style="@style/Header" android:layout_margin="10dp" />
-                    <Button
-                        style="@style/AddClassBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_class"
-                        android:id="@+id/addWednesdayClass"
-                        />
+
                 </RelativeLayout>
 
                 <org.lucasr.twowayview.TwoWayView
@@ -116,13 +98,7 @@
                     android:orientation="horizontal">
 
                     <TextView android:text="@string/thursday" style="@style/Header" android:layout_margin="10dp" />
-                    <Button
-                        style="@style/AddClassBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_class"
-                        android:id="@+id/addThursdayClass"
-                        />
+
                 </RelativeLayout>
 
                 <org.lucasr.twowayview.TwoWayView
@@ -147,13 +123,7 @@
                     android:orientation="horizontal">
 
                     <TextView android:text="@string/friday" style="@style/Header" android:layout_margin="10dp" />
-                    <Button
-                        style="@style/AddClassBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_class"
-                        android:id="@+id/addFridayClass"
-                        />
+
                 </RelativeLayout>
 
                 <org.lucasr.twowayview.TwoWayView
@@ -178,13 +148,7 @@
                     android:orientation="horizontal">
 
                     <TextView android:text="@string/saturday" style="@style/Header" android:layout_margin="10dp" />
-                    <Button
-                        style="@style/AddClassBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_class"
-                        android:id="@+id/addSaturdayClass"
-                        />
+
                 </RelativeLayout>
 
                 <org.lucasr.twowayview.TwoWayView
@@ -209,13 +173,7 @@
                     android:orientation="horizontal">
 
                     <TextView android:text="@string/sunday" style="@style/Header" android:layout_margin="10dp" />
-                    <Button
-                        style="@style/AddClassBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_class"
-                        android:id="@+id/addSundayClass"
-                        />
+
                 </RelativeLayout>
 
                 <org.lucasr.twowayview.TwoWayView

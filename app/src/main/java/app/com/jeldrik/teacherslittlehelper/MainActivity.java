@@ -98,8 +98,13 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if(id==R.id.addClass_setting){
+            Fragment newClassFragment=NewClassFragment.newInstance("day");
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,newClassFragment,NewClassFragment.TAG)
+            .addToBackStack(null).commit();
+        }
+
+        else if (id == R.id.action_settings) {
             return true;
         }
 
@@ -120,9 +125,9 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
 
     @Override
-    public void onDelete(String day, int position) {
+    public void onDelete(int id) {
         try {
-            mainFragment.deleteClassfromAdapter(day, position);
+            mainFragment.deleteClassfromAdapter(id);
         }catch(Exception e){
             Log.e("MainActivity","Something went wrong her: "+e);
             Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();

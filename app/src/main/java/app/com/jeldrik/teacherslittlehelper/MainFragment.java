@@ -37,7 +37,6 @@ public class MainFragment extends Fragment {
     MyAdapter[] mAdapter;
     LinearLayout[] mWeekdays;
     TwoWayView[] mListView;
-    Button[] mAddClassBtn;
 
 
     public MainFragment() {
@@ -50,7 +49,7 @@ public class MainFragment extends Fragment {
         this.createAdapters(savedInstanceState);
         mWeekdays=new LinearLayout[7];
         mListView=new TwoWayView[7];
-        mAddClassBtn=new Button[7];
+
     }
 
     @Override
@@ -64,31 +63,24 @@ public class MainFragment extends Fragment {
             if (i == 0) {
                 mWeekdays[i] = (LinearLayout) mRootView.findViewById(R.id.monday);
                 mListView[i] = (TwoWayView) mRootView.findViewById(R.id.mondayListView);
-                mAddClassBtn[i] = (Button) mRootView.findViewById(R.id.addMondayClass);
             } else if (i == 1) {
                 mWeekdays[i] = (LinearLayout) mRootView.findViewById(R.id.tuesday);
                 mListView[i] = (TwoWayView) mRootView.findViewById(R.id.tuesdayListView);
-                mAddClassBtn[i] = (Button) mRootView.findViewById(R.id.addTuesdayClass);
             } else if (i == 2) {
                 mWeekdays[i] = (LinearLayout) mRootView.findViewById(R.id.wednesday);
                 mListView[i] = (TwoWayView) mRootView.findViewById(R.id.wednesdayListView);
-                mAddClassBtn[i] = (Button) mRootView.findViewById(R.id.addWednesdayClass);
             } else if (i == 3) {
                 mWeekdays[i] = (LinearLayout) mRootView.findViewById(R.id.thursday);
                 mListView[i] = (TwoWayView) mRootView.findViewById(R.id.thursdayListView);
-                mAddClassBtn[i] = (Button) mRootView.findViewById(R.id.addThursdayClass);
             } else if (i == 4) {
                 mWeekdays[i] = (LinearLayout) mRootView.findViewById(R.id.friday);
                 mListView[i] = (TwoWayView) mRootView.findViewById(R.id.fridayListView);
-                mAddClassBtn[i] = (Button) mRootView.findViewById(R.id.addFridayClass);
             } else if (i == 5) {
                 mWeekdays[i] = (LinearLayout) mRootView.findViewById(R.id.saturday);
                 mListView[i] = (TwoWayView) mRootView.findViewById(R.id.saturdayListView);
-                mAddClassBtn[i] = (Button) mRootView.findViewById(R.id.addSaturdayClass);
             } else if (i == 6) {
                 mWeekdays[i] = (LinearLayout) mRootView.findViewById(R.id.sunday);
                 mListView[i] = (TwoWayView) mRootView.findViewById(R.id.sundayListView);
-                mAddClassBtn[i] = (Button) mRootView.findViewById(R.id.addSundayClass);
             }
            
         }
@@ -107,15 +99,6 @@ public class MainFragment extends Fragment {
                 values.add((MyAdapter.ClassAdapterValues) adapter.getItem(u));
             savedState.putParcelableArrayList("Day"+i,values);
         }
-       /*
-        for (int i = 0; i < 7; i++) {
-            MyAdapter adapter=(MyAdapter)mListView[i].getAdapter();
-            ArrayList<String> values=new ArrayList<String>();
-            for (int u = 0; u < adapter.getCount(); u++)
-                values.add((String) adapter.getItem(u));
-            savedState.putStringArrayList("Day"+i,values);
-        }
-        */
     }
     @Override
     public void onPause()
@@ -186,35 +169,19 @@ public class MainFragment extends Fragment {
 
             mListView[i].setAdapter(mAdapter[i]);
 
-
-            mAddClassBtn[i].setOnClickListener(new Button.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
-                    String day=getDay(v.getResources().getResourceName(v.getId()));
-
-                     Fragment newClassFragment=NewClassFragment.newInstance(day);
-                     FragmentTransaction transaction=getFragmentManager().beginTransaction();
-                     transaction.replace(R.id.mainFragment,newClassFragment,NewClassFragment.TAG);
-                     transaction.addToBackStack(null);
-                     transaction.commit();
-                        //Log.v("MainActivity", "Count: " + Integer.toString(adapter.getCount()));
-                }
-            });
-
             //clicking on a particular class
             mListView[i].setOnItemClickListener(new TwoWayView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     //TODO: implementing classFragment
-                    //Toast.makeText(getActivity(), Integer.toString(position) + " " + parent.getResources().getResourceName(parent.getId()), Toast.LENGTH_LONG).show();
+                    MyAdapter.ClassAdapterValues vals=(MyAdapter.ClassAdapterValues)parent.getAdapter().getItem(position);
+
                     String day=getDay(parent.getResources().getResourceName(parent.getId()));
-                    Fragment classFragment=ClassFragment.newInstance(day,position);
+                    Fragment classFragment=ClassFragment.newInstance(day,position,vals._id);
                     FragmentTransaction transaction=getFragmentManager().beginTransaction();
                     transaction.replace(R.id.mainFragment,classFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
-
                 }
             });
 
@@ -241,38 +208,20 @@ public class MainFragment extends Fragment {
         }
 
     }
-    public void deleteClassfromAdapter(String day,int position){
-        TwoWayView listView=null;
-        switch(day){
-            case "Monday":
-                listView = mListView[0];
-                break;
-            case "Tuesday":
-                listView = mListView[1];
-                break;
-            case "Wednesday":
-                listView = mListView[2];
-                break;
-            case "Thursday":
-                listView = mListView[3];
-                break;
-            case "Friday":
-                listView = mListView[4];
-                break;
-            case "Saturday":
-                listView = mListView[5];
-                break;
-            case "Sunday":
-                listView = mListView[6];
-                break;
-        }
-        try {
-            MyAdapter adapter = (MyAdapter)listView.getAdapter();
-            if (adapter != null) {
-                adapter.remove(position);
+    public void deleteClassfromAdapter(int id){
+        //Deleting from database
+        ContentResolver resolver=getActivity().getContentResolver();
+        Uri uri=DbContract.ClassEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(id)).build();
+        resolver.delete(uri,null,null);
+        //deleting from listview
+        for (int i=0;i<7;i++) {
+            MyAdapter adapter = (MyAdapter) mListView[i].getAdapter();
+            for(int u=0;u<adapter.getCount();u++){
+                MyAdapter.ClassAdapterValues val = (MyAdapter.ClassAdapterValues) adapter.getItem(u);
+                if (val._id == id) {
+                    adapter.remove(u);
+                }
             }
-        }catch(NullPointerException e){
-            Log.e("MainFragment","ListView is null "+e);
         }
 
     }
