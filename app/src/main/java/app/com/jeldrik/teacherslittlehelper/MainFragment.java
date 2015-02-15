@@ -6,9 +6,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.VelocityTrackerCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -37,6 +39,8 @@ public class MainFragment extends Fragment {
     MyAdapter[] mAdapter;
     LinearLayout[] mWeekdays;
     TwoWayView[] mListView;
+
+    private VelocityTracker mVelocityTracker = null;
 
 
     public MainFragment() {
@@ -156,16 +160,6 @@ public class MainFragment extends Fragment {
     }
     private void setListeners(){
         for (int i = 0; i < 7; i++) {
-
-            mListView[i].setOnTouchListener(new View.OnTouchListener() {
-                // Setting on Touch Listener for handling the touch inside ScrollView
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    // Disallow the touch request for parent scroll on touch of child view
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-            });
 
             mListView[i].setAdapter(mAdapter[i]);
 

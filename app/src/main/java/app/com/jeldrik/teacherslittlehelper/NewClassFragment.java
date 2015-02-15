@@ -103,6 +103,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mDay = getArguments().getString(ARG_PARAM1);
+            mTime="00:00";
         }
     }
     //---------------------------------------------------------------------------------------------
@@ -158,7 +159,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
                     ContentResolver resolver = getActivity().getContentResolver();
                     Uri returnUri = resolver.insert(DbContract.ClassEntry.CONTENT_URI, vals);
                     int id=Integer.parseInt(returnUri.getLastPathSegment());
-                    Log.v("MainActivity", "The ID: "+returnUri.getLastPathSegment());
+                    //Log.v("MainActivity", "The ID: "+returnUri.getLastPathSegment());
 
 
                     //Hiding the keyboard
