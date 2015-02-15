@@ -51,11 +51,13 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/newClassHour"
                 />
-
-            <EditText
+            <Button
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="00:00"
                 android:id="@+id/newClassStartTime"
                 android:layout_weight="1"/>
+
         </TableRow>
         <TableRow
             android:layout_height="40dp">
