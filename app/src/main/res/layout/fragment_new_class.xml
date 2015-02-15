@@ -97,10 +97,10 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/newClassLevel"
                 />
-
-            <EditText
+            <Spinner
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/newClassLevel"
+                android:id="@+id/newClassLevels"
                 android:layout_weight="1"/>
         </TableRow>
         <TableRow

@@ -19,9 +19,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 
@@ -36,7 +39,7 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
 
 //---------------------------------------------------------------------------------------------
-public class NewClassFragment extends Fragment {
+public class NewClassFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Edit the layout to adjust hours picking (spinner?) and day selection (checkboxes?)
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,10 +48,22 @@ public class NewClassFragment extends Fragment {
     //saving the selected weekdays that get chosen in DialogFragment
     private String mSelectedDays;
     private ArrayList<Integer> mSelectedDaysAsArray;
+    private String mLevel;
 
     private OnAddNewClassListener mListener;
     private Button mBtn;
     View mRootView;
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mLevel=(String)parent.getItemAtPosition(position);
+        //Toast.makeText(getActivity(),mLevel,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        mLevel="-";
+    }
 
     //---------------------------------------------------------------------------------------------
     /**
@@ -93,6 +108,7 @@ public class NewClassFragment extends Fragment {
         // Inflate the layout for this fragment
         mRootView =inflater.inflate(R.layout.fragment_new_class, container, false);
 
+        setSpinners();
         Button daysBtn=(Button)mRootView.findViewById(R.id.newClassDays);
         daysBtn.setOnClickListener(new Button.OnClickListener(){
 
@@ -112,7 +128,7 @@ public class NewClassFragment extends Fragment {
 
                 EditText time=(EditText)mRootView.findViewById(R.id.newClassStartTime);
                 EditText duration=(EditText)mRootView.findViewById(R.id.newClassDuration);
-                EditText level=(EditText)mRootView.findViewById(R.id.newClassLevel);
+
                 EditText location=(EditText)mRootView.findViewById(R.id.newClassLocation);
                 EditText info=(EditText)mRootView.findViewById(R.id.newClassInfo);
 
@@ -126,7 +142,7 @@ public class NewClassFragment extends Fragment {
                     vals.put(DbContract.ClassEntry.COLUMN_DATE, mSelectedDays);
                     vals.put(DbContract.ClassEntry.COLUMN_DURATION, Integer.parseInt(duration.getText().toString()));
                     vals.put(DbContract.ClassEntry.COLUMN_LOCATION, location.getText().toString());
-                    vals.put(DbContract.ClassEntry.COLUMN_LEVEL, level.getText().toString());
+                    vals.put(DbContract.ClassEntry.COLUMN_LEVEL, mLevel);
                     vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO, info.getText().toString());
 
                     ContentResolver resolver = getActivity().getContentResolver();
@@ -188,6 +204,15 @@ public class NewClassFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+    //---------------------------------------------------------------------------------------------
+    public void setSpinners(){
+        Spinner lvlSpinner=(Spinner)mRootView.findViewById(R.id.newClassLevels);
+        ArrayAdapter<CharSequence>lvlAdapter= ArrayAdapter.createFromResource(getActivity(),R.array.levels,android.R.layout.simple_spinner_item);
+        lvlAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        lvlSpinner.setAdapter(lvlAdapter);
+        lvlSpinner.setOnItemSelectedListener(this);
+
     }
     //---------------------------------------------------------------------------------------------
     //DialogFragment for selecting days
