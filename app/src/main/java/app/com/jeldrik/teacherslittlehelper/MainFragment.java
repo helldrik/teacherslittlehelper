@@ -170,8 +170,7 @@ public class MainFragment extends Fragment {
                     //TODO: implementing classFragment
                     MyAdapter.ClassAdapterValues vals=(MyAdapter.ClassAdapterValues)parent.getAdapter().getItem(position);
 
-                    String day=getDay(parent.getResources().getResourceName(parent.getId()));
-                    Fragment classFragment=ClassFragment.newInstance(day,position,vals._id);
+                    Fragment classFragment=ClassFragment.newInstance(position,vals._id);
                     FragmentTransaction transaction=getFragmentManager().beginTransaction();
                     transaction.replace(R.id.mainFragment,classFragment);
                     transaction.addToBackStack(null);
@@ -218,31 +217,6 @@ public class MainFragment extends Fragment {
             }
         }
 
-    }
-    private String getDay(String viewName){
-        String day="";
-        if(viewName.toLowerCase().contains("monday")){
-            day="Monday";
-        }
-        else if(viewName.toLowerCase().contains("tuesday")){
-            day="Tuesday";
-        }
-        else if(viewName.toLowerCase().contains("wednesday")){
-            day="Wednesday";
-        }
-        else if(viewName.toLowerCase().contains("thursday")){
-            day="Thursday";
-        }
-        else if(viewName.toLowerCase().contains("friday")){
-            day="Friday";
-        }
-        else if(viewName.toLowerCase().contains("saturday")){
-            day="Saturday";
-        }
-        else if(viewName.toLowerCase().contains("sunday")){
-            day="Sunday";
-        }
-        return day;
     }
 }
 

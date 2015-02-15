@@ -18,8 +18,8 @@
     <string name="newClassTitle">Title</string>
     <string name="newClassLevel">Level</string>
     <string name="newClassDays">Days</string>
-    <string name="newClassHour">Hour</string>
-    <string name="newClassDuration">Duration</string>
+    <string name="newClassHour">Start Time</string>
+    <string name="newClassDuration">End Time</string>
     <string name="newClassInfo">Info</string>
     <string name="newClassLocation">Location</string>
     <string name="newClassBtn">Create</string>

@@ -150,8 +150,12 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     public void forwardTimeFromDialogFragmentToFragment(String TAG, String time){
         switch (TAG){
             case NewClassFragment.TAG:
-                NewClassFragment frag=(NewClassFragment)getSupportFragmentManager().findFragmentByTag(TAG);
-                frag.setSelectedTime(time);
+                NewClassFragment frag=(NewClassFragment)getSupportFragmentManager().findFragmentByTag(NewClassFragment.TAG);
+                frag.setSelectedTime(TAG,time);
+                break;
+            case NewClassFragment.TAG+"END":
+                NewClassFragment endFrag=(NewClassFragment)getSupportFragmentManager().findFragmentByTag(NewClassFragment.TAG);
+                endFrag.setSelectedTime(TAG,time);
                 break;
             default:
                 Log.e("MainActivity","could not find Fragment "+TAG);

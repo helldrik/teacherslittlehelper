@@ -26,12 +26,12 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 public class ClassFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
+    
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 ="id";
 
     // TODO: Rename and change types of parameters
-    private String day;
+    
     private int position;
     private int mID;
 
@@ -39,7 +39,7 @@ public class ClassFragment extends Fragment {
     private String mDays;
     private String mLocation;
     private String mHour;
-    private String mDuration;
+    private String mEndTime;
     private String mLevel;
     private String mInfo;
 
@@ -49,15 +49,14 @@ public class ClassFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment ClassFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ClassFragment newInstance(String param1, int param2, int param3) {
+    public static ClassFragment newInstance(int param2, int param3) {
         ClassFragment fragment = new ClassFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        
         args.putInt(ARG_PARAM2, param2);
         args.putInt(ARG_PARAM3,param3);
         fragment.setArguments(args);
@@ -72,7 +71,7 @@ public class ClassFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            day = getArguments().getString(ARG_PARAM1);
+            
             position = getArguments().getInt(ARG_PARAM2);
             mID=getArguments().getInt(ARG_PARAM3);
         }
@@ -88,8 +87,8 @@ public class ClassFragment extends Fragment {
         title.setText(mTitle);
         TextView days=(TextView)rootView.findViewById(R.id.classFragment_days);
         days.setText(mDays);
-        TextView duration=(TextView)rootView.findViewById(R.id.classFragment_duration);
-        duration.setText(mDuration);
+        TextView endTime=(TextView)rootView.findViewById(R.id.classFragment_duration);
+        endTime.setText(mEndTime);
         TextView info=(TextView)rootView.findViewById(R.id.classFragment_info);
         info.setText(mInfo);
         TextView level=(TextView)rootView.findViewById(R.id.classFragment_level);
@@ -161,7 +160,7 @@ public class ClassFragment extends Fragment {
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
             mDays=toDays(cursor.getString(0));
-            mDuration=cursor.getString(1);
+            mEndTime=cursor.getString(1);
             mInfo=cursor.getString(2);
             mLevel=cursor.getString(3);
             mLocation=cursor.getString(4);

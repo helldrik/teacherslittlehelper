@@ -68,11 +68,11 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/newClassDuration"
                 />
-
-            <EditText
+            <Button
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/newClassDuration"
-                android:inputType="numberDecimal"
+                android:text="00:00"
+                android:id="@+id/newClassEndTime"
                 android:layout_weight="1"/>
         </TableRow>
         <TableRow

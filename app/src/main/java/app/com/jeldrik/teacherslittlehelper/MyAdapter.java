@@ -30,9 +30,11 @@ public class MyAdapter extends ArrayAdapter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View rowView = inflater.inflate(R.layout.class_item, parent, false);
-        TextView textView = (TextView) rowView.findViewById(R.id.classTitle);
+        TextView title = (TextView) rowView.findViewById(R.id.classTitle);
+        title.setText(values.get(position).title);
 
-        textView.setText(values.get(position).title+" "+values.get(position)._id);
+        TextView startTime = (TextView) rowView.findViewById(R.id.classTime);
+        startTime.setText(values.get(position).time);
 
         return rowView;
     }

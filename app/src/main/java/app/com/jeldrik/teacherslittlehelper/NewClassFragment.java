@@ -52,10 +52,10 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
     private String mSelectedDays;
     private ArrayList<Integer> mSelectedDaysAsArray;
     private String mLevel;
-    private String mTime;
+    private String mTime, mEndTime;
 
     private OnAddNewClassListener mListener;
-    private Button mBtn, mTimeBtn;
+    private Button mBtn, mTimeBtn,mEndTimeBtn;
     View mRootView;
 
     @Override
@@ -103,7 +103,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mDay = getArguments().getString(ARG_PARAM1);
-            mTime="00:00";
+            mTime=mEndTime="00:00";
         }
     }
     //---------------------------------------------------------------------------------------------
@@ -131,6 +131,14 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
                 newFragment.show(getActivity().getFragmentManager(),"Time");
             }
         });
+        mEndTimeBtn= (Button)mRootView.findViewById(R.id.newClassEndTime);
+        mEndTimeBtn.setOnClickListener(new Button.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = new EndTimeDialogFragment();
+                newFragment.show(getActivity().getFragmentManager(),"EndTime");
+            }
+        });
 
         mBtn=(Button)mRootView.findViewById(R.id.createClassBtn);
         mBtn.setOnClickListener(new Button.OnClickListener(){
@@ -139,19 +147,17 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
             public void onClick(View v) {
 
                 EditText title=(EditText)mRootView.findViewById(R.id.newClassTitle);
-                EditText duration=(EditText)mRootView.findViewById(R.id.newClassDuration);
                 EditText location=(EditText)mRootView.findViewById(R.id.newClassLocation);
                 EditText info=(EditText)mRootView.findViewById(R.id.newClassInfo);
 
-                if(title.getText().toString().matches("")||mSelectedDays==null||
-                        duration.getText().toString().matches("")||location.getText().toString().matches(""))
+                if(title.getText().toString().matches("")||mSelectedDays==null||location.getText().toString().matches(""))
                     Toast.makeText(getActivity(),R.string.notAllFieldsFilledOutWarning,Toast.LENGTH_LONG).show();
                 else {
                     ContentValues vals = new ContentValues(7);
                     vals.put(DbContract.ClassEntry.COLUMN_TITLE, title.getText().toString());
                     vals.put(DbContract.ClassEntry.COLUMN_TIME, mTime);
                     vals.put(DbContract.ClassEntry.COLUMN_DATE, mSelectedDays);
-                    vals.put(DbContract.ClassEntry.COLUMN_DURATION, Integer.parseInt(duration.getText().toString()));
+                    vals.put(DbContract.ClassEntry.COLUMN_DURATION, mEndTime);
                     vals.put(DbContract.ClassEntry.COLUMN_LOCATION, location.getText().toString());
                     vals.put(DbContract.ClassEntry.COLUMN_LEVEL, mLevel);
                     vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO, info.getText().toString());
@@ -177,9 +183,15 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
     }
     //---------------------------------------------------------------------------------------------
     //called from TimeDialogFragment through MainActivity
-    public void setSelectedTime(String time){
-        mTimeBtn.setText(time);
-        mTime=time;
+    public void setSelectedTime(String TAG,String time){
+        if(TAG.equals(this.TAG)) {
+            mTimeBtn.setText(time);
+            mTime = time;
+        }
+        else if(TAG.equals(this.TAG+"END")){
+            mEndTimeBtn.setText(time);
+            mEndTime=time;
+        }
     }
     //---------------------------------------------------------------------------------------------
     //called from DialogFragment through MainActivity
@@ -273,7 +285,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
     //---------------------------------------------------------------------------------------------
-    //DialogFragment for selecting time
+    //DialogFragment for selecting startTtime
     //---------------------------------------------------------------------------------------------
     public static class TimeDialogFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
         @Override
@@ -289,6 +301,25 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             String time=Integer.toString(hourOfDay)+":"+Integer.toString(minute);
             ((MainActivity)getActivity()).forwardTimeFromDialogFragmentToFragment(TAG,time);
+        }
+    }
+    //---------------------------------------------------------------------------------------------
+    //DialogFragment for selecting startTtime
+    //---------------------------------------------------------------------------------------------
+    public static class EndTimeDialogFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            return new TimePickerDialog(getActivity(),this,hour,minute,true);
+        }
+
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            String time=Integer.toString(hourOfDay)+":"+Integer.toString(minute);
+            ((MainActivity)getActivity()).forwardTimeFromDialogFragmentToFragment(TAG+"END",time);
         }
     }
 
