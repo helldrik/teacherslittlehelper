@@ -176,7 +176,17 @@
 
 
             </TableRow>
+            <TableRow
+                android:layout_marginBottom="10dp"
+                android:padding="5dp">
 
+                <Button
+                    android:id="@+id/classFragment_students"
+                    android:text="@string/classFragment_studentsBtn">
+
+                </Button>
+
+            </TableRow>
         </TableLayout>
 
 

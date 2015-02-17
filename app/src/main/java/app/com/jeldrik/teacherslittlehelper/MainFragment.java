@@ -167,12 +167,12 @@ public class MainFragment extends Fragment {
             mListView[i].setOnItemClickListener(new TwoWayView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //TODO: implementing classFragment
+
                     MyAdapter.ClassAdapterValues vals=(MyAdapter.ClassAdapterValues)parent.getAdapter().getItem(position);
 
                     Fragment classFragment=ClassFragment.newInstance(position,vals._id);
                     FragmentTransaction transaction=getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.mainFragment,classFragment);
+                    transaction.replace(R.id.FragmentContainer,classFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,6 +98,19 @@ public class ClassFragment extends Fragment {
         location.setText(mLocation);
         TextView hour=(TextView)rootView.findViewById(R.id.classFragment_hour);
         hour.setText(mHour);
+
+        Button studentBtn=(Button)rootView.findViewById(R.id.classFragment_students);
+
+        studentBtn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment studentFragment=StudentFragment.newInstance();
+                FragmentTransaction transaction=getFragmentManager().beginTransaction();
+                transaction.replace(R.id.FragmentContainer,studentFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         Button deleteBtn=(Button)rootView.findViewById(R.id.deleteClassButton);
         deleteBtn.setOnClickListener(new Button.OnClickListener(){

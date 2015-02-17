@@ -46,7 +46,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mainFragment, mainFragment)
+                    .add(R.id.FragmentContainer, mainFragment)
                     .commit();
         }
      /*    SQLiteDatabase myDataBase=new DbHelper(this).getReadableDatabase();
@@ -100,7 +100,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
 
         if(id==R.id.addClass_setting){
             Fragment newClassFragment=NewClassFragment.newInstance("day");
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,newClassFragment,NewClassFragment.TAG)
+            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentContainer,newClassFragment,NewClassFragment.TAG)
             .addToBackStack(null).commit();
         }
 
