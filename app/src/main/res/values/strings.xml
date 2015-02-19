@@ -28,6 +28,11 @@
     <string name="classFragment_studentsBtn">Students</string>
     <string name="addStudent">Add Student</string>
 
+    <string name="newStudentName">Name</string>
+    <string name="newStudentPhone">Phone</string>
+    <string name="newStudentEmail">Email</string>
+    <string name="studentAddedAlert">New Student added</string>
+
     <string-array name="weekDays">
         <item>Monday</item>
         <item>Tuesday</item>

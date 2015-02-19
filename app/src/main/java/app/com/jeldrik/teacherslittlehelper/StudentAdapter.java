@@ -49,17 +49,20 @@ public class StudentAdapter extends ArrayAdapter {
 
     //implements Parcelable to be able to store it in Savedinstancestate bundle
     static class StudentAdapterValues implements Parcelable {
+        int id;
         String name;
         String email;
         String phone;
 
-        public StudentAdapterValues(String name,String email,String phone){
+        public StudentAdapterValues(int id,String name,String email,String phone){
+            this.id=id;
             this.name=name;
             this.email=email;
             this.phone=phone;
         }
 
         public StudentAdapterValues(Parcel in){
+            id=in.readInt();
             name=in.readString();
             email=in.readString();
             phone=in.readString();

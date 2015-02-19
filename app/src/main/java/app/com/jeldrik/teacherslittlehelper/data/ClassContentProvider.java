@@ -22,6 +22,7 @@ public class ClassContentProvider extends ContentProvider {
     private static final int CLASS_DAY_TITLE_HOUR_ID=101;
     private static final int STUDENT=3;
     private static final int STUDENT_ID=4;
+    private static final int STUDENT_CLASS_ID=401;
     private static final int CLASSCONTENT=5;
     private static final int CLASSCONTENT_ID=6;
 
@@ -36,6 +37,7 @@ public class ClassContentProvider extends ContentProvider {
 
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT,STUDENT);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT+"/#",STUDENT_ID);
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT+"/#",STUDENT_CLASS_ID);
 
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT,CLASSCONTENT);
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT+"/#",CLASSCONTENT_ID);
@@ -56,18 +58,38 @@ public class ClassContentProvider extends ContentProvider {
                 break;
             case CLASS_ID:
                 String id=uri.getLastPathSegment();
-                cursor=mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{DbContract.ClassEntry.COLUMN_DATE,
-                        DbContract.ClassEntry.COLUMN_DURATION,
-                        DbContract.ClassEntry.COLUMN_EXTRA_INFO,
-                        DbContract.ClassEntry.COLUMN_LEVEL,
-                        DbContract.ClassEntry.COLUMN_LOCATION,
-                        DbContract.ClassEntry.COLUMN_TIME,
-                        DbContract.ClassEntry.COLUMN_TITLE},ClassEntry._ID+" =?", new String[]{id}, null, null, null);
+                cursor=mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{ClassEntry.COLUMN_DATE,
+                        ClassEntry.COLUMN_DURATION,
+                        ClassEntry.COLUMN_EXTRA_INFO,
+                        ClassEntry.COLUMN_LEVEL,
+                        ClassEntry.COLUMN_LOCATION,
+                        ClassEntry.COLUMN_TIME,
+                        ClassEntry.COLUMN_TITLE},ClassEntry._ID+" =?", new String[]{id}, null, null, null);
                 break;
             case CLASS_DAY_TITLE_HOUR_ID:
                 cursor = mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{ClassEntry._ID, DbContract.ClassEntry.COLUMN_TITLE, ClassEntry.COLUMN_TIME, ClassEntry.COLUMN_DATE}, null, null, null, null, null);
                 break;
-            case STUDENT:
+            case STUDENT_CLASS_ID:
+                String classId=uri.getLastPathSegment();
+                cursor=mdataBase.query(StudentEntry.TABLE_NAME, new String[]{
+                        StudentEntry._ID,
+                        StudentEntry.COLUMN_STUDENT_NAME,
+                        StudentEntry.COLUMN_EMAIL,
+                        StudentEntry.COLUMN_PHONE
+                },StudentEntry.COLUMN_FOREIGN_KEY_CLASS+" =?", new String[]{classId}, null, null, null);
+
+               /* String query="Select "+StudentEntry.TABLE_NAME+"."+StudentEntry._ID+","
+                                                   +StudentEntry.TABLE_NAME+"."+StudentEntry.COLUMN_STUDENT_NAME+","
+                                                   +StudentEntry.TABLE_NAME+"."+StudentEntry.COLUMN_EMAIL+","
+                                                   +StudentEntry.TABLE_NAME+"."+StudentEntry.COLUMN_PHONE+","
+                                                   +ClassEntry.TABLE_NAME+"."+ClassEntry._ID
+                                                   +"from "+ StudentEntry.TABLE_NAME+","+ClassEntry.TABLE_NAME
+                                                   +" where "
+                                                   +StudentEntry.TABLE_NAME+"."+StudentEntry._ID+" = "+ClassEntry.TABLE_NAME+"."+ClassEntry._ID;
+                Log.v("ClassContentProvider",query);
+                cursor=mdataBase.rawQuery(query,null);*/
+
+
 
                 break;
             case CLASSCONTENT:

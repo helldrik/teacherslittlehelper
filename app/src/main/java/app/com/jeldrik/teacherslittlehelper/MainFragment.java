@@ -94,14 +94,16 @@ public class MainFragment extends Fragment {
 
     public void onSaveInstanceState(Bundle savedState){
         super.onSaveInstanceState(savedState);
-        //TODO:Adjust for usage of ClassAdapterValues instead of String
+        //TODO:fixing bug that leads to NullPointer Exception
 
         for (int i = 0; i < 7; i++) {
-            MyAdapter adapter=(MyAdapter)mListView[i].getAdapter();
-            ArrayList<MyAdapter.ClassAdapterValues> values=new ArrayList<MyAdapter.ClassAdapterValues>();
-            for (int u = 0; u < adapter.getCount(); u++)
-                values.add((MyAdapter.ClassAdapterValues) adapter.getItem(u));
-            savedState.putParcelableArrayList("Day"+i,values);
+            try {
+                MyAdapter adapter = (MyAdapter) mListView[i].getAdapter();
+                ArrayList<MyAdapter.ClassAdapterValues> values=new ArrayList<MyAdapter.ClassAdapterValues>();
+                for (int u = 0; u < adapter.getCount(); u++)
+                    values.add((MyAdapter.ClassAdapterValues) adapter.getItem(u));
+                savedState.putParcelableArrayList("Day"+i,values);
+            }catch(Exception e){Log.e("MainFragment","can not initialize adapter in on SaveInstanceState "+e);}
         }
     }
     @Override
@@ -160,7 +162,7 @@ public class MainFragment extends Fragment {
     }
     private void setListeners(){
         for (int i = 0; i < 7; i++) {
-
+            //TODO: fix bug that leads to nullpointer exception
             mListView[i].setAdapter(mAdapter[i]);
 
             //clicking on a particular class

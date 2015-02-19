@@ -104,7 +104,7 @@ public class ClassFragment extends Fragment {
         studentBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment studentFragment=StudentFragment.newInstance();
+                Fragment studentFragment=StudentFragment.newInstance(mID);
                 FragmentTransaction transaction=getFragmentManager().beginTransaction();
                 transaction.replace(R.id.FragmentContainer,studentFragment);
                 transaction.addToBackStack(null);
