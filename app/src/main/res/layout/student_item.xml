@@ -4,7 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:padding="5dp"
+    >
 
             <TextView
                 android:id="@+id/studentListItem_name"
@@ -28,12 +29,16 @@
                 android:text="Phone"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_weight="1"/>
+
+  <!-- android:focusable="false" if you want to use onItemClickListener on the list -->
             <Button
+                android:focusable="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/studentItem_changeStudentData"
                 android:text="@string/changeStudentData"/>
             <Button
+                android:focusable="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/studentItem_deleteStudentData"

@@ -24,14 +24,17 @@ public class DbContract {
     // as the ContentProvider hasn't been given any information on what to do with "givemeroot".
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_STUDENT = "student";
+    public static final String PATH_STUDENT_WITH_FOREIGNKEY = "studentWithForeignKey";
     public static final String PATH_CLASS = "class";
     public static final String PATH_CLASSCONTENT = "classContent";
 
-
+//--------------------------------------------------------------------------------------------------
     /* Inner class that defines the table contents of the student table */
     public static final class StudentEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT).build();
+
+        public static final Uri CONTENT_URI_WITH_FOREIGNKEY = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_WITH_FOREIGNKEY).build();
 
         public static final String CONTENT_TYPE =
                 "vnd.android.cursor.dir/" + AUTHORITY + "/" + PATH_STUDENT;
@@ -45,7 +48,7 @@ public class DbContract {
         public static final String COLUMN_PHONE="phone";
         public static final String COLUMN_FOREIGN_KEY_CLASS="classID";
     }
-
+ //--------------------------------------------------------------------------------------------------
     /* Inner class that defines the table contents of the class table */
     public static final class ClassEntry implements BaseColumns {
 
@@ -66,7 +69,7 @@ public class DbContract {
         public static final String COLUMN_LEVEL="level";
         public static final String COLUMN_EXTRA_INFO="extraInfo";
     }
-
+//--------------------------------------------------------------------------------------------------
     /* Inner class that defines the table contents of the classContent table */
     public static final class ClassContentEntry implements BaseColumns {
 

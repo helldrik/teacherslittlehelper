@@ -34,6 +34,7 @@
     <string name="newStudentPhone">Phone</string>
     <string name="newStudentEmail">Email</string>
     <string name="studentAddedAlert">New Student added</string>
+    <string name="studentUpdatedAlert">Student updated</string>
 
     <string-array name="weekDays">
         <item>Monday</item>

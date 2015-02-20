@@ -13,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,8 +34,9 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 public class StudentFragment extends Fragment {
 
     public static final String ARG_CLASS_ID="classId";
-
+    public static final String TAG="STUDENTFRAGMENT";
     int mClassId;
+    ListView mStudentList;
 
     public static StudentFragment newInstance(int param_classID) {
         StudentFragment fragment = new StudentFragment();
@@ -58,15 +62,14 @@ public class StudentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView= inflater.inflate(R.layout.fragment_student, container, false);
-        ListView studentList= (ListView)rootView.findViewById(R.id.studentListView);
-
+        mStudentList= (ListView)rootView.findViewById(R.id.studentListView);
 
         ArrayList<StudentAdapter.StudentAdapterValues> vals=getData();
         if(vals==null)
             Toast.makeText(getActivity(),"No Students in this class",Toast.LENGTH_LONG).show();
         else {
             StudentAdapter adapter = new StudentAdapter(getActivity(), vals);
-            studentList.setAdapter(adapter);
+            mStudentList.setAdapter(adapter);
         }
         return rootView;
     }
@@ -93,12 +96,19 @@ public class StudentFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    public void updateAdapter(StudentAdapter.StudentAdapterValues vals, int position){
+        StudentAdapter adapter=(StudentAdapter)mStudentList.getAdapter();
+        adapter.remove(position);
+        adapter.add(vals);
+        adapter.notifyDataSetChanged();
+    }
+
     private ArrayList<StudentAdapter.StudentAdapterValues> getData(){
         ArrayList<StudentAdapter.StudentAdapterValues> vals=new ArrayList<>();
         //vals.add(new StudentAdapter.StudentAdapterValues("Jeldrik","jeldriks@gmail.com","673300608"));
 
         ContentResolver resolver=getActivity().getContentResolver();
-        Uri uri= DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(mClassId)).build();
+        Uri uri= DbContract.StudentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Integer.toString(mClassId)).build();
         Log.v("ClassFragment", "Uri: " + uri.toString());
         Cursor cursor=resolver.query(uri,null,null,null,null);
         cursor.moveToFirst();

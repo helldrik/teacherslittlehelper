@@ -37,7 +37,7 @@ public class ClassContentProvider extends ContentProvider {
 
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT,STUDENT);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT+"/#",STUDENT_ID);
-        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT+"/#",STUDENT_CLASS_ID);
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_WITH_FOREIGNKEY+"/#",STUDENT_CLASS_ID);
 
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT,CLASSCONTENT);
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT+"/#",CLASSCONTENT_ID);
@@ -192,16 +192,23 @@ public class ClassContentProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+        String id="";
+        int affectedRows=0;
         switch(mUriMatcher.match(uri)) {
             case CLASS:
                 break;
             case STUDENT:
+                break;
+            case STUDENT_ID:
+                id=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(StudentEntry.TABLE_NAME,values,StudentEntry._ID+"=?",new String[]{id});
                 break;
             case CLASSCONTENT:
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
-        return 0;
+        return affectedRows;
     }
 }

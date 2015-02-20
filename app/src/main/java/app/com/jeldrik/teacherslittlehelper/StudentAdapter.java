@@ -1,17 +1,24 @@
 package app.com.jeldrik.teacherslittlehelper;
 
+import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -29,22 +36,26 @@ public class StudentAdapter extends ArrayAdapter {
         this.values=values;
         this.context=context;
     }
-/*
-    @Override
-    public boolean areAllItemsEnabled() {
-        return false;
-    }
 
-    @Override
-    public boolean isEnabled(int position) {
-        return false;
-    }
-*/
+
+
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View rowView = inflater.inflate(R.layout.student_item, parent, false);
+
+/*
+        rowView.setOnTouchListener(new View.OnTouchListener() {
+            // Setting on Touch Listener for handling the touch inside ScrollView
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Disallow the touch request for parent scroll on touch of child view
+                mParent.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+*/
         TextView name = (TextView) rowView.findViewById(R.id.studentListItem_name);
         name.setText(values.get(position).name);
 
@@ -58,19 +69,27 @@ public class StudentAdapter extends ArrayAdapter {
         deleteBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //delete Student
                 ContentResolver resolver=context.getContentResolver();
                 Uri uri= DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(values.get(position).id)).build();
+
                 Log.v("StudentAdapter", "delete Button pressed");
                 if(resolver.delete(uri,null,null)>0)
                     remove(position);
             }
         });
         Button updateBtn=(Button)rowView.findViewById(R.id.studentItem_changeStudentData);
-        deleteBtn.setOnClickListener(new Button.OnClickListener() {
+        final StudentAdapter studentAdapter=this;
+        updateBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //update Student
+                Fragment updateStudentFragment=UpdateStudentFragment.newInstance(values.get(position),position);
+                FragmentTransaction transaction=((FragmentActivity)context).getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.FragmentContainer, updateStudentFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 

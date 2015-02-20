@@ -1,39 +1,17 @@
 package app.com.jeldrik.teacherslittlehelper;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
-
-import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 
-import app.com.jeldrik.teacherslittlehelper.data.DbContract;
-import app.com.jeldrik.teacherslittlehelper.data.DbHelper;
 
-
-public class MainActivity extends ActionBarActivity implements NewClassFragment.OnAddNewClassListener, ClassFragment.OnDeleteListener {
+public class MainActivity extends ActionBarActivity implements NewClassFragment.OnAddNewClassListener, ClassFragment.OnDeleteListener,UpdateStudentFragment.OnStudentUpdatedListener {
 
     MainFragment mainFragment;
     @Override
@@ -160,5 +138,12 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             default:
                 Log.e("MainActivity","could not find Fragment "+TAG);
         }
+    }
+
+    @Override
+    public void onStudentUpdated(StudentAdapter.StudentAdapterValues vals,int position) {
+        StudentFragment frag=(StudentFragment)getSupportFragmentManager().findFragmentByTag(StudentFragment.TAG);
+        frag.updateAdapter(vals, position);
+
     }
 }
