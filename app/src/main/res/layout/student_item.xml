@@ -28,5 +28,16 @@
                 android:text="Phone"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_weight="1"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/studentItem_changeStudentData"
+                android:text="@string/changeStudentData"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/studentItem_deleteStudentData"
+                android:text="@string/deleteStudent"/>
+
 
 </LinearLayout>

@@ -59,7 +59,7 @@ public class StudentFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView= inflater.inflate(R.layout.fragment_student, container, false);
         ListView studentList= (ListView)rootView.findViewById(R.id.studentListView);
-        //TODO: get values from sqlite db
+
 
         ArrayList<StudentAdapter.StudentAdapterValues> vals=getData();
         if(vals==null)

@@ -1,6 +1,8 @@
 package app.com.jeldrik.teacherslittlehelper;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -8,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
 /**
  * Created by jeldrik on 17/02/15.
@@ -24,7 +29,18 @@ public class StudentAdapter extends ArrayAdapter {
         this.values=values;
         this.context=context;
     }
-    public View getView(int position, View convertView, ViewGroup parent) {
+/*
+    @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
+    }
+*/
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -37,6 +53,26 @@ public class StudentAdapter extends ArrayAdapter {
 
         TextView phone = (TextView) rowView.findViewById(R.id.studentListItem_phone);
         phone.setText(values.get(position).phone);
+
+        Button deleteBtn=(Button)rowView.findViewById(R.id.studentItem_deleteStudentData);
+        deleteBtn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //delete Student
+                ContentResolver resolver=context.getContentResolver();
+                Uri uri= DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(values.get(position).id)).build();
+                Log.v("StudentAdapter", "delete Button pressed");
+                if(resolver.delete(uri,null,null)>0)
+                    remove(position);
+            }
+        });
+        Button updateBtn=(Button)rowView.findViewById(R.id.studentItem_changeStudentData);
+        deleteBtn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //update Student
+            }
+        });
 
         return rowView;
     }

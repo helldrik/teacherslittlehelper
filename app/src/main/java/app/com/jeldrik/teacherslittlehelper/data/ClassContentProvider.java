@@ -177,6 +177,11 @@ public class ClassContentProvider extends ContentProvider {
                 break;
             case STUDENT:
                 break;
+            case STUDENT_ID:
+                id=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.delete(StudentEntry.TABLE_NAME,StudentEntry._ID+"=?",new String[]{id});
+                break;
             case CLASSCONTENT:
                 break;
             default:

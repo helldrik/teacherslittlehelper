@@ -27,6 +27,8 @@
 
     <string name="classFragment_studentsBtn">Students</string>
     <string name="addStudent">Add Student</string>
+    <string name="changeStudentData">Change</string>
+    <string name="deleteStudent">Delete</string>
 
     <string name="newStudentName">Name</string>
     <string name="newStudentPhone">Phone</string>
