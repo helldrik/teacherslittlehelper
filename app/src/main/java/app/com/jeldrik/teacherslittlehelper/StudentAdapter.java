@@ -131,6 +131,7 @@ public class StudentAdapter extends ArrayAdapter {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(id);
             dest.writeString(name);
             dest.writeString(email);
             dest.writeString(phone);

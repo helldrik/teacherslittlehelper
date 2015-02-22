@@ -18,6 +18,7 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 
@@ -84,6 +85,7 @@ public class ClassFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView =inflater.inflate(R.layout.fragment_class, container, false);
         getData();
+        addClassContent(rootView);
         TextView title=(TextView)rootView.findViewById(R.id.classfragment_title);
         title.setText(mTitle);
         TextView days=(TextView)rootView.findViewById(R.id.classFragment_days);
@@ -104,9 +106,9 @@ public class ClassFragment extends Fragment {
         studentBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment studentFragment=StudentFragment.newInstance(mID);
-                FragmentTransaction transaction=getFragmentManager().beginTransaction();
-                transaction.replace(R.id.FragmentContainer,studentFragment,StudentFragment.TAG);
+                Fragment studentFragment = StudentFragment.newInstance(mID);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.FragmentContainer, studentFragment, StudentFragment.TAG);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -159,7 +161,27 @@ public class ClassFragment extends Fragment {
         // TODO: Update argument type and name
         public void onDelete(int id);
     }
+    private void addClassContent(View rootView){
+        TwoWayView list = (TwoWayView)rootView.findViewById(R.id.classContentListView);
+        ArrayList<ClassContentAdapter.ClassContentAdapterValues> values = new ArrayList<>();
+        values.add(new ClassContentAdapter.ClassContentAdapterValues(0, "01.10.1981", "Book of Eden", "12-133", "something special"));
+        values.add(new ClassContentAdapter.ClassContentAdapterValues(0, "01.10.1981", "Book of Eden", "12-133", "something special"));
+        values.add(new ClassContentAdapter.ClassContentAdapterValues(0, "01.10.1981", "Book of Eden", "12-133", "something special"));
+        values.add(new ClassContentAdapter.ClassContentAdapterValues(0, "01.10.1981", "Book of Eden", "12-133", "something specisomething specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething special" +
+                "something specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething special" +
+                "something specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething special" +
+                "something specialsomething specialsomething specialsomething specialsomething specialsomething special" +
+                "something specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething special" +
+                "" +
+                "" +
+                "" +
+                "" +
+                "" +
+                "something specialsomething specialsomething specialsomething specialsomething specialsomething specialsomething specialal"));
 
+        ClassContentAdapter adapter = new ClassContentAdapter(getActivity(), values);
+        list.setAdapter(adapter);
+    }
     private void getData(){
         ContentResolver resolver=getActivity().getContentResolver();
         Uri uri= DbContract.ClassEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(mID)).build();
