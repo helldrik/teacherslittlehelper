@@ -25,6 +25,7 @@ public class ClassContentProvider extends ContentProvider {
     private static final int STUDENT_CLASS_ID=401;
     private static final int CLASSCONTENT=5;
     private static final int CLASSCONTENT_ID=6;
+    private static final int CLASSCONTENT_CLASS_ID=601;
 
     private static final UriMatcher mUriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -41,6 +42,7 @@ public class ClassContentProvider extends ContentProvider {
 
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT,CLASSCONTENT);
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT+"/#",CLASSCONTENT_ID);
+        mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT_WITH_FOREIGNKEY+"/#",CLASSCONTENT_CLASS_ID);
     }
 
     SQLiteDatabase mdataBase;
@@ -92,8 +94,14 @@ public class ClassContentProvider extends ContentProvider {
 
 
                 break;
-            case CLASSCONTENT:
-
+            case CLASSCONTENT_CLASS_ID:
+                classId=uri.getLastPathSegment();
+                cursor=mdataBase.query(ClassContentEntry.TABLE_NAME,new String[]{
+                        ClassContentEntry.COLUMN_BOOK,
+                        ClassContentEntry.COLUMN_DATE,
+                        ClassContentEntry.COLUMN_PAGE,
+                        ClassContentEntry.COLUMN_INFO,
+                        ClassContentEntry._ID},ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS+" =?",new String[]{classId},null,null,ClassContentEntry._ID+" desc");
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);

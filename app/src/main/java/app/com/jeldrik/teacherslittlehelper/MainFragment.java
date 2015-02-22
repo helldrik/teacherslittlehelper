@@ -95,6 +95,7 @@ public class MainFragment extends Fragment {
     public void onSaveInstanceState(Bundle savedState){
         super.onSaveInstanceState(savedState);
         //TODO:fixing bug that leads to NullPointer Exception
+        //http://stackoverflow.com/questions/15313598/once-for-all-how-to-correctly-save-instance-state-of-fragments-in-back-stack
 
         for (int i = 0; i < 7; i++) {
             try {
@@ -174,7 +175,7 @@ public class MainFragment extends Fragment {
 
                     Fragment classFragment=ClassFragment.newInstance(position,vals._id);
                     FragmentTransaction transaction=getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.FragmentContainer,classFragment);
+                    transaction.replace(R.id.FragmentContainer,classFragment,ClassFragment.TAG);
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }

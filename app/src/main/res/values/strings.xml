@@ -30,6 +30,17 @@
     <string name="changeStudentData">Change</string>
     <string name="deleteStudent">Delete</string>
 
+    <string name="AddContent">Add new content</string>
+    <string name="NotifyAllStudents">Notify all students</string>
+
+    <string name="newDate">Date</string>
+    <string name="newBook">Book used</string>
+    <string name="newPages">Pages</string>
+    <string name="newInfo">Info</string>
+    <string name="addClassContent">Add Content</string>
+    <string name="DateNotFilledOutWarning">Please select a Date! </string>
+    <string name="contentAddedAlert">New Content added</string>
+
     <string name="newStudentName">Name</string>
     <string name="newStudentPhone">Phone</string>
     <string name="newStudentEmail">Email</string>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/addClass_setting" android:title="@string/add_class"
+        android:orderInCategory="1" app:showAsAction="always"/>
+    <item
+        android:id="@+id/AddContent"
+        android:title="@string/AddContent"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="2"></item>
+    <group>
+        <item
+            android:id="@+id/AddStudent"
+            android:title="@string/addStudent"
+            app:showAsAction="ifRoom"
+            android:orderInCategory="3"></item>
+        <item
+            android:id="@+id/NotifyAllStudents"
+            android:title="@string/NotifyAllStudents"
+            app:showAsAction="ifRoom"
+            android:orderInCategory="4"></item>
+    </group>
+</menu>

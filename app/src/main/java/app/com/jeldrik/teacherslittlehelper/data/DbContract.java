@@ -27,6 +27,7 @@ public class DbContract {
     public static final String PATH_STUDENT_WITH_FOREIGNKEY = "studentWithForeignKey";
     public static final String PATH_CLASS = "class";
     public static final String PATH_CLASSCONTENT = "classContent";
+    public static final String PATH_CLASSCONTENT_WITH_FOREIGNKEY = "classContentWithForeignKey";
 
 //--------------------------------------------------------------------------------------------------
     /* Inner class that defines the table contents of the student table */
@@ -74,6 +75,7 @@ public class DbContract {
     public static final class ClassContentEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CLASSCONTENT).build();
+    public static final Uri CONTENT_URI_WITH_FOREIGNKEY = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CLASSCONTENT_WITH_FOREIGNKEY).build();
 
         public static final String CONTENT_TYPE =
                 "vnd.android.cursor.dir/" + AUTHORITY + "/" + PATH_CLASSCONTENT;
@@ -82,6 +84,7 @@ public class DbContract {
 
         //table name
         public static final String TABLE_NAME="classContent";
+        public static final String COLUMN_DATE="date";
         public static final String COLUMN_BOOK="book";
         public static final String COLUMN_PAGE="page";
         public static final String COLUMN_INFO="info";

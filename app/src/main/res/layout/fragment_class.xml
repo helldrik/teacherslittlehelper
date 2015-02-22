@@ -205,7 +205,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:drawSelectorOnTop="false"
-                    tools:context="app.com.jeldrik.teacherslittlehelper.ClassContentFragment"
                     android:layout_span="2"/>
             </TableRow>
         </TableLayout>

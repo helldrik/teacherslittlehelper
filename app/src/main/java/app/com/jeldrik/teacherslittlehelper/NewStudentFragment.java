@@ -73,7 +73,7 @@ public class NewStudentFragment extends Fragment {
                 TextView tvPhone=(TextView)mRootView.findViewById(R.id.newStudentPhone);
                 String phone=tvPhone.getText().toString();
 
-                ContentValues vals = new ContentValues(7);
+                ContentValues vals = new ContentValues(4);
                 vals.put(DbContract.StudentEntry.COLUMN_STUDENT_NAME, name);
                 vals.put(DbContract.StudentEntry.COLUMN_EMAIL, email);
                 vals.put(DbContract.StudentEntry.COLUMN_PHONE,phone);

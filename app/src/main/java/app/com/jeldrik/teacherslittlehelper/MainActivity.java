@@ -11,7 +11,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity implements NewClassFragment.OnAddNewClassListener, ClassFragment.OnDeleteListener,UpdateStudentFragment.OnStudentUpdatedListener {
+public class MainActivity extends ActionBarActivity implements NewClassFragment.OnAddNewClassListener, ClassFragment.OnDeleteListener,
+        UpdateStudentFragment.OnStudentUpdatedListener,NewClassContentFragment.OnNewClassContentListener {
 
     MainFragment mainFragment;
     @Override
@@ -145,5 +146,11 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         StudentFragment frag=(StudentFragment)getSupportFragmentManager().findFragmentByTag(StudentFragment.TAG);
         frag.updateAdapter(vals, position);
 
+    }
+
+    @Override
+    public void OnNewClassContent(ClassContentAdapter.ClassContentAdapterValues values) {
+        ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
+        frag.updateClassContent(values);
     }
 }
