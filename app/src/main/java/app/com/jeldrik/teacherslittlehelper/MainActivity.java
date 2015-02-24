@@ -77,13 +77,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if(id==R.id.addClass_setting){
-            Fragment newClassFragment=NewClassFragment.newInstance("day");
-            getSupportFragmentManager().beginTransaction().replace(R.id.FragmentContainer,newClassFragment,NewClassFragment.TAG)
-            .addToBackStack(null).commit();
-        }
-
-        else if (id == R.id.action_settings) {
+        if (id == R.id.action_settings) {
             return true;
         }
 

@@ -9,6 +9,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.VelocityTrackerCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -47,9 +50,35 @@ public class MainFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_main_fragment,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if(id==R.id.addClass_setting){
+            Fragment newClassFragment=NewClassFragment.newInstance("day");
+            FragmentTransaction transaction=getFragmentManager().beginTransaction();
+            transaction.replace(R.id.FragmentContainer,newClassFragment,NewClassFragment.TAG);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
+        else if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.setHasOptionsMenu(true);
         this.createAdapters(savedInstanceState);
         mWeekdays=new LinearLayout[7];
         mListView=new TwoWayView[7];
