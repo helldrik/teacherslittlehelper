@@ -4,79 +4,82 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="app.com.jeldrik.teacherslittlehelper.NewClassContentFragment">
-    <TableLayout
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="*">
-    <TableRow>
+        android:layout_height="fill_parent">
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*">
+        <TableRow>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/newDate"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/newDate"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/newClassContentFragmentnewDate"
-            />
-    </TableRow>
-    <TableRow>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/newClassContentFragmentnewDate"
+                />
+        </TableRow>
+        <TableRow>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/newBook"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/newBook"/>
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/newClassContentFragmentNewBook"
-            android:layout_weight="1"/>
-    </TableRow>
-    <TableRow>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/newClassContentFragmentNewBook"
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/newPages"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/newPages"/>
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/newClassContentFragmentNewPages"
-            android:layout_weight="1"/>
-    </TableRow>
-    <TableRow>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/newClassContentFragmentNewPages"
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow>
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/newInfo"
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow>
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/newClassContentFragmentNewInfo"
+                android:inputType="textMultiLine"
+                android:layout_weight="1"
+                android:layout_span="2"/>
+        </TableRow>
+        <TableRow>
+        <Button
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/newInfo"
-            android:layout_weight="1"/>
-    </TableRow>
-    <TableRow>
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/newClassContentFragmentNewInfo"
-            android:inputType="textMultiLine"
-            android:minLines="8"
-            android:layout_weight="1"
-            android:layout_span="2"/>
-    </TableRow>
-    <TableRow>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/addClassContent"
-        android:id="@+id/newClassContentFragmentNewClassContent"
-        android:layout_gravity="center"
-        android:layout_span="2" />
-    </TableRow>
-    </TableLayout>
+            android:layout_height="wrap_content"
+            android:text="@string/addClassContent"
+            android:id="@+id/newClassContentFragmentNewClassContent"
+            android:layout_gravity="center"
+            android:layout_span="2" />
+        </TableRow>
+        </TableLayout>
+    </ScrollView>
 </LinearLayout>

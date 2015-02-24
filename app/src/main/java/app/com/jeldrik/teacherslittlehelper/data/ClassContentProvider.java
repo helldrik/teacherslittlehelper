@@ -192,6 +192,11 @@ public class ClassContentProvider extends ContentProvider {
                 break;
             case CLASSCONTENT:
                 break;
+            case CLASSCONTENT_ID:
+                String classId=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.delete(ClassContentEntry.TABLE_NAME,selection,selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -213,6 +218,11 @@ public class ClassContentProvider extends ContentProvider {
                 affectedRows=mdataBase.update(StudentEntry.TABLE_NAME,values,StudentEntry._ID+"=?",new String[]{id});
                 break;
             case CLASSCONTENT:
+                break;
+            case CLASSCONTENT_ID:
+                String classId=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(ClassContentEntry.TABLE_NAME,values,selection,selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);

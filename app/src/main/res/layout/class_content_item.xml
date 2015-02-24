@@ -82,18 +82,16 @@
                 android:text="Info"
                 android:textColor="@color/White"
                 />
-            <ScrollView
-                android:layout_width="fill_parent"
-                android:layout_height="130dp"
-                android:background="@color/White"
-                android:id="@+id/classContentItemScroller">
+            <!-- android:ellipsize="end" = Adding ... at the end of visible text if text has to be truncated -->
                 <TextView
                     android:padding="10dp"
                     android:layout_width="fill_parent"
+                    android:maxLines="6"
+                    android:ellipsize="end"
                     android:layout_height="130dp"
+                    android:background="@color/White"
                     android:text="Info"
                     android:id="@+id/classContentItemInfo"/>
-            </ScrollView>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -40,6 +40,12 @@
     <string name="addClassContent">Add Content</string>
     <string name="DateNotFilledOutWarning">Please select a Date! </string>
     <string name="contentAddedAlert">New Content added</string>
+    <string name="contentDeletedAlert">Content deleted</string>
+    <string name="contentUpdatedAlert">Content updated</string>
+    <string name="contentTitle">Content of each Class</string>
+
+    <string name="updateContent">Update</string>
+   <string name="deleteContent">Delete</string>
 
     <string name="newStudentName">Name</string>
     <string name="newStudentPhone">Phone</string>

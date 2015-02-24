@@ -74,7 +74,7 @@ public class StudentAdapter extends ArrayAdapter {
                 ContentResolver resolver=context.getContentResolver();
                 Uri uri= DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(values.get(position).id)).build();
 
-                Log.v("StudentAdapter", "delete Button pressed");
+                //Log.v("StudentAdapter", "delete Button pressed");
                 if(resolver.delete(uri,null,null)>0)
                     remove(position);
             }

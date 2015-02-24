@@ -43,14 +43,8 @@ public class ClassContentAdapter extends ArrayAdapter {
         TextView info=(TextView)rowView.findViewById(R.id.classContentItemInfo);
         info.setText(values.get(position).info);
 
-        ScrollView scroller=(ScrollView)rowView.findViewById(R.id.classContentItemScroller);
-        scroller.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
+        if (info.getLineCount()>6)
+            info.setMaxLines(6);
 
         return rowView;
     }

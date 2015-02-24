@@ -13,11 +13,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -223,6 +226,30 @@ public class ClassFragment extends Fragment {
         }
         ClassContentAdapter adapter = new ClassContentAdapter(getActivity(), values);
         list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new TwoWayView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TwoWayView list = (TwoWayView) rootView.findViewById(R.id.classContentListView);
+                ClassContentAdapter adapter = (ClassContentAdapter) list.getAdapter();
+                ClassContentAdapter.ClassContentAdapterValues data=(ClassContentAdapter.ClassContentAdapterValues)adapter.getItem(position);
+                Fragment frag = UpdateClassContentFragment.newInstance(data.date,data.book,data.pages,data.info,data.id);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.FragmentContainer, frag, UpdateClassContentFragment.TAG);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+        /*
+        list.setLongClickable(true);
+        list.setOnItemLongClickListener(new TwoWayView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(),"Item long clicked",Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+        */
     }
 
     private void getData(){

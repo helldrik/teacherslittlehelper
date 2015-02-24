@@ -1,6 +1,7 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="app.com.jeldrik.teacherslittlehelper.ClassFragment">
 
    <LinearLayout
@@ -35,8 +36,7 @@
    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp">
+        android:layout_height="wrap_content">
 
         <TableLayout
             android:orientation="vertical"
@@ -196,20 +196,30 @@
 
             </TableRow>
             <TableRow>
-                <org.lucasr.twowayview.TwoWayView
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:tools="http://schemas.android.com/tools"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/classContentListView"
-                    style="@style/TwoWayView"
+                <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:drawSelectorOnTop="false"
-                    android:layout_span="2"/>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_span="2">
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/contentTitle"/>
+
+                    <org.lucasr.twowayview.TwoWayView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/classContentListView"
+                        style="@style/TwoWayView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:drawSelectorOnTop="false"/>
+                </LinearLayout>
             </TableRow>
         </TableLayout>
 
 
         </ScrollView>
-
-</FrameLayout>
+</LinearLayout>
