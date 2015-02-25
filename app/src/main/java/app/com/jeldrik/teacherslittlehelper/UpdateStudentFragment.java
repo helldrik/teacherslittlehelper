@@ -3,6 +3,7 @@ package app.com.jeldrik.teacherslittlehelper;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,7 +84,25 @@ public class UpdateStudentFragment extends Fragment {
         mPhone=(TextView)mRootView.findViewById(R.id.newStudentPhone);
         mPhone.setText(studentAdapterVal.phone);
 
-        Log.v("UpdateStudentFragment","new Values: name: "+studentAdapterVal.name+" email "+studentAdapterVal.email+" phone "+studentAdapterVal.phone);
+        Button deleteBtn=(Button)mRootView.findViewById(R.id.studentItem_deleteStudentData);
+        deleteBtn.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //delete Student
+                ContentResolver resolver = getActivity().getContentResolver();
+                Uri uri = DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(studentAdapterVal.id)).build();
+
+                //Log.v("StudentAdapter", "delete Button pressed");
+                if (resolver.delete(uri, null, null) > 0) {
+                    //by passing null instead of StudentAdapterValue student gets deleted from adapter
+                    mListener.onStudentUpdated(null,mPosition);
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack();
+                    Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.studentDeletedAlert), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
         Button btn=(Button)mRootView.findViewById(R.id.updateStudentFragmentUpdateStudent);
 
@@ -110,6 +130,9 @@ public class UpdateStudentFragment extends Fragment {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();
                     Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.studentUpdatedAlert), Toast.LENGTH_LONG).show();
+                    //Hiding the keyboard
+                    InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    mgr.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
         });

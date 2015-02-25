@@ -1,8 +1,10 @@
 package app.com.jeldrik.teacherslittlehelper;
 
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,29 +12,22 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NewStudentFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NewStudentFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_CLASS_ID = "classId";
 
 
     private int mClassId;
     private View mRootView;
+    private OnStudentAddedListener mListener;
 
-
-
-    // TODO: Rename and change types and number of parameters
     public static NewStudentFragment newInstance(int classId) {
         NewStudentFragment fragment = new NewStudentFragment();
         Bundle args = new Bundle();
@@ -44,7 +39,9 @@ public class NewStudentFragment extends Fragment {
     public NewStudentFragment() {
         // Required empty public constructor
     }
-
+    public interface OnStudentAddedListener {
+        public void onStudentAdded(StudentAdapter.StudentAdapterValues newStudent);
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,16 +82,31 @@ public class NewStudentFragment extends Fragment {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.popBackStack();
                 Toast.makeText(getActivity(),getActivity().getResources().getText(R.string.studentAddedAlert),Toast.LENGTH_LONG).show();
+                mListener.onStudentAdded(new StudentAdapter.StudentAdapterValues(id,name,email,phone));
+
+                //Hiding the keyboard
+                InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                mgr.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
             }
         });
-
-        
-        
-        
         
         return mRootView;
     }
-
+    //--------------------------------------------------------------------------------------------------
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnStudentAddedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnStudentAddedListener");
+        }
+    }
+    public void onDetach(){
+        super.onDetach();
+        mListener=null;
+    }
 
 }

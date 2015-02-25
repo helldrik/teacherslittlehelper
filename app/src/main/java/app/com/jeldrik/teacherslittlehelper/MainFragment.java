@@ -128,10 +128,9 @@ public class MainFragment extends Fragment {
 
         for (int i = 0; i < 7; i++) {
             try {
-                MyAdapter adapter = (MyAdapter) mListView[i].getAdapter();
                 ArrayList<MyAdapter.ClassAdapterValues> values=new ArrayList<MyAdapter.ClassAdapterValues>();
-                for (int u = 0; u < adapter.getCount(); u++)
-                    values.add((MyAdapter.ClassAdapterValues) adapter.getItem(u));
+                for (int u = 0; u < mAdapter[i].getCount(); u++)
+                    values.add((MyAdapter.ClassAdapterValues) mAdapter[i].getItem(u));
                 savedState.putParcelableArrayList("Day"+i,values);
             }catch(Exception e){Log.e("MainFragment","can not initialize adapter in on SaveInstanceState "+e);}
         }

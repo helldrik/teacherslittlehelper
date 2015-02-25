@@ -52,6 +52,8 @@
     <string name="newStudentEmail">Email</string>
     <string name="studentAddedAlert">New Student added</string>
     <string name="studentUpdatedAlert">Student updated</string>
+    <string name="studentDeletedAlert">Student deleted</string>
+    <string name="studentTitle">Students</string>
 
     <string-array name="weekDays">
         <item>Monday</item>

@@ -55,11 +55,23 @@
             android:id="@+id/newStudentPhone"
             android:layout_weight="1"/>
     </LinearLayout>
-    <Button
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/changeStudentData"
-        android:id="@+id/updateStudentFragmentUpdateStudent"
-        android:layout_gravity="center"/>
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/changeStudentData"
+            android:id="@+id/updateStudentFragmentUpdateStudent"
+            android:layout_gravity="center"/>
+        <Button
+            android:focusable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/studentItem_deleteStudentData"
+            android:text="@string/deleteStudent"/>
+    </LinearLayout>
 
 </LinearLayout>

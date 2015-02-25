@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/studentListItem"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
+    android:layout_width="150dp"
+    android:layout_height="250dp"
     android:padding="5dp"
-    >
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/background_floating_material_dark"
+        android:orientation="vertical">
 
             <TextView
                 android:id="@+id/studentListItem_name"
@@ -30,19 +35,6 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:layout_weight="1"/>
 
-  <!-- android:focusable="false" if you want to use onItemClickListener on the list -->
-            <Button
-                android:focusable="false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/studentItem_changeStudentData"
-                android:text="@string/changeStudentData"/>
-            <Button
-                android:focusable="false"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/studentItem_deleteStudentData"
-                android:text="@string/deleteStudent"/>
-
+    </LinearLayout>
 
 </LinearLayout>

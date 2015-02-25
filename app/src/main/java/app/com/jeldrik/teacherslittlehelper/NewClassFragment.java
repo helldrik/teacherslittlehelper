@@ -180,7 +180,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
 
                     //Hiding the keyboard
                     InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    mgr.hideSoftInputFromWindow(title.getWindowToken(), 0);
+                    mgr.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
                     mListener.onAddNewClass(mSelectedDaysAsArray, title.getText().toString(),mTime,id);
                     FragmentManager fm = getActivity().getSupportFragmentManager();

@@ -183,17 +183,28 @@
 
 
             </TableRow>
-            <TableRow
-                android:layout_marginBottom="10dp"
-                android:padding="5dp">
+            <TableRow>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_span="2">
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/studentTitle"/>
 
-                <Button
-                    android:id="@+id/classFragment_students"
-                    android:text="@string/classFragment_studentsBtn"
-                    >
-
-                </Button>
-
+                    <org.lucasr.twowayview.TwoWayView
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/studentListView"
+                        style="@style/TwoWayView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:drawSelectorOnTop="false"/>
+                </LinearLayout>
             </TableRow>
             <TableRow>
                 <LinearLayout
