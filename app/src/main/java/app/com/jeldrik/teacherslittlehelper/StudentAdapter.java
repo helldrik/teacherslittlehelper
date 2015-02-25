@@ -116,7 +116,7 @@ public class StudentAdapter extends ArrayAdapter {
             this.phone=phone;
         }
 
-        public StudentAdapterValues(Parcel in){
+        private StudentAdapterValues(Parcel in){
             id=in.readInt();
             name=in.readString();
             email=in.readString();
@@ -137,14 +137,12 @@ public class StudentAdapter extends ArrayAdapter {
             dest.writeString(phone);
 
         }
-        public static final Creator CREATOR= new Creator(){
-
-            @Override
-            public StudentAdapterValues createFromParcel(Parcel source) {
-                return null;
+        public static final Parcelable.Creator<StudentAdapterValues> CREATOR
+                = new Parcelable.Creator<StudentAdapterValues>() {
+            public StudentAdapterValues createFromParcel(Parcel in) {
+                return new StudentAdapterValues(in);
             }
 
-            @Override
             public StudentAdapterValues[] newArray(int size) {
                 return new StudentAdapterValues[size];
             }

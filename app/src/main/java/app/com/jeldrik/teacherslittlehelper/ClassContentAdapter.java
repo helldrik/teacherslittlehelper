@@ -71,7 +71,7 @@ public class ClassContentAdapter extends ArrayAdapter {
             this.info=info;
         }
 
-        public ClassContentAdapterValues(Parcel in){
+        private ClassContentAdapterValues(Parcel in){
             id=in.readInt();
             date=in.readString();
             book=in.readString();
@@ -94,14 +94,12 @@ public class ClassContentAdapter extends ArrayAdapter {
             dest.writeString(info);
 
         }
-        public static final Creator CREATOR= new Creator(){
-
-            @Override
-            public ClassContentAdapterValues createFromParcel(Parcel source) {
-                return null;
+        public static final Parcelable.Creator<ClassContentAdapterValues> CREATOR
+                = new Parcelable.Creator<ClassContentAdapterValues>() {
+            public ClassContentAdapterValues createFromParcel(Parcel in) {
+                return new ClassContentAdapterValues(in);
             }
 
-            @Override
             public ClassContentAdapterValues[] newArray(int size) {
                 return new ClassContentAdapterValues[size];
             }
