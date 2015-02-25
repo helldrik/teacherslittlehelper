@@ -55,7 +55,7 @@ public class MyAdapter extends ArrayAdapter {
             this.title=title;
         }
 
-        public ClassAdapterValues(Parcel in){
+        private ClassAdapterValues(Parcel in){
             title=in.readString();
             time=in.readString();
             _id=in.readInt();
@@ -74,14 +74,12 @@ public class MyAdapter extends ArrayAdapter {
             dest.writeInt(_id);
 
         }
-        public static final Creator CREATOR= new Creator(){
-
-            @Override
-            public ClassAdapterValues createFromParcel(Parcel source) {
-                return null;
+        public static final Parcelable.Creator<ClassAdapterValues> CREATOR
+                = new Parcelable.Creator<ClassAdapterValues>() {
+            public ClassAdapterValues createFromParcel(Parcel in) {
+                return new ClassAdapterValues(in);
             }
 
-            @Override
             public ClassAdapterValues[] newArray(int size) {
                 return new ClassAdapterValues[size];
             }
