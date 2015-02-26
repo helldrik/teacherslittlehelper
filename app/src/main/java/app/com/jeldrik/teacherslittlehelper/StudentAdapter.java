@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -61,9 +62,28 @@ public class StudentAdapter extends ArrayAdapter {
 
         TextView email = (TextView) rowView.findViewById(R.id.studentListItem_email);
         email.setText(values.get(position).email);
+        email.setLongClickable(true);
+        email.setOnLongClickListener(new TextView.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO,Uri.fromParts("mailto",values.get(position).email,null));
+                context.startActivity(emailIntent);
+                return true;
+            }
+        });
 
         TextView phone = (TextView) rowView.findViewById(R.id.studentListItem_phone);
         phone.setText(values.get(position).phone);
+        phone.setLongClickable(true);
+        phone.setOnLongClickListener(new TextView.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:"+values.get(position).phone));
+                context.startActivity(callIntent);
+                return true;
+            }
+        });
 
         return rowView;
     }

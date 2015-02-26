@@ -53,6 +53,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:numeric="integer"
             android:id="@+id/newStudentPhone"
             android:layout_weight="1"/>
     </LinearLayout>

@@ -2,6 +2,7 @@ package app.com.jeldrik.teacherslittlehelper;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -119,6 +120,11 @@ public class ClassFragment extends Fragment {
                 transaction.commit();
                 break;
             case R.id.NotifyAllStudents:
+                String emails="";
+                for(int i=0;i<mStudentList.size();i++)
+                    emails+=mStudentList.get(i).email+";";
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO,Uri.fromParts("mailto",emails,null));
+                startActivity(emailIntent);
                 break;
 
 
