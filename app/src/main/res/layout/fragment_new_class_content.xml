@@ -13,17 +13,9 @@
             android:stretchColumns="*">
         <TableRow>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+            <Button
                 android:text="@string/newDate"
-                android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/newClassContentFragmentnewDate"
-                />
+                android:id="@+id/newClassContentFragmentnewDate"/>
         </TableRow>
         <TableRow>
 

@@ -134,20 +134,26 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                 Log.e("MainActivity","could not find Fragment "+TAG);
         }
     }
-
+    //---------------------------------------------------------------------------------------------
+    public void forwardDatetoNewClassContentFragment(String date){
+        Toast.makeText(this,date,Toast.LENGTH_LONG).show();
+        NewClassContentFragment frag=(NewClassContentFragment)getSupportFragmentManager().findFragmentByTag(NewClassContentFragment.TAG);
+        frag.setDate(date);
+    }
+    //---------------------------------------------------------------------------------------------
     @Override
     public void onStudentUpdated(StudentAdapter.StudentAdapterValues vals,int position) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.updateStudents(vals, position);
 
     }
-
+    //---------------------------------------------------------------------------------------------
     @Override
     public void OnNewClassContent(ClassContentAdapter.ClassContentAdapterValues values) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.updateClassContent(values);
     }
-
+    //---------------------------------------------------------------------------------------------
     @Override
     public void onStudentAdded(StudentAdapter.StudentAdapterValues newStudent) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
