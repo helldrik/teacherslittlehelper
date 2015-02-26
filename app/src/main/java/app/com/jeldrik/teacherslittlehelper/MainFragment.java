@@ -45,16 +45,16 @@ public class MainFragment extends Fragment {
 
     private VelocityTracker mVelocityTracker = null;
 
-
+    //----------------------------------------------------------------------------------------------
     public MainFragment() {
     }
-
+    //----------------------------------------------------------------------------------------------
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_main_fragment,menu);
     }
-
+    //----------------------------------------------------------------------------------------------
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -74,7 +74,7 @@ public class MainFragment extends Fragment {
 
         return super.onOptionsItemSelected(item);
     }
-
+    //----------------------------------------------------------------------------------------------
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +84,7 @@ public class MainFragment extends Fragment {
         mListView=new TwoWayView[7];
 
     }
-
+    //----------------------------------------------------------------------------------------------
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -120,7 +120,7 @@ public class MainFragment extends Fragment {
         this.setListeners();
         return mRootView;
     }
-
+    //----------------------------------------------------------------------------------------------
     public void onSaveInstanceState(Bundle savedState){
         super.onSaveInstanceState(savedState);
         //TODO:fixing bug that leads to NullPointer Exception
@@ -135,6 +135,7 @@ public class MainFragment extends Fragment {
             }catch(Exception e){Log.e("MainFragment","can not initialize adapter in on SaveInstanceState "+e);}
         }
     }
+    //----------------------------------------------------------------------------------------------
     @Override
     public void onPause()
     {
@@ -189,6 +190,7 @@ public class MainFragment extends Fragment {
             Log.v(TAG,"mAdapter  already exists");
         }
     }
+    //----------------------------------------------------------------------------------------------
     private void setListeners(){
         for (int i = 0; i < 7; i++) {
             //TODO: fix bug that leads to nullpointer exception
@@ -218,6 +220,7 @@ public class MainFragment extends Fragment {
             });
         }
     }
+    //----------------------------------------------------------------------------------------------
     public void addNewClassToAdapter(ArrayList<Integer>days,String title,String time, int id){
         for(int i=0;i<days.size();i++){
             try {
@@ -225,6 +228,7 @@ public class MainFragment extends Fragment {
                 if (adapter != null) {
                     MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(title,time,id);
                     adapter.add(obj);
+                    adapter.notifyDataSetChanged();
                 }
             }catch(NullPointerException e){
                 Log.e("MainFragment","ListView is null "+e);
@@ -232,6 +236,7 @@ public class MainFragment extends Fragment {
         }
 
     }
+    //----------------------------------------------------------------------------------------------
     public void deleteClassfromAdapter(int id){
         //Deleting from database
         ContentResolver resolver=getActivity().getContentResolver();

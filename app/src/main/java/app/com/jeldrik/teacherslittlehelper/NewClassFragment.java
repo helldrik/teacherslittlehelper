@@ -309,12 +309,18 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
 
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            String time=Integer.toString(hourOfDay)+":"+Integer.toString(minute);
+            String hour=Integer.toString(hourOfDay);
+            if (hour.length()==1)
+                hour="0"+hour;
+            String min=Integer.toString(minute);
+            if(min.length()==1)
+                min="0"+min;
+            String time=hour+":"+min;
             ((MainActivity)getActivity()).forwardTimeFromDialogFragmentToFragment(TAG,time);
         }
     }
     //---------------------------------------------------------------------------------------------
-    //DialogFragment for selecting startTtime
+    //DialogFragment for selecting endTtime
     //---------------------------------------------------------------------------------------------
     public static class EndTimeDialogFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
         @Override
