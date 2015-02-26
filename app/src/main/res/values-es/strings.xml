@@ -13,4 +13,69 @@
     <string name="saturday">Sabado</string>
     <string name="sunday">Domingo</string>
 
+    <string name="newClassTitle">Titulo</string>
+    <string name="newClassLevel">Nivel</string>
+    <string name="newClassDays">Dias</string>
+    <string name="newClassHour">Hora de Empezar</string>
+    <string name="newClassDuration">Hora de Terminar</string>
+    <string name="newClassInfo">Info</string>
+    <string name="newClassLocation">Lugar</string>
+    <string name="newClassBtn">Crear</string>
+    <string name="notAllFieldsFilledOutWarning">Todos los campos menos lo de Info y Nivel son obligatorios! </string>
+    <string name="classUpdated">Clase actualizado</string>
+
+    <string name="classFragment_studentsBtn">Alumnos</string>
+    <string name="addStudent">Añadir Alumno</string>
+    <string name="changeStudentData">Cambiar</string>
+    <string name="deleteStudent">Borar</string>
+
+    <string name="AddContent">Añadir nuevo contenido</string>
+    <string name="NotifyAllStudents">Notificar á todos los alumnos </string>
+
+    <string name="newDate">Fecha</string>
+    <string name="newBook">Libro usado</string>
+    <string name="newPages">Paginas</string>
+    <string name="newInfo">Info</string>
+    <string name="addClassContent">Añadir contenido</string>
+    <string name="DateNotFilledOutWarning">Seleciona una fecha! </string>
+    <string name="contentAddedAlert">Contenido añadido</string>
+    <string name="contentDeletedAlert">Contenido borado</string>
+    <string name="contentUpdatedAlert">Contenido actualizado</string>
+    <string name="contentTitle">Contentido de cada clase</string>
+
+    <string name="updateContent">actualizar</string>
+    <string name="deleteContent">borar</string>
+
+    <string name="newStudentName">Nombre</string>
+    <string name="newStudentPhone">Telefono</string>
+    <string name="newStudentEmail">Email</string>
+    <string name="studentAddedAlert">Alumno añadido</string>
+    <string name="studentUpdatedAlert">Alumno actualizado</string>
+    <string name="studentDeletedAlert">Alumno borado</string>
+    <string name="studentTitle">Alumnos</string>
+
+    <string-array name="weekDays">
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miercoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+        <item>Sabado</item>
+        <item>Domingo</item>
+    </string-array>
+
+    <string-array name="levels">
+        <item>A1</item>
+        <item>A1+</item>
+        <item>A2</item>
+        <item>A2+</item>
+        <item>B1</item>
+        <item>B1+</item>
+        <item>B2</item>
+        <item>B2+</item>
+        <item>C1</item>
+        <item>C1+</item>
+        <item>C2</item>
+    </string-array>
+
 </resources>

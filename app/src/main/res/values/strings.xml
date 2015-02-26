@@ -24,6 +24,7 @@
     <string name="newClassLocation">Location</string>
     <string name="newClassBtn">Create</string>
     <string name="notAllFieldsFilledOutWarning">All fields except Info and Level are mandatory! </string>
+    <string name="classUpdated">Class updated</string>
 
     <string name="classFragment_studentsBtn">Students</string>
     <string name="addStudent">Add Student</string>

@@ -237,6 +237,48 @@ public class MainFragment extends Fragment {
 
     }
     //----------------------------------------------------------------------------------------------
+    public void updateClassinAdapter(String days,String title,String time, int id){
+
+        String[]weekDays=getActivity().getResources().getStringArray(R.array.weekDays);
+
+        for (int i = 0; i < weekDays.length; i++) {
+            MyAdapter adapter = (MyAdapter) mListView[i].getAdapter();
+            if (adapter != null) {
+                //found a day where the class should be
+                if (days.contains(weekDays[i])) {
+                    boolean isOnNewDay = true;
+                    for (int u = 0; u < adapter.getCount(); u++) {
+                        MyAdapter.ClassAdapterValues obj = (MyAdapter.ClassAdapterValues) adapter.getItem(u);
+                        //found the class and update it
+                        if (obj._id == id) {
+                            obj.title = title;
+                            obj.time = time;
+                            adapter.remove(u);
+                            adapter.add(obj);
+                            isOnNewDay = false;
+                        }
+                    }
+                    //class was not found on this day -> we add it
+                    if (isOnNewDay) {
+                        MyAdapter.ClassAdapterValues obj = new MyAdapter.ClassAdapterValues(title, time, id);
+                        adapter.add(obj);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                //class should not be on this day -> we check if its there and delete it if so
+                else{
+                    for (int u = 0; u < adapter.getCount(); u++) {
+                        MyAdapter.ClassAdapterValues obj = (MyAdapter.ClassAdapterValues) adapter.getItem(u);
+                        if (obj._id == id) {
+                            adapter.remove(u);
+                        }
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
+    //----------------------------------------------------------------------------------------------
     public void deleteClassfromAdapter(int id){
         //Deleting from database
         ContentResolver resolver=getActivity().getContentResolver();

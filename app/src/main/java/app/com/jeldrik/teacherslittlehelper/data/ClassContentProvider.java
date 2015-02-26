@@ -208,7 +208,10 @@ public class ClassContentProvider extends ContentProvider {
         String id="";
         int affectedRows=0;
         switch(mUriMatcher.match(uri)) {
-            case CLASS:
+            case CLASS_ID:
+                id=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(ClassEntry.TABLE_NAME,values,ClassEntry._ID+" = ?",new String[]{id});
                 break;
             case STUDENT:
                 break;

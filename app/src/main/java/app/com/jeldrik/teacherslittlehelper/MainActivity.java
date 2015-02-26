@@ -12,7 +12,8 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity implements NewClassFragment.OnAddNewClassListener, ClassFragment.OnDeleteListener,
-        UpdateStudentFragment.OnStudentUpdatedListener,NewClassContentFragment.OnNewClassContentListener,NewStudentFragment.OnStudentAddedListener {
+        UpdateStudentFragment.OnStudentUpdatedListener,NewClassContentFragment.OnNewClassContentListener,
+        NewStudentFragment.OnStudentAddedListener,UpdateClassFragment.OnClassUpdatedListener {
 
     MainFragment mainFragment;
     @Override
@@ -90,13 +91,15 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         //Save the fragment's instance
         getSupportFragmentManager().putFragment(outState,"mainFragment",mainFragment);
     }
-
+    //---------------------------------------------------------------------------------------------
+    //LISTENER METHODS
+    //---------------------------------------------------------------------------------------------
     @Override
     public void onAddNewClass(ArrayList days,String title, String time, int id) {
         //Toast.makeText(this,day+" "+msg,Toast.LENGTH_LONG).show();
         mainFragment.addNewClassToAdapter(days,title,time,id);
     }
-
+    //---------------------------------------------------------------------------------------------
     @Override
     public void onDelete(int id) {
         try {
@@ -115,6 +118,9 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                 NewClassFragment frag=(NewClassFragment)getSupportFragmentManager().findFragmentByTag(TAG);
                 frag.setSelectedWeekdays(data);
                 break;
+            case UpdateClassFragment.TAG:
+                UpdateClassFragment updateFrag=(UpdateClassFragment)getSupportFragmentManager().findFragmentByTag(TAG);
+                updateFrag.setSelectedWeekdays(data);
             default:
                 Log.e("MainActivity","could not find Fragment "+TAG);
         }
@@ -123,12 +129,14 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     public void forwardTimeFromDialogFragmentToFragment(String TAG, String time){
         switch (TAG){
             case NewClassFragment.TAG:
+            case NewClassFragment.TAG+"END":
                 NewClassFragment frag=(NewClassFragment)getSupportFragmentManager().findFragmentByTag(NewClassFragment.TAG);
                 frag.setSelectedTime(TAG,time);
                 break;
-            case NewClassFragment.TAG+"END":
-                NewClassFragment endFrag=(NewClassFragment)getSupportFragmentManager().findFragmentByTag(NewClassFragment.TAG);
-                endFrag.setSelectedTime(TAG,time);
+            case UpdateClassFragment.TAG:
+            case UpdateClassFragment.TAG+"END":
+                UpdateClassFragment upFrag=(UpdateClassFragment)getSupportFragmentManager().findFragmentByTag(UpdateClassFragment.TAG);
+                upFrag.setSelectedTime(TAG,time);
                 break;
             default:
                 Log.e("MainActivity","could not find Fragment "+TAG);
@@ -158,5 +166,12 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     public void onStudentAdded(StudentAdapter.StudentAdapterValues newStudent) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.updateStudents(newStudent,-1);
+    }
+    //---------------------------------------------------------------------------------------------
+    @Override
+    public void OnClassUpdated(int id, String title, String days, String location, String startTime, String endTime, String level, String info) {
+        ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
+        frag.updateMemberVars(title,days,location,startTime,endTime,level,info);
+        mainFragment.updateClassinAdapter(days,title,startTime,id);
     }
 }

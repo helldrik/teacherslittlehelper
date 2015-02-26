@@ -105,9 +105,16 @@ public class ClassFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch(id) {
+            case R.id.UpdateClass:
+                Fragment updateFrag=UpdateClassFragment.newInstance(mID,mTitle,mDays,mLocation,mHour,mEndTime,mLevel,mInfo);
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.FragmentContainer, updateFrag, UpdateClassFragment.TAG);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                break;
             case R.id.AddContent:
                 Fragment newClassContentFragment = NewClassContentFragment.newInstance(mID);
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.FragmentContainer, newClassContentFragment, NewClassContentFragment.TAG);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -191,7 +198,15 @@ public class ClassFragment extends Fragment {
         public void onDelete(int id);
     }
 
-
+public void updateMemberVars(String title,String days,String location,String hour,String endTime,String level,String info){
+    mTitle=title;
+    mDays=days;
+    mLocation=location;
+    mHour=hour;
+    mEndTime=endTime;
+    mLevel=level;
+    mInfo=info;
+}
     //--------------------------------------------------------------------------------------------------
     public void updateStudents(StudentAdapter.StudentAdapterValues vals, int position){
             TwoWayView list = (TwoWayView)rootView.findViewById(R.id.studentListView);

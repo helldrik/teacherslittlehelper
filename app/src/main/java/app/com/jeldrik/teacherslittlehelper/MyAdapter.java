@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.sql.CallableStatement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by jeldrik on 29/01/15.
@@ -24,6 +26,8 @@ public class MyAdapter extends ArrayAdapter {
         super(context, R.layout.class_item, values);
         this.context = context;
         this.values = values;
+        //sorting the classes by time
+        Collections.sort(values,new ClassAdapterValuesTimeComparator());
     }
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context
@@ -40,9 +44,15 @@ public class MyAdapter extends ArrayAdapter {
     }
 
     public void remove(int position){
-        Log.v("MyAdapter","removing "+values.get(position));
+
         values.remove(position);
         this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        Collections.sort(values,new ClassAdapterValuesTimeComparator());
+        super.notifyDataSetChanged();
     }
 
     //implements Parcelable to be able to store it in Savedinstancestate bundle
@@ -86,5 +96,14 @@ public class MyAdapter extends ArrayAdapter {
                 return new ClassAdapterValues[size];
             }
         };
+    }
+    //Custom ComparatorClass to sort classes by time
+    class ClassAdapterValuesTimeComparator implements Comparator<ClassAdapterValues> {
+        @Override
+        public int compare(ClassAdapterValues lhs, ClassAdapterValues rhs) {
+            int hour1=Integer.parseInt(lhs.time.substring(0,2));
+            int hour2=Integer.parseInt(rhs.time.substring(0,2));
+            return hour1-hour2;
+        }
     }
 }
