@@ -57,6 +57,8 @@ public class ClassContentProvider extends ContentProvider {
         Cursor cursor=null;
         switch(mUriMatcher.match(uri)) {
             case CLASS:
+                cursor=mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{ClassEntry._ID,
+                        ClassEntry.COLUMN_TITLE},null,null, null, null, null);
                 break;
             case CLASS_ID:
                 String id=uri.getLastPathSegment();
@@ -69,7 +71,11 @@ public class ClassContentProvider extends ContentProvider {
                         ClassEntry.COLUMN_TITLE},ClassEntry._ID+" =?", new String[]{id}, null, null, null);
                 break;
             case CLASS_DAY_TITLE_HOUR_ID:
-                cursor = mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{ClassEntry._ID, DbContract.ClassEntry.COLUMN_TITLE, ClassEntry.COLUMN_TIME, ClassEntry.COLUMN_DATE}, null, null, null, null, null);
+                cursor = mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{
+                        ClassEntry._ID, DbContract.ClassEntry.COLUMN_TITLE,
+                        ClassEntry.COLUMN_TIME,
+                        ClassEntry.COLUMN_DURATION,
+                        ClassEntry.COLUMN_DATE}, null, null, null, null, null);
                 break;
             case STUDENT_CLASS_ID:
                 String classId=uri.getLastPathSegment();

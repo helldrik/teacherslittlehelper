@@ -57,6 +57,22 @@ public class UpdateClassFragment extends Fragment {
     private String mInfo;
 
     private View mRootView;
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt("id",mId);
+        outState.putString("title",mTitle);
+        outState.putString("days",mDays);
+        outState.putString("location",mLocation);
+        outState.putString("time",mTime);
+        outState.putString("endTime",mEndTime);
+        outState.putString("level",mLevel);
+        outState.putString("info",mInfo);
+        outState.putString("selectedDaysAsJson",mSelectedDaysAsJson);
+
+        super.onSaveInstanceState(outState);
+    }
+
     private Button mTimeBtn,mEndTimeBtn;
 
     private OnClassUpdatedListener mListener;
@@ -84,7 +100,18 @@ public class UpdateClassFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if(savedInstanceState!=null) {
+            mId=savedInstanceState.getInt("id",0);
+            mTitle=savedInstanceState.getString("title","");
+            mDays=savedInstanceState.getString("days","");
+            mLocation=savedInstanceState.getString("location","");
+            mTime=savedInstanceState.getString("time","");
+            mEndTime=savedInstanceState.getString("endTime","");
+            mLevel=savedInstanceState.getString("level","");
+            mInfo=savedInstanceState.getString("info","");
+            mSelectedDaysAsJson=savedInstanceState.getString("selectedDaysAsJson","");
+        }
+        else if (getArguments() != null) {
             mId = getArguments().getInt(ARG_ID);
             mTitle = getArguments().getString(ARG_TITLE);
             mDays = getArguments().getString(ARG_DAYS);
@@ -159,7 +186,7 @@ public class UpdateClassFragment extends Fragment {
                 vals.put(DbContract.ClassEntry.COLUMN_TITLE, mTitle);
                 vals.put(DbContract.ClassEntry.COLUMN_TIME, mTime);
 
-                if(mSelectedDaysAsJson!=null)
+                if(mSelectedDaysAsJson!=null && mSelectedDaysAsJson!="")
                     vals.put(DbContract.ClassEntry.COLUMN_DATE, mSelectedDaysAsJson);
 
                 vals.put(DbContract.ClassEntry.COLUMN_DURATION, mEndTime);
@@ -313,8 +340,9 @@ public class UpdateClassFragment extends Fragment {
             super.onCreate(savedInstanceState);
             if (getArguments() != null) {
                 mTime=getArguments().getString("TIME","");
-                int hour= Integer.parseInt(mTime.substring(0,2));
-                int minute=Integer.parseInt(mTime.substring(3));
+                int dividerPos=mTime.indexOf(":");
+                int hour= Integer.parseInt(mTime.substring(0,dividerPos));
+                int minute=Integer.parseInt(mTime.substring(dividerPos+1));
                 mCalendar=Calendar.getInstance();
                 mCalendar.set(Calendar.HOUR_OF_DAY,hour);
                 mCalendar.set(Calendar.MINUTE,minute);
@@ -362,8 +390,9 @@ public class UpdateClassFragment extends Fragment {
             super.onCreate(savedInstanceState);
             if (getArguments() != null) {
                 mTime=getArguments().getString("TIME","");
-                int hour= Integer.parseInt(mTime.substring(0,2));
-                int minute=Integer.parseInt(mTime.substring(3));
+                int dividerPos=mTime.indexOf(":");
+                int hour= Integer.parseInt(mTime.substring(0,dividerPos));
+                int minute=Integer.parseInt(mTime.substring(dividerPos+1));
                 mCalendar=Calendar.getInstance();
                 mCalendar.set(Calendar.HOUR_OF_DAY,hour);
                 mCalendar.set(Calendar.MINUTE,minute);
@@ -380,8 +409,15 @@ public class UpdateClassFragment extends Fragment {
 
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            String time=Integer.toString(hourOfDay)+":"+Integer.toString(minute);
-            ((MainActivity)getActivity()).forwardTimeFromDialogFragmentToFragment(TAG+"END",time);
+            String hour=Integer.toString(hourOfDay);
+            if (hour.length()==1)
+                hour="0"+hour;
+            String min=Integer.toString(minute);
+            if(min.length()==1)
+                min="0"+min;
+            String time=hour+":"+min;
+
+            ((MainActivity)getActivity()).forwardTimeFromDialogFragmentToFragment(TAG + "END", time);
         }
     }
     //--------------------------------------------------------------------------------------------------

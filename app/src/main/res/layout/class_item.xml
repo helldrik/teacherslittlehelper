@@ -14,7 +14,9 @@
     android:orientation="vertical"
     >
     <TextView android:id="@+id/classTitle" android:text="@string/hello_world" style="@style/Header"/>
-    <TextView android:id="@+id/classTime" android:text="@string/hello_world" style="@style/Header"/>
+    <TextView android:id="@+id/classStartTime" android:text="@string/hello_world" style="@style/Header"/>
+    <TextView  android:text="-" style="@style/Header"/>
+    <TextView android:id="@+id/classEndTime" android:text="@string/hello_world" style="@style/Header"/>
 </LinearLayout>
 
 </LinearLayout>

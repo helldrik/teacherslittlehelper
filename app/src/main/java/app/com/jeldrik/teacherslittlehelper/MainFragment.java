@@ -153,7 +153,7 @@ public class MainFragment extends Fragment {
                 }
             }else {
                 ContentResolver resolver = getActivity().getContentResolver();
-                Cursor cursor= resolver.query(DbContract.CLASS_DAY_TITLE_HOUR_ID, new String[]{DbContract.ClassEntry._ID, DbContract.ClassEntry.COLUMN_TITLE, DbContract.ClassEntry.COLUMN_TIME, DbContract.ClassEntry.COLUMN_DATE}, null, null, null);
+                Cursor cursor= resolver.query(DbContract.CLASS_DAY_TITLE_HOUR_ID,null, null, null, null);
                 cursor.moveToFirst();
                 //the arraylists of every day a saved in a list
                 ArrayList<List<MyAdapter.ClassAdapterValues>> listGroup= new ArrayList<List<MyAdapter.ClassAdapterValues>>(7);
@@ -164,14 +164,16 @@ public class MainFragment extends Fragment {
                 while(!cursor.isAfterLast()){
                     int id=cursor.getInt(0);
                     String title=cursor.getString(1);
-                    String time=cursor.getString(2);
+                    String startTime=cursor.getString(2);
+                    String endTime=cursor.getString(3);
+                    Log.v("MYCURSOR","Show data in class: "+id+" "+title+" "+startTime+" "+cursor.getString(4));
                     try {
-                        JSONObject json = new JSONObject(cursor.getString(3));
+                        JSONObject json = new JSONObject(cursor.getString(4));
                         JSONArray jarr=json.optJSONArray("selectedDays");
                         if (jarr != null) {
                             for (int i=0;i<jarr.length();i++){
-                                MyAdapter.ClassAdapterValues obj = new MyAdapter.ClassAdapterValues(title,time,id);
-                                Log.v("MYCURSOR",id+" "+title+" "+time+" "+jarr.get(i));
+                                MyAdapter.ClassAdapterValues obj = new MyAdapter.ClassAdapterValues(title,startTime,endTime,id);
+                                //Log.v("MYCURSOR",id+" "+title+" "+startTime+" "+jarr.get(i));
                                 ArrayList<MyAdapter.ClassAdapterValues> tempList=(ArrayList)listGroup.get(jarr.getInt(i));
                                 tempList.add(obj);
                                 listGroup.set(jarr.getInt(i),tempList);
@@ -221,59 +223,54 @@ public class MainFragment extends Fragment {
         }
     }
     //----------------------------------------------------------------------------------------------
-    public void addNewClassToAdapter(ArrayList<Integer>days,String title,String time, int id){
+    public void addNewClassToAdapter(ArrayList<Integer>days,String title,String startTime,String endTime, int id){
         for(int i=0;i<days.size();i++){
-            try {
-                MyAdapter adapter = (MyAdapter)mListView[days.get(i)].getAdapter();
-                if (adapter != null) {
-                    MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(title,time,id);
-                    adapter.add(obj);
-                    adapter.notifyDataSetChanged();
-                }
-            }catch(NullPointerException e){
-                Log.e("MainFragment","ListView is null "+e);
+            if (mAdapter[i] != null) {
+                MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(title,startTime,endTime,id);
+                mAdapter[i].add(obj);
+                mAdapter[i].notifyDataSetChanged();
             }
         }
 
     }
     //----------------------------------------------------------------------------------------------
-    public void updateClassinAdapter(String days,String title,String time, int id){
+    public void updateClassinAdapter(String days,String title,String startTime, String endTime, int id){
 
         String[]weekDays=getActivity().getResources().getStringArray(R.array.weekDays);
 
         for (int i = 0; i < weekDays.length; i++) {
-            MyAdapter adapter = (MyAdapter) mListView[i].getAdapter();
-            if (adapter != null) {
+            if (mAdapter[i] != null) {
                 //found a day where the class should be
                 if (days.contains(weekDays[i])) {
                     boolean isOnNewDay = true;
-                    for (int u = 0; u < adapter.getCount(); u++) {
-                        MyAdapter.ClassAdapterValues obj = (MyAdapter.ClassAdapterValues) adapter.getItem(u);
+                    for (int u = 0; u < mAdapter[i].getCount(); u++) {
+                        MyAdapter.ClassAdapterValues obj = (MyAdapter.ClassAdapterValues) mAdapter[i].getItem(u);
                         //found the class and update it
                         if (obj._id == id) {
                             obj.title = title;
-                            obj.time = time;
-                            adapter.remove(u);
-                            adapter.add(obj);
+                            obj.startTime = startTime;
+                            obj.endTime=endTime;
+                            mAdapter[i].remove(u);
+                            mAdapter[i].add(obj);
                             isOnNewDay = false;
                         }
                     }
                     //class was not found on this day -> we add it
                     if (isOnNewDay) {
-                        MyAdapter.ClassAdapterValues obj = new MyAdapter.ClassAdapterValues(title, time, id);
-                        adapter.add(obj);
+                        MyAdapter.ClassAdapterValues obj = new MyAdapter.ClassAdapterValues(title, startTime, endTime, id);
+                        mAdapter[i].add(obj);
                     }
-                    adapter.notifyDataSetChanged();
+                    mAdapter[i].notifyDataSetChanged();
                 }
                 //class should not be on this day -> we check if its there and delete it if so
                 else{
-                    for (int u = 0; u < adapter.getCount(); u++) {
-                        MyAdapter.ClassAdapterValues obj = (MyAdapter.ClassAdapterValues) adapter.getItem(u);
+                    for (int u = 0; u < mAdapter[i].getCount(); u++) {
+                        MyAdapter.ClassAdapterValues obj = (MyAdapter.ClassAdapterValues) mAdapter[i].getItem(u);
                         if (obj._id == id) {
-                            adapter.remove(u);
+                            mAdapter[i].remove(u);
                         }
                     }
-                    adapter.notifyDataSetChanged();
+                    mAdapter[i].notifyDataSetChanged();
                 }
             }
         }
@@ -286,11 +283,12 @@ public class MainFragment extends Fragment {
         resolver.delete(uri,null,null);
         //deleting from listview
         for (int i=0;i<7;i++) {
-            MyAdapter adapter = (MyAdapter) mListView[i].getAdapter();
-            for(int u=0;u<adapter.getCount();u++){
-                MyAdapter.ClassAdapterValues val = (MyAdapter.ClassAdapterValues) adapter.getItem(u);
-                if (val._id == id) {
-                    adapter.remove(u);
+            if(mAdapter[i]!=null) {
+                for (int u = 0; u < mAdapter[i].getCount(); u++) {
+                    MyAdapter.ClassAdapterValues val = (MyAdapter.ClassAdapterValues) mAdapter[i].getItem(u);
+                    if (val._id == id) {
+                        mAdapter[i].remove(u);
+                    }
                 }
             }
         }

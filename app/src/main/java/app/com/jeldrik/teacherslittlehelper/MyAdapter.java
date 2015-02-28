@@ -37,8 +37,12 @@ public class MyAdapter extends ArrayAdapter {
         TextView title = (TextView) rowView.findViewById(R.id.classTitle);
         title.setText(values.get(position).title);
 
-        TextView startTime = (TextView) rowView.findViewById(R.id.classTime);
-        startTime.setText(values.get(position).time);
+        TextView startTime = (TextView) rowView.findViewById(R.id.classStartTime);
+        startTime.setText(values.get(position).startTime);
+
+        TextView endTime = (TextView) rowView.findViewById(R.id.classEndTime);
+        endTime.setText(values.get(position).endTime);
+        Log.v("SFSF","THE ENDTIME: "+values.get(position).endTime);
 
         return rowView;
     }
@@ -58,18 +62,21 @@ public class MyAdapter extends ArrayAdapter {
     //implements Parcelable to be able to store it in Savedinstancestate bundle
     static class ClassAdapterValues implements Parcelable{
         String title;
-        String time;
+        String startTime;
+        String endTime;
         int _id;
 
-        public ClassAdapterValues(String title,String time,int _id){
+        public ClassAdapterValues(String title,String startTime,String endTime,int _id){
             this._id=_id;
-            this.time=time;
+            this.startTime=startTime;
+            this.endTime=endTime;
             this.title=title;
         }
 
         private ClassAdapterValues(Parcel in){
             title=in.readString();
-            time=in.readString();
+            startTime=in.readString();
+            endTime=in.readString();
             _id=in.readInt();
         }
 
@@ -82,7 +89,8 @@ public class MyAdapter extends ArrayAdapter {
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(title);
-            dest.writeString(time);
+            dest.writeString(startTime);
+            dest.writeString(endTime);
             dest.writeInt(_id);
 
         }
@@ -101,8 +109,8 @@ public class MyAdapter extends ArrayAdapter {
     class ClassAdapterValuesTimeComparator implements Comparator<ClassAdapterValues> {
         @Override
         public int compare(ClassAdapterValues lhs, ClassAdapterValues rhs) {
-            int hour1=Integer.parseInt(lhs.time.substring(0,2));
-            int hour2=Integer.parseInt(rhs.time.substring(0,2));
+            int hour1=Integer.parseInt(lhs.startTime.substring(0,2));
+            int hour2=Integer.parseInt(rhs.startTime.substring(0,2));
             return hour1-hour2;
         }
     }

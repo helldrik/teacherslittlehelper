@@ -77,7 +77,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
      * fragment to allow an interaction in this fragment to be communicated
      */
     public interface OnAddNewClassListener {
-        public void onAddNewClass(ArrayList days,String title,String time, int id);
+        public void onAddNewClass(ArrayList days,String title,String startTime,String endTime, int id);
     }
 
     /**
@@ -105,15 +105,35 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
         menu.clear();
         super.onCreateOptionsMenu(menu, inflater);
     }
+    //---------------------------------------------------------------------------------------------
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("day", mDay);
+        outState.putString("selectedDays", mSelectedDays);
+        outState.putIntegerArrayList("selectedDaysAsArray", mSelectedDaysAsArray);
+        outState.putString("level", mLevel);
+        outState.putString("startTime", mTime);
+        outState.putString("endTime", mEndTime);
+        super.onSaveInstanceState(outState);
+    }
 
     //---------------------------------------------------------------------------------------------
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        if (getArguments() != null) {
+        if(savedInstanceState!=null) {
+            mDay=savedInstanceState.getString("day");
+            mSelectedDays=savedInstanceState.getString("selectedDays");
+            mSelectedDaysAsArray=savedInstanceState.getIntegerArrayList("selectedDaysAsArray");
+            mLevel=savedInstanceState.getString("level");
+            mTime=savedInstanceState.getString("startTime");
+            mEndTime=savedInstanceState.getString("endTime");
+        }
+        else if (getArguments() != null) {
             mDay = getArguments().getString(ARG_PARAM1);
             mTime=mEndTime="00:00";
+            mSelectedDays="";
         }
     }
     //---------------------------------------------------------------------------------------------
@@ -129,19 +149,22 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
 
             @Override
             public void onClick(View v) {
-                showDaysDialog(0);
+                DaysDialogFragment dialogFragment= DaysDialogFragment.newInstance(mSelectedDaysAsArray);
+                dialogFragment.show(getActivity().getFragmentManager(),"dialog");
             }
         });
 
         mTimeBtn= (Button)mRootView.findViewById(R.id.newClassStartTime);
-        mTimeBtn.setOnClickListener(new Button.OnClickListener(){
+        mTimeBtn.setText(mTime);
+        mTimeBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment newFragment = new TimeDialogFragment();
-                newFragment.show(getActivity().getFragmentManager(),"Time");
+                newFragment.show(getActivity().getFragmentManager(), "Time");
             }
         });
         mEndTimeBtn= (Button)mRootView.findViewById(R.id.newClassEndTime);
+        mEndTimeBtn.setText(mEndTime);
         mEndTimeBtn.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -182,7 +205,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
                     InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     mgr.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                    mListener.onAddNewClass(mSelectedDaysAsArray, title.getText().toString(),mTime,id);
+                    mListener.onAddNewClass(mSelectedDaysAsArray, title.getText().toString(),mTime,mEndTime,id);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();
                 }
@@ -223,11 +246,6 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
 
     }
     //---------------------------------------------------------------------------------------------
-    private void showDaysDialog(int i) {
-        DaysDialogFragment dialogFragment= DaysDialogFragment.newInstance(0);
-        dialogFragment.show(getActivity().getFragmentManager(),"dialog");
-    }
-    //---------------------------------------------------------------------------------------------
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -260,20 +278,34 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
 
         public String[] mdays;
         public boolean[] mselections;
+        private ArrayList<Integer> mSavedDays;
 
         //---------------------------------------------------------------------------------------------
-        public static DaysDialogFragment newInstance(int title) {
+        public static DaysDialogFragment newInstance(ArrayList<Integer> days) {
             DaysDialogFragment frag = new DaysDialogFragment();
             Bundle args = new Bundle();
-            args.putInt("title", title);
+            args.putIntegerArrayList("days", days);
             frag.setArguments(args);
             return frag;
         }
         //---------------------------------------------------------------------------------------------
         @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
             mdays=getActivity().getResources().getStringArray(R.array.weekDays);
             mselections=new boolean[mdays.length];
+            if (getArguments() != null) {
+                mSavedDays=getArguments().getIntegerArrayList("days");
+                if(mSavedDays!=null) {
+                    for (int i = 0; i < mSavedDays.size(); i++) {
+                        mselections[mSavedDays.get(i)] = true;
+                    }
+                }
+            }
+        }
+        //---------------------------------------------------------------------------------------------
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder( getActivity() )
                     .setTitle(getActivity().getResources().getString(R.string.newClassDays) )
                     .setMultiChoiceItems(mdays, mselections, new DialogInterface.OnMultiChoiceClickListener() {
@@ -334,8 +366,14 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
 
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            String time=Integer.toString(hourOfDay)+":"+Integer.toString(minute);
-            ((MainActivity)getActivity()).forwardTimeFromDialogFragmentToFragment(TAG+"END",time);
+            String hour=Integer.toString(hourOfDay);
+            if (hour.length()==1)
+                hour="0"+hour;
+            String min=Integer.toString(minute);
+            if(min.length()==1)
+                min="0"+min;
+            String time=hour+":"+min;
+            ((MainActivity)getActivity()).forwardTimeFromDialogFragmentToFragment(TAG,time);
         }
     }
 

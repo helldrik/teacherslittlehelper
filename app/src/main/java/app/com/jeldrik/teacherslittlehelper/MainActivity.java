@@ -95,9 +95,9 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     //LISTENER METHODS
     //---------------------------------------------------------------------------------------------
     @Override
-    public void onAddNewClass(ArrayList days,String title, String time, int id) {
+    public void onAddNewClass(ArrayList days,String title, String startTime,String endTime, int id) {
         //Toast.makeText(this,day+" "+msg,Toast.LENGTH_LONG).show();
-        mainFragment.addNewClassToAdapter(days,title,time,id);
+        mainFragment.addNewClassToAdapter(days,title,startTime,endTime,id);
     }
     //---------------------------------------------------------------------------------------------
     @Override
@@ -172,6 +172,6 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     public void OnClassUpdated(int id, String title, String days, String location, String startTime, String endTime, String level, String info) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.updateMemberVars(title,days,location,startTime,endTime,level,info);
-        mainFragment.updateClassinAdapter(days,title,startTime,id);
+        mainFragment.updateClassinAdapter(days,title,startTime,endTime,id);
     }
 }
