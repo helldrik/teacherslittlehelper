@@ -58,6 +58,9 @@ public class ClassFragment extends Fragment {
     private ArrayList<ClassContentAdapter.ClassContentAdapterValues> mClassContentList;
     private ArrayList<StudentAdapter.StudentAdapterValues> mStudentList;
 
+    private StudentAdapter mStudentAdapter;
+    private ClassContentAdapter mclassContentAdapter;
+
     private OnDeleteListener mListener;
 
     /**
@@ -85,7 +88,16 @@ public class ClassFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if(savedInstanceState!=null){
+            position=savedInstanceState.getInt("position");
+            mID=savedInstanceState.getInt("id");
+            mClassContentList = savedInstanceState.getParcelableArrayList("ClassContentList");
+            mStudentList = savedInstanceState.getParcelableArrayList("StudentList");
+            mclassContentAdapter=new ClassContentAdapter(getActivity(),mClassContentList);
+            mStudentAdapter=new StudentAdapter(getActivity(),mStudentList);
+
+        }
+        else if (getArguments() != null) {
             
             position = getArguments().getInt(ARG_PARAM2);
             mID=getArguments().getInt(ARG_PARAM3);
@@ -144,6 +156,7 @@ public class ClassFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView =inflater.inflate(R.layout.fragment_class, container, false);
+
         addStudents();
         addClassContent();
         TextView title=(TextView)rootView.findViewById(R.id.classfragment_title);
@@ -209,21 +222,21 @@ public void updateMemberVars(String title,String days,String location,String hou
 }
     //--------------------------------------------------------------------------------------------------
     public void updateStudents(StudentAdapter.StudentAdapterValues vals, int position){
-            TwoWayView list = (TwoWayView)rootView.findViewById(R.id.studentListView);
-            StudentAdapter adapter=(StudentAdapter)list.getAdapter();
-        //if position= -1 means we want to add a new student
-            if(position!=-1)
-                adapter.remove(position);
-            if(vals!=null)
-                adapter.add(vals);
-        adapter.notifyDataSetChanged();
+        if(mStudentAdapter!=null) {
+            //if position= -1 means we want to add a new student
+            if (position != -1)
+                mStudentAdapter.remove(position);
+            if (vals != null)
+                mStudentAdapter.add(vals);
+            mStudentAdapter.notifyDataSetChanged();
+        }
     }
     //--------------------------------------------------------------------------------------------------
     private void addStudents(){
-        TwoWayView list = (TwoWayView)rootView.findViewById(R.id.studentListView);
 
-        StudentAdapter adapter = new StudentAdapter(getActivity(), mStudentList);
-        list.setAdapter(adapter);
+        TwoWayView list = (TwoWayView)rootView.findViewById(R.id.studentListView);
+        mStudentAdapter =new StudentAdapter(getActivity(),mStudentList);
+        list.setAdapter(mStudentAdapter);
 
         list.setOnItemClickListener(new TwoWayView.OnItemClickListener() {
             @Override
@@ -248,17 +261,17 @@ public void updateMemberVars(String title,String days,String location,String hou
     }
     //--------------------------------------------------------------------------------------------------
     public void updateClassContent(ClassContentAdapter.ClassContentAdapterValues vals){
-        TwoWayView list = (TwoWayView)rootView.findViewById(R.id.classContentListView);
-        ClassContentAdapter adapter=(ClassContentAdapter)list.getAdapter();
-        adapter.add(vals);
-        adapter.notifyDataSetChanged();
+        if(mclassContentAdapter!=null) {
+            mclassContentAdapter.add(vals);
+            mclassContentAdapter.notifyDataSetChanged();
+        }
     }
     //--------------------------------------------------------------------------------------------------
     private void addClassContent(){
-        TwoWayView list = (TwoWayView)rootView.findViewById(R.id.classContentListView);
 
-        ClassContentAdapter adapter = new ClassContentAdapter(getActivity(), mClassContentList);
-        list.setAdapter(adapter);
+        TwoWayView list = (TwoWayView)rootView.findViewById(R.id.classContentListView);
+        mclassContentAdapter = new ClassContentAdapter(getActivity(), mClassContentList);
+        list.setAdapter(mclassContentAdapter);
 
         list.setOnItemClickListener(new TwoWayView.OnItemClickListener() {
             @Override
@@ -287,8 +300,6 @@ public void updateMemberVars(String title,String days,String location,String hou
     //--------------------------------------------------------------------------------------------------
     private void getData(Bundle savedInstanceState){
         if(savedInstanceState!=null) {
-            mClassContentList = savedInstanceState.getParcelableArrayList("ClassContentList");
-            mStudentList = savedInstanceState.getParcelableArrayList("StudentList");
             mDays=savedInstanceState.getString("days");
             mEndTime=savedInstanceState.getString("endTime");
             mInfo=savedInstanceState.getString("info");
@@ -341,6 +352,8 @@ public void updateMemberVars(String title,String days,String location,String hou
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("ClassContentList", mClassContentList);
         outState.putParcelableArrayList("StudentList", mStudentList);
+        outState.putInt("id",mID);
+        outState.putInt("position",position);
         outState.putString("days",mDays);
         outState.putString("endTime",mEndTime);
         outState.putString("info",mInfo);

@@ -34,6 +34,9 @@ public class NewClassContentFragment extends Fragment {
     private static final String ARG_CLASS_ID = "classId";
     private int mClassId;
     private String mDate;
+    private String sBook;
+    private String sPages;
+    private String sInfo;
     private OnNewClassContentListener mListener;
     private View mRootView;
 
@@ -54,14 +57,32 @@ public class NewClassContentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mClassId=getArguments().getInt(ARG_CLASS_ID);
+        if(savedInstanceState!=null){
+            mClassId=savedInstanceState.getInt("classId");
+            mDate=savedInstanceState.getString("date");
+            sBook=savedInstanceState.getString("book");
+            sPages=savedInstanceState.getString("pages");
+            sInfo=savedInstanceState.getString("info");
         }
-        Calendar c=Calendar.getInstance();
-        if(DATE_FORMAT=="EUR")
-            mDate=Integer.toString(c.get(Calendar.DAY_OF_MONTH))+"."+Integer.toString(c.get(Calendar.MONTH)+1)+"."+Integer.toString(c.get(Calendar.YEAR));
-        else if(DATE_FORMAT=="US")
-            mDate=Integer.toString(c.get(Calendar.MONTH)+1)+"/"+Integer.toString(c.get(Calendar.DAY_OF_MONTH))+"/"+Integer.toString(c.get(Calendar.YEAR));
+        else if (getArguments() != null) {
+            mClassId = getArguments().getInt(ARG_CLASS_ID);
+
+            Calendar c = Calendar.getInstance();
+            if (DATE_FORMAT == "EUR")
+                mDate = Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "." + Integer.toString(c.get(Calendar.MONTH) + 1) + "." + Integer.toString(c.get(Calendar.YEAR));
+            else if (DATE_FORMAT == "US")
+                mDate = Integer.toString(c.get(Calendar.MONTH) + 1) + "/" + Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "/" + Integer.toString(c.get(Calendar.YEAR));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("classId", mClassId);
+        outState.putString("date", mDate);
+        outState.putString("book", sBook);
+        outState.putString("pages", sPages);
+        outState.putString("info", sInfo);
     }
 
     @Override
@@ -84,11 +105,11 @@ public class NewClassContentFragment extends Fragment {
             public void onClick(View v) {
 
                 TextView book=(TextView)mRootView.findViewById(R.id.newClassContentFragmentNewBook);
-                String sBook=book.getText().toString();
+                sBook=book.getText().toString();
                 TextView pages=(TextView)mRootView.findViewById(R.id.newClassContentFragmentNewPages);
-                String sPages=pages.getText().toString();
+                sPages=pages.getText().toString();
                 TextView info=(TextView)mRootView.findViewById(R.id.newClassContentFragmentNewInfo);
-                String sInfo=info.getText().toString();
+                sInfo=info.getText().toString();
 
                 ContentValues vals = new ContentValues(5);
                 vals.put(DbContract.ClassContentEntry.COLUMN_BOOK, sBook);
@@ -129,7 +150,6 @@ public class NewClassContentFragment extends Fragment {
     }
 
     public interface OnNewClassContentListener {
-        // TODO: Update argument type and name
         public void OnNewClassContent(ClassContentAdapter.ClassContentAdapterValues values);
     }
 
@@ -140,12 +160,21 @@ public class NewClassContentFragment extends Fragment {
     }
     public static class AddDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
+        int day,month,year;
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int day=c.get(Calendar.DAY_OF_MONTH);
-            int month=c.get(Calendar.MONTH);
-            int year=c.get(Calendar.YEAR);
+            if(savedInstanceState!=null){
+                day=savedInstanceState.getInt("day");
+                month=savedInstanceState.getInt("month");
+                year=savedInstanceState.getInt("year");
+            }
+            else {
+                final Calendar c = Calendar.getInstance();
+                day = c.get(Calendar.DAY_OF_MONTH);
+                month = c.get(Calendar.MONTH);
+                year = c.get(Calendar.YEAR);
+            }
             return new DatePickerDialog(getActivity(),this,year,month,day);
         }
 
@@ -158,6 +187,14 @@ public class NewClassContentFragment extends Fragment {
                 date=Integer.toString(monthOfYear+1)+"/"+Integer.toString(dayOfMonth)+"/"+Integer.toString(year);
             ((MainActivity)getActivity()).forwardDatetoNewClassContentFragment(date);
 
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putInt("day",day);
+            outState.putInt("month",month);
+            outState.putInt("year",year);
         }
     }
 

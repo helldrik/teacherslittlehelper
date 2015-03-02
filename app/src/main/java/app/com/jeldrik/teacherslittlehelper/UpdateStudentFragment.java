@@ -65,10 +65,21 @@ public class UpdateStudentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if(savedInstanceState!=null){
+            studentAdapterVal=savedInstanceState.getParcelable("studentAdapterVal");
+            mPosition=savedInstanceState.getInt("position");
+        }
+        else if (getArguments() != null) {
             studentAdapterVal = getArguments().getParcelable(ARG_STUDENTADAPTERVAL);
             mPosition=getArguments().getInt(ARG_POSITION);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("studentAdapterVal",studentAdapterVal);
+        outState.putInt("position",mPosition);
     }
 
     @Override

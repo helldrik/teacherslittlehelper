@@ -205,6 +205,9 @@ public class UpdateClassFragment extends Fragment {
                     fm.popBackStack();
                     Toast.makeText(getActivity(),R.string.classUpdated,Toast.LENGTH_LONG).show();
                 }
+                else{
+                    Toast.makeText(getActivity(),"Could not update",Toast.LENGTH_LONG).show();
+                }
             }
         });
         return mRootView;

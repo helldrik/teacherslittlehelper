@@ -25,6 +25,10 @@ public class NewStudentFragment extends Fragment {
 
 
     private int mClassId;
+    private String name;
+    private String email;
+    private String phone;
+
     private View mRootView;
     private OnStudentAddedListener mListener;
 
@@ -45,9 +49,24 @@ public class NewStudentFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+        if(savedInstanceState!=null) {
+            mClassId=savedInstanceState.getInt("classId");
+            name=savedInstanceState.getString("name");
+            email=savedInstanceState.getString("email");
+            phone=savedInstanceState.getString("phone");
+        }
+        else if (getArguments() != null) {
             mClassId = getArguments().getInt(ARG_CLASS_ID);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("classId",mClassId);
+        outState.putString("name",name);
+        outState.putString("email",email);
+        outState.putString("phone",phone);
     }
 
     @Override
@@ -64,11 +83,11 @@ public class NewStudentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 TextView tvName=(TextView)mRootView.findViewById(R.id.newStudentName);
-                String name=tvName.getText().toString();
+                name=tvName.getText().toString();
                 TextView tvEmail=(TextView)mRootView.findViewById(R.id.newStudentEmail);
-                String email=tvEmail.getText().toString();
+                email=tvEmail.getText().toString();
                 TextView tvPhone=(TextView)mRootView.findViewById(R.id.newStudentPhone);
-                String phone=tvPhone.getText().toString();
+                phone=tvPhone.getText().toString();
 
                 ContentValues vals = new ContentValues(4);
                 vals.put(DbContract.StudentEntry.COLUMN_STUDENT_NAME, name);
