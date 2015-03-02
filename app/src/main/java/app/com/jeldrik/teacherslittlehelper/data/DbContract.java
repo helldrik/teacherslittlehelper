@@ -28,6 +28,9 @@ public class DbContract {
     public static final String PATH_CLASS = "class";
     public static final String PATH_CLASSCONTENT = "classContent";
     public static final String PATH_CLASSCONTENT_WITH_FOREIGNKEY = "classContentWithForeignKey";
+    public static final String PATH_STUDENT_ATTENDANCE ="studentAttendance";
+    public static final String PATH_STUDENT_ATTENDANCE_WITH_CLASSCONTENT_ID ="studentAttendanceWithClassContentId";
+    public static final String PATH_STUDENT_ATTENDANCE_WITH_STUDENT_ID ="studentAttendanceWithStudentId";
 
 //--------------------------------------------------------------------------------------------------
     /* Inner class that defines the table contents of the student table */
@@ -89,6 +92,26 @@ public class DbContract {
         public static final String COLUMN_PAGE="page";
         public static final String COLUMN_INFO="info";
         public static final String COLUMN_FOREIGN_KEY_CLASS="classID";
+    }
+    //--------------------------------------------------------------------------------------------------
+    /* Inner class that defines the table contents of the student table */
+    public static final class StudentAttendanceEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_ATTENDANCE).build();
+        public static final Uri CONTENT_URI_WITH_STUDENTKEY = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_ATTENDANCE_WITH_STUDENT_ID).build();
+        public static final Uri CONTENT_URI_WITH_CLASSCONTENTKEY = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_ATTENDANCE_WITH_CLASSCONTENT_ID).build();
+
+
+        public static final String CONTENT_TYPE =
+                "vnd.android.cursor.dir/" + AUTHORITY + "/" + PATH_STUDENT_ATTENDANCE;
+        public static final String CONTENT_ITEM_TYPE =
+                "vnd.android.cursor.item/" + AUTHORITY + "/" + PATH_STUDENT_ATTENDANCE;
+
+        //table name
+        public static final String TABLE_NAME="studentAttendance";
+        public static final String COLUMN_STATUS="studentStatus";
+        public static final String COLUMN_FOREIGN_KEY_STUDENT="studentId";
+        public static final String COLUMN_FOREIGN_KEY_CLASSCONTENT="classContentID";
     }
 
 }

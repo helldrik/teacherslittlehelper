@@ -26,6 +26,10 @@ public class ClassContentProvider extends ContentProvider {
     private static final int CLASSCONTENT=5;
     private static final int CLASSCONTENT_ID=6;
     private static final int CLASSCONTENT_CLASS_ID=601;
+    private static final int STUDENTATTENDANCE=7;
+    private static final int STUDENTATTENDANCE_ID=8;
+    private static final int STUDENTATTENDANCE_STUDENT_ID=801;
+    private static final int STUDENTATTENDANCE_CLASSCONTENT_ID=802;
 
     private static final UriMatcher mUriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -43,6 +47,10 @@ public class ClassContentProvider extends ContentProvider {
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT,CLASSCONTENT);
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT+"/#",CLASSCONTENT_ID);
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT_WITH_FOREIGNKEY+"/#",CLASSCONTENT_CLASS_ID);
+
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE,STUDENTATTENDANCE);
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE_WITH_CLASSCONTENT_ID+"/#",STUDENTATTENDANCE_CLASSCONTENT_ID);
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE_WITH_STUDENT_ID+"/#",STUDENTATTENDANCE_STUDENT_ID);
     }
 
     SQLiteDatabase mdataBase;
@@ -109,6 +117,21 @@ public class ClassContentProvider extends ContentProvider {
                         ClassContentEntry.COLUMN_INFO,
                         ClassContentEntry._ID},ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS+" =?",new String[]{classId},null,null,ClassContentEntry._ID+" desc");
                 break;
+            case STUDENTATTENDANCE_CLASSCONTENT_ID:
+                String classContentId=uri.getLastPathSegment();
+                String query="Select "+StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry._ID+","
+                        +StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+","
+                        +StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry.COLUMN_STATUS+","
+                        +StudentEntry.TABLE_NAME+"."+StudentEntry.COLUMN_STUDENT_NAME
+
+                        +" from "+StudentAttendanceEntry.TABLE_NAME+" inner join "+StudentEntry.TABLE_NAME+" on "
+                        +StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+" = "
+                        +StudentEntry.TABLE_NAME+"."+StudentEntry._ID+" where "
+                        +StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+" = "+classContentId+";";
+
+                Log.v("MYContentProvider"," QUERY: "+query);
+                cursor=mdataBase.rawQuery(query,null);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -143,6 +166,9 @@ public class ClassContentProvider extends ContentProvider {
             case CLASSCONTENT:
                 Log.v("ContentProvider","Insert data into classcontent table");
                 table=ClassContentEntry.TABLE_NAME;
+                break;
+            case STUDENTATTENDANCE:
+                table=StudentAttendanceEntry.TABLE_NAME;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
@@ -202,6 +228,16 @@ public class ClassContentProvider extends ContentProvider {
                 String classId=uri.getLastPathSegment();
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.delete(ClassContentEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            case STUDENTATTENDANCE_STUDENT_ID:
+                String studentId=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.delete(StudentAttendanceEntry.TABLE_NAME,StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+"=?",new String[]{studentId});
+                break;
+            case STUDENTATTENDANCE_CLASSCONTENT_ID:
+                String classContentId=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.delete(StudentAttendanceEntry.TABLE_NAME,StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+"=?",new String[]{classContentId});
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);

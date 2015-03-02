@@ -112,6 +112,11 @@ public class UpdateClassContentFragment extends Fragment {
                 Uri uri= DbContract.ClassContentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(mId)).build();
                 ContentResolver resolver=getActivity().getContentResolver();
                 if(resolver.delete(uri, DbContract.ClassContentEntry._ID+" = ?",new String[]{Integer.toString(mId)})>0){
+
+                    //Delete all students in StudentAttendance associated with this classcontent
+                    uri= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Integer.toString(mId)).build();
+                    resolver.delete(uri,null,null);
+
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();
                     Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.contentDeletedAlert), Toast.LENGTH_LONG).show();

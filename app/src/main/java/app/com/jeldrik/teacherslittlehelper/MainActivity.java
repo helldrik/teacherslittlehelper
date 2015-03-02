@@ -1,5 +1,10 @@
 package app.com.jeldrik.teacherslittlehelper;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -9,6 +14,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import app.com.jeldrik.teacherslittlehelper.data.DbContract;
+import app.com.jeldrik.teacherslittlehelper.data.DbHelper;
 
 
 public class MainActivity extends ActionBarActivity implements NewClassFragment.OnAddNewClassListener, ClassFragment.OnDeleteListener,
@@ -60,7 +68,46 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         ContentResolver resolver=getContentResolver();
         Uri returnUri=resolver.insert(DbContract.ClassEntry.CONTENT_URI,vals);
         Log.v("MainActivity",returnUri.toString());
-         */
+
+        ContentValues vals=new ContentValues();
+        vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT,2);
+        vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT,3);
+        vals.put(DbContract.StudentAttendanceEntry.COLUMN_STATUS,"ill");
+        ContentResolver resolver=getContentResolver();
+        Uri returnUri=resolver.insert(DbContract.StudentAttendanceEntry.CONTENT_URI,vals);
+        Log.v("MainActivity","return uri: "+returnUri.toString());
+/*
+        ContentValues vals=new ContentValues();
+        vals.put(DbContract.StudentEntry.COLUMN_STUDENT_NAME, "Emmir");
+        vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS,2);
+        ContentResolver resolver=getContentResolver();
+        Uri returnUri=resolver.insert(DbContract.StudentEntry.CONTENT_URI,vals);
+/*
+        vals=new ContentValues();
+        vals.put(DbContract.ClassContentEntry.COLUMN_DATE, "ayer");
+        vals.put(DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS,2);
+        resolver=getContentResolver();
+        returnUri=resolver.insert(DbContract.ClassContentEntry.CONTENT_URI,vals);
+*/
+        /*
+        resolver = this.getContentResolver();
+        Uri uri2= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_STUDENTKEY.buildUpon().appendPath("2").build();
+        resolver = this.getContentResolver();
+        resolver.delete(uri2,null,null);
+
+        uri2= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath("2").build();
+        resolver = this.getContentResolver();
+        resolver.delete(uri2,null,null);
+
+        resolver = this.getContentResolver();
+        Uri uri= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath("1").build();
+        Cursor cursor=resolver.query(uri,null,null,null,null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            Log.v("MYCURSOR","ID: "+cursor.getString(0)+" Foreign Key Student: "+cursor.getString(1)+" Status: "+cursor.getString(2)+" Student Name: "+cursor.getString(3));
+            cursor.moveToNext();
+        }
+        */
     }
 
 

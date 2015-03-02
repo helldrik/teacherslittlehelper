@@ -13,7 +13,7 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract.*;
 public class DbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     public static final String DATABASE_NAME ="teachersLittleHelperDB.db";
 
@@ -57,9 +57,19 @@ public class DbHelper extends SQLiteOpenHelper {
                 ClassEntry.COLUMN_LEVEL+" text, "+
                 ClassEntry.COLUMN_EXTRA_INFO+" text);";
 
+        //class studentAttendance
+        final String SQL_CREATE_STUDENTATTENDANCE_TABLE="create table "+StudentAttendanceEntry.TABLE_NAME+" ("+
+                StudentAttendanceEntry._ID+" integer primary key autoincrement,"+
+                StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+ " integer foreign key references "
+                +StudentEntry.TABLE_NAME+"("+StudentEntry._ID+"),"
+                +StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+ " integer foreign key references "
+                +ClassContentEntry.TABLE_NAME+"("+ClassContentEntry._ID+"),"
+                +StudentAttendanceEntry.COLUMN_STATUS+" text);";
+
         db.execSQL(SQL_CREATE_CLASS_TABLE);
         db.execSQL(SQL_CREATE_CLASSCONTENT_TABLE);
         db.execSQL(SQL_CREATE_STUDENT_TABLE);
+        db.execSQL(SQL_CREATE_STUDENTATTENDANCE_TABLE);
 
     }
 
@@ -71,6 +81,7 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ClassEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ClassContentEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + StudentEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + StudentAttendanceEntry.TABLE_NAME);
 
         onCreate(db);
     }

@@ -106,6 +106,9 @@ public class UpdateStudentFragment extends Fragment {
 
                 //Log.v("StudentAdapter", "delete Button pressed");
                 if (resolver.delete(uri, null, null) > 0) {
+                    //delete student from StudentAttendance table
+                    uri= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_STUDENTKEY.buildUpon().appendPath(Integer.toString(studentAdapterVal.id)).build();
+                    resolver.delete(uri,null,null);
                     //by passing null instead of StudentAdapterValue student gets deleted from adapter
                     mListener.onStudentUpdated(null,mPosition);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
