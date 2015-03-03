@@ -191,9 +191,15 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
     //---------------------------------------------------------------------------------------------
     public void forwardDatetoNewClassContentFragment(String date){
-        Toast.makeText(this,date,Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,date,Toast.LENGTH_LONG).show();
         NewClassContentFragment frag=(NewClassContentFragment)getSupportFragmentManager().findFragmentByTag(NewClassContentFragment.TAG);
         frag.setDate(date);
+    }
+    //---------------------------------------------------------------------------------------------
+    public void forwardStudentAttendancetoNewClassContentFragment(int studentId, String status){
+        //Toast.makeText(this,date,Toast.LENGTH_LONG).show();
+        NewClassContentFragment frag=(NewClassContentFragment)getSupportFragmentManager().findFragmentByTag(NewClassContentFragment.TAG);
+        frag.updateStudentAttendance(studentId,status);
     }
     //---------------------------------------------------------------------------------------------
     @Override

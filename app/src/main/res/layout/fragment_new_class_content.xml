@@ -64,6 +64,23 @@
                 android:layout_span="2"/>
         </TableRow>
         <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/studentTitle"
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow>
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:id="@+id/studentsListView"
+                android:layout_span="2" />
+        </TableRow>
+        <TableRow>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

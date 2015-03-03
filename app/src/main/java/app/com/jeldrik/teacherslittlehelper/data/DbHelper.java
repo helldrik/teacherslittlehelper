@@ -60,11 +60,13 @@ public class DbHelper extends SQLiteOpenHelper {
         //class studentAttendance
         final String SQL_CREATE_STUDENTATTENDANCE_TABLE="create table "+StudentAttendanceEntry.TABLE_NAME+" ("+
                 StudentAttendanceEntry._ID+" integer primary key autoincrement,"+
-                StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+ " integer foreign key references "
-                +StudentEntry.TABLE_NAME+"("+StudentEntry._ID+"),"
-                +StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+ " integer foreign key references "
-                +ClassContentEntry.TABLE_NAME+"("+ClassContentEntry._ID+"),"
-                +StudentAttendanceEntry.COLUMN_STATUS+" text);";
+                StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+ " integer, "
+                +StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+ " integer, "
+                +StudentAttendanceEntry.COLUMN_STATUS+" text, "
+                +"foreign key("+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+") references "
+                +StudentEntry.TABLE_NAME+"("+StudentEntry._ID+"), "
+                +"foreign key("+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+") references "
+                +ClassContentEntry.TABLE_NAME+"("+ClassContentEntry._ID+"));";
 
         db.execSQL(SQL_CREATE_CLASS_TABLE);
         db.execSQL(SQL_CREATE_CLASSCONTENT_TABLE);

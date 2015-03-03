@@ -125,7 +125,7 @@ public class ClassFragment extends Fragment {
                 transaction.commit();
                 break;
             case R.id.AddContent:
-                Fragment newClassContentFragment = NewClassContentFragment.newInstance(mID);
+                Fragment newClassContentFragment = NewClassContentFragment.newInstance(mID, mStudentList);
                 transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.FragmentContainer, newClassContentFragment, NewClassContentFragment.TAG);
                 transaction.addToBackStack(null);

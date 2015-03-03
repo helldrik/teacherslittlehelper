@@ -45,7 +45,7 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
 //---------------------------------------------------------------------------------------------
 public class NewClassFragment extends Fragment implements AdapterView.OnItemSelectedListener {
-    // TODO: Edit the layout to adjust hours picking (spinner?) and day selection (checkboxes?)
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     public static final String TAG="NEWCLASSFRAGMENT";
@@ -183,7 +183,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
                 EditText location=(EditText)mRootView.findViewById(R.id.newClassLocation);
                 EditText info=(EditText)mRootView.findViewById(R.id.newClassInfo);
 
-                if(title.getText().toString().matches("")||mSelectedDays==null||location.getText().toString().matches(""))
+                if(title.getText().toString().matches("")||mSelectedDaysAsArray==null||location.getText().toString().matches(""))
                     Toast.makeText(getActivity(),R.string.notAllFieldsFilledOutWarning,Toast.LENGTH_LONG).show();
                 else {
                     ContentValues vals = new ContentValues(7);
@@ -373,7 +373,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
             if(min.length()==1)
                 min="0"+min;
             String time=hour+":"+min;
-            ((MainActivity)getActivity()).forwardTimeFromDialogFragmentToFragment(TAG,time);
+            ((MainActivity)getActivity()).forwardTimeFromDialogFragmentToFragment(TAG+"END",time);
         }
     }
 

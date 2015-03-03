@@ -11,16 +11,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.impl.cookie.DateParseException;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
@@ -32,28 +38,33 @@ public class NewClassContentFragment extends Fragment {
     public static String DATE_FORMAT = "EUR";
     public static final String TAG="AddClassContentFragment";
     private static final String ARG_CLASS_ID = "classId";
+    private static final String ARG_STUDENTS = "students";
+
     private int mClassId;
     private String mDate;
     private String sBook;
     private String sPages;
     private String sInfo;
+    private ArrayList<StudentAdapter.StudentAdapterValues> mStudents;
+
     private OnNewClassContentListener mListener;
     private View mRootView;
 
 
-
-    public static NewClassContentFragment newInstance(int classId) {
+    //---------------------------------------------------------------------------------------------
+    public static NewClassContentFragment newInstance(int classId, ArrayList<StudentAdapter.StudentAdapterValues> students) {
         NewClassContentFragment fragment = new NewClassContentFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_CLASS_ID,classId);
+        args.putParcelableArrayList(ARG_STUDENTS,students);
         fragment.setArguments(args);
         return fragment;
     }
-
+    //---------------------------------------------------------------------------------------------
     public NewClassContentFragment() {
         // Required empty public constructor
     }
-
+    //---------------------------------------------------------------------------------------------
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +74,11 @@ public class NewClassContentFragment extends Fragment {
             sBook=savedInstanceState.getString("book");
             sPages=savedInstanceState.getString("pages");
             sInfo=savedInstanceState.getString("info");
+            mStudents=savedInstanceState.getParcelableArrayList("students");
         }
         else if (getArguments() != null) {
             mClassId = getArguments().getInt(ARG_CLASS_ID);
+            mStudents=getArguments().getParcelableArrayList(ARG_STUDENTS);
 
             Calendar c = Calendar.getInstance();
             if (DATE_FORMAT == "EUR")
@@ -74,7 +87,7 @@ public class NewClassContentFragment extends Fragment {
                 mDate = Integer.toString(c.get(Calendar.MONTH) + 1) + "/" + Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "/" + Integer.toString(c.get(Calendar.YEAR));
         }
     }
-
+    //---------------------------------------------------------------------------------------------
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -84,12 +97,12 @@ public class NewClassContentFragment extends Fragment {
         outState.putString("pages", sPages);
         outState.putString("info", sInfo);
     }
-
+    //---------------------------------------------------------------------------------------------
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView=inflater.inflate(R.layout.fragment_new_class_content, container, false);
-
+        createStudentsList();
         Button dateBtn=(Button)mRootView.findViewById(R.id.newClassContentFragmentnewDate);
         dateBtn.setText(mDate);
         dateBtn.setOnClickListener(new Button.OnClickListener() {
@@ -131,7 +144,19 @@ public class NewClassContentFragment extends Fragment {
         });
         return mRootView;
     }
-
+    //---------------------------------------------------------------------------------------------
+    private void createStudentsList(){
+        if(mStudents.size()>0) {
+            ListView studentsList = (ListView) mRootView.findViewById(R.id.studentsListView);
+            final AttendingStudentsAdapter adapter = new AttendingStudentsAdapter(getActivity(), mStudents);
+            studentsList.setAdapter(adapter);
+        }
+    }
+    //---------------------------------------------------------------------------------------------
+    public void updateStudentAttendance(int id, String status){
+        Log.v("FTAFIYADS", "Student status: "+id+" "+status);
+    }
+    //---------------------------------------------------------------------------------------------
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -142,17 +167,17 @@ public class NewClassContentFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
+    //---------------------------------------------------------------------------------------------
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
-
+    //---------------------------------------------------------------------------------------------
     public interface OnNewClassContentListener {
         public void OnNewClassContent(ClassContentAdapter.ClassContentAdapterValues values);
     }
-
+    //---------------------------------------------------------------------------------------------
     public void setDate(String date){
         mDate=date;
         Button dateBtn=(Button)mRootView.findViewById(R.id.newClassContentFragmentnewDate);
@@ -177,7 +202,7 @@ public class NewClassContentFragment extends Fragment {
             }
             return new DatePickerDialog(getActivity(),this,year,month,day);
         }
-
+        //---------------------------------------------------------------------------------------------
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             String date="";
@@ -188,13 +213,59 @@ public class NewClassContentFragment extends Fragment {
             ((MainActivity)getActivity()).forwardDatetoNewClassContentFragment(date);
 
         }
-
+        //---------------------------------------------------------------------------------------------
         @Override
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
             outState.putInt("day",day);
             outState.putInt("month",month);
             outState.putInt("year",year);
+        }
+    }
+
+    //---------------------------------------------------------------------------------------------
+    //Adapter for StudentAttendance
+    //---------------------------------------------------------------------------------------------
+    static class AttendingStudentsAdapter extends ArrayAdapter{
+        ArrayList<StudentAdapter.StudentAdapterValues> mVals;
+        private final Context context;
+
+        public AttendingStudentsAdapter(Context context,ArrayList<StudentAdapter.StudentAdapterValues> values) {
+            super(context,R.layout.student_attendance_item,values);
+            this.mVals=values;
+            this.context=context;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            View rowView = inflater.inflate(R.layout.student_attendance_item, parent, false);
+            TextView name=(TextView)rowView.findViewById(R.id.attendingStudentName);
+            name.setText(mVals.get(position).name);
+
+            final int studentId=mVals.get(position).id;
+            Spinner spinner=(Spinner)rowView.findViewById(R.id.attendanceSpinner);
+
+            ArrayAdapter<CharSequence>attendanceAdapter= ArrayAdapter.createFromResource(context,R.array.attendance,android.R.layout.simple_spinner_item);
+            attendanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(attendanceAdapter);
+            spinner.setSelection(0);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    ((MainActivity)context).forwardStudentAttendancetoNewClassContentFragment(studentId,parent.getItemAtPosition(position).toString());
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+            return rowView;
         }
     }
 

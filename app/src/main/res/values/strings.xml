@@ -56,6 +56,7 @@
     <string name="studentDeletedAlert">Student deleted</string>
     <string name="studentTitle">Students</string>
 
+
     <string-array name="weekDays">
         <item>Monday</item>
         <item>Tuesday</item>
@@ -80,5 +81,10 @@
         <item>C2</item>
     </string-array>
 
+    <string-array name="attendance">
+        <item>attending</item>
+        <item>excused</item>
+        <item>not attending</item>
+    </string-array>
 
 </resources>
