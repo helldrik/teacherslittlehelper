@@ -260,10 +260,35 @@ public void updateMemberVars(String title,String days,String location,String hou
         */
     }
     //--------------------------------------------------------------------------------------------------
-    public void updateClassContent(ClassContentAdapter.ClassContentAdapterValues vals){
+    public void newClassContent(ClassContentAdapter.ClassContentAdapterValues vals){
         if(mclassContentAdapter!=null) {
             mclassContentAdapter.add(vals);
             mclassContentAdapter.notifyDataSetChanged();
+        }
+    }
+    //--------------------------------------------------------------------------------------------------
+    public void deleteClassContent(ClassContentAdapter.ClassContentAdapterValues deletedObj){
+        if(mclassContentAdapter!=null) {
+            for(int i =0;i<mclassContentAdapter.getCount();i++){
+                ClassContentAdapter.ClassContentAdapterValues val=(ClassContentAdapter.ClassContentAdapterValues)mclassContentAdapter.getItem(i);
+                if(val.id== deletedObj.id){
+                    mclassContentAdapter.remove(i);
+                    mclassContentAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
+    //--------------------------------------------------------------------------------------------------
+    public void upDateClassContent(ClassContentAdapter.ClassContentAdapterValues vals){
+        if(mclassContentAdapter!=null) {
+            for(int i =0;i<mclassContentAdapter.getCount();i++){
+                ClassContentAdapter.ClassContentAdapterValues val=(ClassContentAdapter.ClassContentAdapterValues)mclassContentAdapter.getItem(i);
+                if(val.id== vals.id){
+                    mclassContentAdapter.remove(i);
+                    mclassContentAdapter.add(vals);
+                    mclassContentAdapter.notifyDataSetChanged();
+                }
+            }
         }
     }
     //--------------------------------------------------------------------------------------------------
@@ -352,7 +377,7 @@ public void updateMemberVars(String title,String days,String location,String hou
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("ClassContentList", mClassContentList);
         outState.putParcelableArrayList("StudentList", mStudentList);
-        outState.putInt("id",mID);
+        outState.putInt("id", mID);
         outState.putInt("position",position);
         outState.putString("days",mDays);
         outState.putString("endTime",mEndTime);

@@ -21,7 +21,8 @@ import app.com.jeldrik.teacherslittlehelper.data.DbHelper;
 
 public class MainActivity extends ActionBarActivity implements NewClassFragment.OnAddNewClassListener, ClassFragment.OnDeleteListener,
         UpdateStudentFragment.OnStudentUpdatedListener,NewClassContentFragment.OnNewClassContentListener,
-        NewStudentFragment.OnStudentAddedListener,UpdateClassFragment.OnClassUpdatedListener {
+        NewStudentFragment.OnStudentAddedListener,UpdateClassFragment.OnClassUpdatedListener,
+        UpdateClassContentFragment.OnUpdateClassContentListener {
 
     MainFragment mainFragment;
     @Override
@@ -196,12 +197,6 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         frag.setDate(date);
     }
     //---------------------------------------------------------------------------------------------
-    public void forwardStudentAttendancetoNewClassContentFragment(int studentId, String status){
-        //Toast.makeText(this,date,Toast.LENGTH_LONG).show();
-        NewClassContentFragment frag=(NewClassContentFragment)getSupportFragmentManager().findFragmentByTag(NewClassContentFragment.TAG);
-        frag.updateStudentAttendance(studentId,status);
-    }
-    //---------------------------------------------------------------------------------------------
     @Override
     public void onStudentUpdated(StudentAdapter.StudentAdapterValues vals,int position) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
@@ -212,7 +207,19 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     @Override
     public void OnNewClassContent(ClassContentAdapter.ClassContentAdapterValues values) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
-        frag.updateClassContent(values);
+        frag.newClassContent(values);
+    }
+    //---------------------------------------------------------------------------------------------
+    @Override
+    public void OnUpdateClassContent(ClassContentAdapter.ClassContentAdapterValues values) {
+        ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
+        frag.upDateClassContent(values);
+    }
+    //---------------------------------------------------------------------------------------------
+    @Override
+    public void onDeleteClassContent(ClassContentAdapter.ClassContentAdapterValues deletedObj) {
+        ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
+        frag.deleteClassContent(deletedObj);
     }
     //---------------------------------------------------------------------------------------------
     @Override

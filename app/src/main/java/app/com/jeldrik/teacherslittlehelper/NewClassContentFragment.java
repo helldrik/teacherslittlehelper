@@ -9,6 +9,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -25,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.impl.cookie.DateParseException;
+import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +49,9 @@ public class NewClassContentFragment extends Fragment {
     private String sPages;
     private String sInfo;
     private ArrayList<StudentAdapter.StudentAdapterValues> mStudents;
+
+    private AttendingStudentsAdapter mAdapter;
+    private ArrayList<AttendingStudentsAdapter.AttendingStudentsAdapterValues> mAttendingStudents;
 
     private OnNewClassContentListener mListener;
     private View mRootView;
@@ -75,11 +81,20 @@ public class NewClassContentFragment extends Fragment {
             sPages=savedInstanceState.getString("pages");
             sInfo=savedInstanceState.getString("info");
             mStudents=savedInstanceState.getParcelableArrayList("students");
+            mAttendingStudents=savedInstanceState.getParcelableArrayList("attendingStudents");
         }
         else if (getArguments() != null) {
             mClassId = getArguments().getInt(ARG_CLASS_ID);
             mStudents=getArguments().getParcelableArrayList(ARG_STUDENTS);
 
+            mAttendingStudents=new ArrayList(mStudents.size());
+            for (int i=0;i<mStudents.size();i++) {
+
+                mAttendingStudents.add(new AttendingStudentsAdapter.AttendingStudentsAdapterValues(
+                        mStudents.get(i).id,
+                        mStudents.get(i).name,
+                        getActivity().getResources().getIntArray(R.array.attendance).toString()));
+            }
             Calendar c = Calendar.getInstance();
             if (DATE_FORMAT == "EUR")
                 mDate = Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "." + Integer.toString(c.get(Calendar.MONTH) + 1) + "." + Integer.toString(c.get(Calendar.YEAR));
@@ -96,6 +111,8 @@ public class NewClassContentFragment extends Fragment {
         outState.putString("book", sBook);
         outState.putString("pages", sPages);
         outState.putString("info", sInfo);
+        outState.putParcelableArrayList("students",mStudents);
+        outState.putParcelableArrayList("attendingStudents",mAdapter.mVals);
     }
     //---------------------------------------------------------------------------------------------
     @Override
@@ -134,6 +151,16 @@ public class NewClassContentFragment extends Fragment {
                 ContentResolver resolver=getActivity().getContentResolver();
                 Uri returnUri=resolver.insert(DbContract.ClassContentEntry.CONTENT_URI,vals);
                 int id = Integer.parseInt(returnUri.getLastPathSegment());
+                //updating mAttendingStudents with any changes that have been made in the adapter
+                mAttendingStudents=mAdapter.mVals;
+                for(int i=0;i<mAttendingStudents.size();i++){
+                    vals=new ContentValues();
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT,id);
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT,mAttendingStudents.get(i).id);
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_STATUS,mAttendingStudents.get(i).status);
+                    returnUri=resolver.insert(DbContract.StudentAttendanceEntry.CONTENT_URI,vals);
+                    //Log.v(TAG,"AttendanceId: "+returnUri.getLastPathSegment()+" "+mAttendingStudents.get(i).status);
+                }
                 ClassContentAdapter.ClassContentAdapterValues newVals=new ClassContentAdapter.ClassContentAdapterValues(id,mDate,sBook,sPages,sInfo);
                 mListener.OnNewClassContent(newVals);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -147,14 +174,10 @@ public class NewClassContentFragment extends Fragment {
     //---------------------------------------------------------------------------------------------
     private void createStudentsList(){
         if(mStudents.size()>0) {
-            ListView studentsList = (ListView) mRootView.findViewById(R.id.studentsListView);
-            final AttendingStudentsAdapter adapter = new AttendingStudentsAdapter(getActivity(), mStudents);
-            studentsList.setAdapter(adapter);
+            TwoWayView studentsList = (TwoWayView) mRootView.findViewById(R.id.studentsListView);
+            mAdapter = new AttendingStudentsAdapter(getActivity(), mAttendingStudents);
+            studentsList.setAdapter(mAdapter);
         }
-    }
-    //---------------------------------------------------------------------------------------------
-    public void updateStudentAttendance(int id, String status){
-        Log.v("FTAFIYADS", "Student status: "+id+" "+status);
     }
     //---------------------------------------------------------------------------------------------
     @Override
@@ -222,51 +245,4 @@ public class NewClassContentFragment extends Fragment {
             outState.putInt("year",year);
         }
     }
-
-    //---------------------------------------------------------------------------------------------
-    //Adapter for StudentAttendance
-    //---------------------------------------------------------------------------------------------
-    static class AttendingStudentsAdapter extends ArrayAdapter{
-        ArrayList<StudentAdapter.StudentAdapterValues> mVals;
-        private final Context context;
-
-        public AttendingStudentsAdapter(Context context,ArrayList<StudentAdapter.StudentAdapterValues> values) {
-            super(context,R.layout.student_attendance_item,values);
-            this.mVals=values;
-            this.context=context;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            View rowView = inflater.inflate(R.layout.student_attendance_item, parent, false);
-            TextView name=(TextView)rowView.findViewById(R.id.attendingStudentName);
-            name.setText(mVals.get(position).name);
-
-            final int studentId=mVals.get(position).id;
-            Spinner spinner=(Spinner)rowView.findViewById(R.id.attendanceSpinner);
-
-            ArrayAdapter<CharSequence>attendanceAdapter= ArrayAdapter.createFromResource(context,R.array.attendance,android.R.layout.simple_spinner_item);
-            attendanceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinner.setAdapter(attendanceAdapter);
-            spinner.setSelection(0);
-
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    ((MainActivity)context).forwardStudentAttendancetoNewClassContentFragment(studentId,parent.getItemAtPosition(position).toString());
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-
-            return rowView;
-        }
-    }
-
 }

@@ -269,6 +269,10 @@ public class ClassContentProvider extends ContentProvider {
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.update(ClassContentEntry.TABLE_NAME,values,selection,selectionArgs);
                 break;
+            case STUDENTATTENDANCE_STUDENT_ID:
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(StudentAttendanceEntry.TABLE_NAME,values,selection,selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
