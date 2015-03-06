@@ -2,76 +2,87 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="app.com.jeldrik.teacherslittlehelper.UpdateStudentFragment">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/newStudentName"
-            android:layout_weight="1"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/newStudentName"
-            android:layout_weight="1"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/newStudentEmail"
-            android:layout_weight="1"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/newStudentEmail"
-            android:layout_weight="1"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/newStudentPhone"
-            android:layout_weight="1"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/newStudentPhone"
-            android:layout_weight="1"/>
-    </LinearLayout>
-    <LinearLayout
+    android:background="@color/background"
+    tools:context="app.com.jeldrik.teacherslittlehelper.UpdateStudentFragment"
+    android:padding="20dp">
+    <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/changeStudentData"
-            android:id="@+id/updateStudentFragmentUpdateStudent"
-            android:layout_gravity="center"/>
-        <Button
-            android:focusable="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/studentItem_deleteStudentData"
-            android:text="@string/deleteStudent"/>
-    </LinearLayout>
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/line"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/updateStudent"/>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <TableLayout
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+            android:stretchColumns="1">
 
+            <TableRow android:layout_margin="5dp">
+
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newStudentName"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newStudentName"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
+
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newStudentEmail"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newStudentEmail"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
+
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newStudentPhone"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newStudentPhone"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow
+                android:gravity="center">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_span="2"
+                    android:gravity="center">
+                    <Button
+                        android:layout_width="100dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/button"
+                        android:text="@string/changeStudentData"
+                        android:id="@+id/updateStudentFragmentUpdateStudent"
+                        android:layout_gravity="center"/>
+
+                    <Button
+                        android:layout_width="100dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/button"
+                        android:id="@+id/studentItem_deleteStudentData"
+                        android:text="@string/deleteStudent"/>
+                </LinearLayout>
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
 </LinearLayout>

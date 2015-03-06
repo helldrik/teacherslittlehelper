@@ -11,23 +11,32 @@
         <item name="android:clickable">true</item>
     </style>
     <style name="WhiteWeekday" parent="WeekListStyle">
-        <item name="android:background">@color/White</item>
+
     </style>
     <style name="BabyBlueWeekday" parent="WeekListStyle">
-        <item name="android:background">@color/BabyBlue</item>
+
     </style>
 
     <style name="Header">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/Brown</item>
+        <item name="android:textColor">@color/line</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">16dp</item>
+    </style>
+    <style name="content">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/primary_dark_material_dark</item>
+    </style>
+    <style name="titleInListItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textBgr</item>
     </style>
     <style name="title">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/White</item>
+        <item name="android:textColor">@color/lightBlue</item>
     </style>
 
 

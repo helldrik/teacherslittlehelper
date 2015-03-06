@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity$PlaceholderFragment">
+    tools:context=".MainActivity$PlaceholderFragment"
+    android:background="@color/background">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,14 +18,7 @@
                 android:id="@+id/monday"
                 style="@style/BabyBlueWeekday">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:text="@string/monday" style="@style/Header" android:layout_margin="10dp" />
-
-                </RelativeLayout>
+                <TextView android:text="@string/monday" style="@style/Header" android:layout_margin="5dp" android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <org.lucasr.twowayview.TwoWayView
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -37,20 +31,18 @@
                     android:drawSelectorOnTop="false"
                     tools:context=".MainActivity" />
 
-
             </LinearLayout>
+
+            <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:background="@color/line" />
+
             <LinearLayout
                 android:id="@+id/tuesday"
                 style="@style/WhiteWeekday">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:text="@string/tuesday" style="@style/Header" android:layout_margin="10dp" />
-
-                </RelativeLayout>
+                <TextView android:text="@string/tuesday" style="@style/Header" android:layout_margin="5dp" android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <org.lucasr.twowayview.TwoWayView
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -64,18 +56,17 @@
                     tools:context=".MainActivity" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:background="@color/line" />
+
             <LinearLayout
                 android:id="@+id/wednesday"
                 style="@style/BabyBlueWeekday">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:text="@string/wednesday" style="@style/Header" android:layout_margin="10dp" />
-
-                </RelativeLayout>
+                <TextView android:text="@string/wednesday" style="@style/Header" android:layout_margin="5dp" android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <org.lucasr.twowayview.TwoWayView
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -89,18 +80,17 @@
                     tools:context=".MainActivity" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:background="@color/line" />
+
             <LinearLayout
                 android:id="@+id/thursday"
                 style="@style/WhiteWeekday">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:text="@string/thursday" style="@style/Header" android:layout_margin="10dp" />
-
-                </RelativeLayout>
+                <TextView android:text="@string/thursday" style="@style/Header" android:layout_margin="5dp" android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <org.lucasr.twowayview.TwoWayView
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -114,18 +104,17 @@
                     tools:context=".MainActivity" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:background="@color/line" />
+
             <LinearLayout
                 android:id="@+id/friday"
                 style="@style/BabyBlueWeekday">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:text="@string/friday" style="@style/Header" android:layout_margin="10dp" />
-
-                </RelativeLayout>
+                <TextView android:text="@string/friday" style="@style/Header" android:layout_margin="5dp" android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <org.lucasr.twowayview.TwoWayView
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -139,18 +128,17 @@
                     tools:context=".MainActivity" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:background="@color/line" />
+
             <LinearLayout
                 android:id="@+id/saturday"
                 style="@style/WhiteWeekday">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:text="@string/saturday" style="@style/Header" android:layout_margin="10dp" />
-
-                </RelativeLayout>
+                <TextView android:text="@string/saturday" style="@style/Header" android:layout_margin="5dp" android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <org.lucasr.twowayview.TwoWayView
                     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -164,18 +152,17 @@
                     tools:context=".MainActivity" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:background="@color/line" />
+
             <LinearLayout
                 android:id="@+id/sunday"
                 style="@style/BabyBlueWeekday">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView android:text="@string/sunday" style="@style/Header" android:layout_margin="10dp" />
-
-                </RelativeLayout>
+                <TextView android:text="@string/sunday" style="@style/Header" android:layout_margin="5dp" android:textAppearance="?android:attr/textAppearanceMedium"/>
 
                 <org.lucasr.twowayview.TwoWayView
                     xmlns:android="http://schemas.android.com/apk/res/android"

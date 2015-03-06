@@ -1,140 +1,164 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/background"
     tools:context="app.com.jeldrik.teacherslittlehelper.NewClassFragment">
 
-
-    <TableLayout
-        android:orientation="vertical"
+    <TextView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_gravity="center_horizontal|top"
-        android:padding="20dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/line"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/newClass"/>
 
-        <TableRow
-            android:layout_height="40dp">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/newClassTitle"
-                />
+        <TableLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_horizontal|top">
 
-            <EditText
-                android:layout_height="wrap_content"
-                android:id="@+id/newClassTitle"
-                android:layout_weight="1"/>
-        </TableRow>
-        <TableRow
-            android:layout_height="40dp">
+            <TableRow android:layout_margin="5dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/newClassDays"
-            />
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassTitle"
+                    />
 
-            <Button
-                android:layout_height="wrap_content"
-                android:id="@+id/newClassDays"
-                android:text="Choose Days"
-                android:layout_weight="1"/>
-        </TableRow>
-        <TableRow
-            android:layout_height="40dp">
+                <EditText
+                    android:layout_marginLeft="5dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newClassTitle"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent" />
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/newClassHour"
-                />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:00"
-                android:id="@+id/newClassStartTime"
-                android:layout_weight="1"/>
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassDays"
+                    />
 
-        </TableRow>
-        <TableRow
-            android:layout_height="40dp">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp">
+                    <Button
+                        android:layout_width="100dp"
+                        android:layout_height="32dp"
+                        android:id="@+id/newClassDays"
+                        android:text="@string/newClassDays"
+                        android:background="@drawable/button" />
+                </RelativeLayout>
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/newClassDuration"
-                />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="00:00"
-                android:id="@+id/newClassEndTime"
-                android:layout_weight="1"/>
-        </TableRow>
-        <TableRow
-            android:layout_height="40dp">
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassHour"
+                    />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp">
+                    <Button
+                        android:layout_width="100dp"
+                        android:layout_height="32dp"
+                        android:text="00:00"
+                        android:id="@+id/newClassStartTime"
+                        android:background="@drawable/button"
+                        />
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/newClassLocation"
-                />
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
 
-            <EditText
-                android:layout_height="wrap_content"
-                android:id="@+id/newClassLocation"
-                android:layout_weight="1"/>
-        </TableRow>
-        <TableRow
-            android:layout_height="40dp">
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassDuration"/>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp">
+                    <Button
+                        android:layout_width="100dp"
+                        android:layout_height="32dp"
+                        android:text="00:00"
+                        android:id="@+id/newClassEndTime"
+                        android:background="@drawable/button"/>
+                </RelativeLayout>
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/newClassLevel"
-                />
-            <Spinner
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassLocation"
+                    />
+
+                <EditText
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/newClassLocation"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent" />
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
+
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassLevel"
+                    />
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:id="@+id/newClassLevels"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
+
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newClassInfo"
+                    />
+
+                <EditText
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:gravity="left|top"
+                    android:id="@+id/newClassInfo"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent" />
+
+
+            </TableRow>
+            <TableRow android:gravity="center_horizontal" android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/newClassLevels"
-                android:layout_weight="1"/>
-        </TableRow>
-        <TableRow
-            android:layout_height="40dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/newClassInfo"
-                />
-
-            <EditText
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:ems="10"
-                android:gravity="left|top"
-                android:id="@+id/newClassInfo"
-                android:layout_weight="1" />
-
-
-        </TableRow>
-        <TableRow android:gravity="center_horizontal" android:layout_marginTop="20dp">
-            <Button
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:id="@+id/createClassBtn"
-                android:textColor="@color/White"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/sphere50px"
-                android:text="@string/newClassBtn"/>
-        </TableRow>
-    </TableLayout>
-
-</FrameLayout>
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_width="100dp"
+                    android:layout_height="32dp"
+                    android:id="@+id/createClassBtn"
+                    android:textColor="@color/primary_dark_material_dark"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/button"
+                    android:text="@string/newClassBtn"/>
+            </TableRow>
+        </TableLayout>
+</ScrollView>
+</LinearLayout>

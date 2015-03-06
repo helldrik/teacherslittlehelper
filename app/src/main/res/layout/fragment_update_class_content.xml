@@ -1,68 +1,78 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/background"
     tools:context="app.com.jeldrik.teacherslittlehelper.UpdateClassContentFragment">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/line"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/updateClassContent"/>
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         <TableLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:stretchColumns="*">
-            <TableRow>
+            android:stretchColumns="1">
+
+            <TableRow android:layout_margin="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/newDate"
-                    android:textAppearance="?android:attr/textAppearanceMedium"/>
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newDate"/>
 
                 <EditText
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/updateClassContentFragmentnewDate"
-                    />
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"/>
             </TableRow>
-            <TableRow>
+            <TableRow android:layout_margin="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    style="@style/Header"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newBook"/>
 
                 <EditText
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/updateClassContentFragmentNewBook"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"/>
             </TableRow>
-            <TableRow>
+            <TableRow android:layout_margin="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    style="@style/Header"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newPages"/>
 
                 <EditText
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/updateClassContentFragmentNewPages"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"/>
             </TableRow>
-            <TableRow>
+            <TableRow android:layout_margin="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    style="@style/Header"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newInfo"
                     android:layout_weight="1"/>
             </TableRow>
-            <TableRow>
+            <TableRow android:layout_margin="5dp">
                 <EditText
                     android:layout_width="wrap_content"
                     android:id="@+id/updateClassContentFragmentNewInfo"
@@ -70,16 +80,15 @@
                     android:layout_weight="1"
                     android:layout_span="2"/>
             </TableRow>
-            <TableRow>
+            <TableRow android:layout_margin="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    style="@style/Header"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/studentTitle"
                     android:layout_weight="1"/>
             </TableRow>
-            <TableRow>
+            <TableRow android:layout_margin="5dp">
                 <org.lucasr.twowayview.TwoWayView
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
@@ -87,20 +96,33 @@
                     android:id="@+id/studentsListView"
                     style="@style/TwoWayView"
                     android:layout_width="fill_parent"
-                    android:layout_height="200dp"
-                    android:drawSelectorOnTop="false"/>
+                    android:layout_height="120dp"
+                    android:drawSelectorOnTop="false"
+                    android:layout_span="2" />
             </TableRow>
-            <TableRow>
+            <TableRow
+                android:gravity="center">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_span="2"
+                    android:gravity="center">
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_width="100dp"
+                    android:layout_height="32dp"
                     android:text="@string/updateContent"
+                    android:background="@drawable/button"
+                    android:textColor="@color/primary_dark_material_dark"
                     android:id="@+id/updateClassContentFragmentUpdate" />
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_width="100dp"
+                    android:layout_height="32dp"
                     android:text="@string/deleteContent"
+                    android:background="@drawable/button"
+                    android:textColor="@color/primary_dark_material_dark"
                     android:id="@+id/updateClassContentFragmentDelete" />
+                </LinearLayout>
             </TableRow>
         </TableLayout>
     </ScrollView>

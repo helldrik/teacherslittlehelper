@@ -124,6 +124,13 @@ public class ClassFragment extends Fragment {
                 transaction.addToBackStack(null);
                 transaction.commit();
                 break;
+            case R.id.DeleteClass:
+                if (mListener != null) {
+                    mListener.onDelete(mID);
+                }
+                FragmentManager fm=getActivity().getSupportFragmentManager();
+                fm.popBackStack();
+                break;
             case R.id.AddContent:
                 Fragment newClassContentFragment = NewClassContentFragment.newInstance(mID, mStudentList);
                 transaction = getFragmentManager().beginTransaction();
@@ -173,19 +180,6 @@ public class ClassFragment extends Fragment {
         location.setText(mLocation);
         TextView hour=(TextView)rootView.findViewById(R.id.classFragment_hour);
         hour.setText(mHour);
-
-        Button deleteBtn=(Button)rootView.findViewById(R.id.deleteClassButton);
-        deleteBtn.setOnClickListener(new Button.OnClickListener(){
-
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onDelete(mID);
-                }
-                FragmentManager fm=getActivity().getSupportFragmentManager();
-                fm.popBackStack();
-            }
-        });
 
         return rootView;
     }

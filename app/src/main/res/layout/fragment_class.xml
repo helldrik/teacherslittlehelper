@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background"
     tools:context="app.com.jeldrik.teacherslittlehelper.ClassFragment">
 
    <LinearLayout
@@ -12,7 +13,9 @@
        <LinearLayout
            android:layout_width="fill_parent"
            android:layout_height="wrap_content"
-           android:layout_margin="20dp"
+           android:layout_marginTop="20dp"
+           android:layout_marginLeft="20dp"
+           android:layout_marginBottom="5dp"
            android:orientation="horizontal">
 
             <TextView android:layout_width="wrap_content"
@@ -20,17 +23,10 @@
                 android:id="@+id/classfragment_title"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginRight="5dp"
-                android:text="@string/hello_blank_fragment"
+                android:text="Title of class goes here"
+                style="@style/Header"
                 android:layout_weight="1"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/delete_Class"
-                android:id="@+id/deleteClassButton"
-                android:layout_gravity="right|top"
-                android:layout_marginLeft="5dp"
-                />
        </LinearLayout>
 
    </LinearLayout>
@@ -43,26 +39,25 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal|top"
-            android:padding="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
             android:stretchColumns="*">
 
             <TableRow
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-                android:background="@color/LightGrey">
+                android:background="@color/textBgr">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/title"
                     android:layout_marginRight="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newClassDays"
                     />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    style="@style/content"
                     android:text="@string/newClassDays"
                     android:id="@+id/classFragment_days"
                     android:layout_weight="1"
@@ -72,21 +67,19 @@
             <TableRow
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-                android:background="@color/LightGrey"
+                android:background="@color/textBgr"
                 >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/title"
                     android:layout_marginRight="10dp"
+                    android:textColor="@color/lightBlue"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newClassHour"
                     />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    style="@style/content"
                     android:text="@string/newClassHour"
                     android:id="@+id/classFragment_hour"
                     android:layout_weight="1"
@@ -95,11 +88,10 @@
             <TableRow
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-                android:background="@color/LightGrey">
+                android:background="@color/textBgr">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/title"
                     android:layout_marginRight="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newClassDuration"
@@ -107,9 +99,7 @@
                     />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    style="@style/content"
                     android:text="@string/newClassDuration"
                     android:id="@+id/classFragment_duration"
                     android:layout_weight="1"
@@ -118,20 +108,17 @@
             <TableRow
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-                android:background="@color/LightGrey">
+                android:background="@color/textBgr">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/title"
                     android:layout_marginRight="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newClassLocation"
                     />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    style="@style/content"
                     android:text="@string/newClassLocation"
                     android:id="@+id/classFragment_location"
                     android:layout_weight="1"
@@ -140,20 +127,17 @@
             <TableRow
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-                android:background="@color/LightGrey">
+                android:background="@color/textBgr">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/title"
                     android:layout_marginRight="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newClassLevel"
                     />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    style="@style/content"
                     android:text="@string/newClassLevel"
                     android:id="@+id/classFragment_level"
                     android:layout_weight="1"
@@ -162,20 +146,17 @@
             <TableRow
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
-                android:background="@color/LightGrey">
+                android:background="@color/textBgr">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/title"
                     android:layout_marginRight="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newClassInfo"
                     />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    style="@style/content"
                     android:text="@string/newClassInfo"
                     android:id="@+id/classFragment_info"
                     android:layout_weight="1"
@@ -190,8 +171,7 @@
                     android:orientation="vertical"
                     android:layout_span="2">
                     <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/Header"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="@string/studentTitle"/>
 
@@ -202,10 +182,18 @@
                         android:id="@+id/studentListView"
                         style="@style/TwoWayView"
                         android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:drawSelectorOnTop="false"/>
                 </LinearLayout>
             </TableRow>
+            <TableRow>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/line"
+                    android:layout_span="2"/>
+            </TableRow>
+
             <TableRow>
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -213,8 +201,7 @@
                     android:orientation="vertical"
                     android:layout_span="2">
                     <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        style="@style/Header"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="@string/contentTitle"/>
 

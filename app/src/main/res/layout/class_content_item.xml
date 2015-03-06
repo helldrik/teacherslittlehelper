@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="150dp"
+    android:layout_width="160dp"
     android:layout_height="250dp"
     android:padding="5dp"
     android:gravity="center">
@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/background_floating_material_dark"
+        android:background="@color/lightBlue"
         android:orientation="vertical">
 
         <LinearLayout
@@ -19,13 +19,11 @@
             android:layout_margin="5dp"
             android:layout_gravity="center">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/titleInListItem"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Date"
                 android:id="@+id/classContentItemDate"
-                android:gravity="center_horizontal"
-                android:textColor="@color/White"/>
+                android:gravity="center_horizontal"/>
 
         </LinearLayout>
         <LinearLayout
@@ -34,19 +32,32 @@
             android:orientation="vertical"
             android:layout_margin="5dp">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/titleInListItem"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Book"
-                android:textColor="@color/White"
+                android:text="@string/newBook"
                  />
-
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/content"
                 android:text="Book"
                 android:id="@+id/classContentItemBook"
-                android:textColor="@color/White"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="5dp">
+            <TextView
+                style="@style/titleInListItem"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/newPages"
+                />
+
+            <TextView
+                style="@style/content"
+                android:text="Pages"
+                android:id="@+id/classContentItemPages"
                 android:layout_weight="1"/>
         </LinearLayout>
         <LinearLayout
@@ -55,32 +66,9 @@
             android:orientation="vertical"
             android:layout_margin="5dp">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/titleInListItem"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Pages"
-                android:textColor="@color/White"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Pages"
-                android:id="@+id/classContentItemPages"
-                android:layout_weight="1"
-                android:textColor="@color/White"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Info"
-                android:textColor="@color/White"
+                android:text="@string/newClassInfo"
                 />
             <!-- android:ellipsize="end" = Adding ... at the end of visible text if text has to be truncated -->
                 <TextView
@@ -91,6 +79,7 @@
                     android:layout_height="130dp"
                     android:background="@color/White"
                     android:text="Info"
+                    style="@style/content"
                     android:id="@+id/classContentItemInfo"/>
         </LinearLayout>
     </LinearLayout>

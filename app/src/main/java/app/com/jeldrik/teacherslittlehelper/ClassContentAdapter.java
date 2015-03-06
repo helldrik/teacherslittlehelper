@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by jeldrik on 21/02/15.
@@ -53,6 +55,12 @@ public class ClassContentAdapter extends ArrayAdapter {
         Log.v("MyAdapter", "removing " + values.get(position));
         values.remove(position);
         this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        Collections.sort(values, new ClassAdapterValuesIDComparator());
+        super.notifyDataSetChanged();
     }
 
     //implements Parcelable to be able to store it in Savedinstancestate bundle
@@ -104,5 +112,12 @@ public class ClassContentAdapter extends ArrayAdapter {
                 return new ClassContentAdapterValues[size];
             }
         };
+    }
+    //Custom ComparatorClass to sort classes by time
+    class ClassAdapterValuesIDComparator implements Comparator<ClassContentAdapterValues> {
+        @Override
+        public int compare(ClassContentAdapterValues lhs, ClassContentAdapterValues rhs) {
+            return rhs.id - lhs.id;
+        }
     }
 }

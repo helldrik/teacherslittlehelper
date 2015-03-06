@@ -1,67 +1,81 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/background"
     tools:context="app.com.jeldrik.teacherslittlehelper.NewStudentFragment">
 
-    <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="@string/newStudentName"
-        android:layout_weight="1"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/newStudentName"
-        android:layout_weight="1"/>
-</LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/line"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/newStudent"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/newStudentEmail"
-            android:layout_weight="1"/>
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/newStudentEmail"
-            android:layout_weight="1"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        <TableLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_horizontal|top">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/newStudentPhone"
-            android:layout_weight="1"/>
+            <TableRow android:layout_margin="5dp">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:numeric="integer"
-            android:id="@+id/newStudentPhone"
-            android:layout_weight="1"/>
-    </LinearLayout>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/addStudent"
-        android:id="@+id/newStudentAddStudent"
-        android:layout_gravity="center"/>
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newStudentName"/>
 
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newStudentName"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
+
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newStudentEmail"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newStudentEmail"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow android:layout_margin="5dp">
+
+                <TextView
+                    style="@style/Header"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/newStudentPhone"/>
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numeric="integer"
+                    android:id="@+id/newStudentPhone"
+                    android:layout_weight="1"/>
+            </TableRow>
+            <TableRow android:gravity="center_horizontal" android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                    <Button
+                        android:layout_width="100dp"
+                        android:layout_height="32dp"
+                        android:text="@string/addStudent"
+                        android:id="@+id/newStudentAddStudent"
+                        android:background="@drawable/button"/>
+
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
 </LinearLayout>

@@ -13,8 +13,13 @@
     <string name="sunday">Sunday</string>
     <string name="add_class">Add Class</string>
     <string name="delete_Class">Delete Class</string>
+    <string name="updateClass">Update Class</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="newClass">New Class</string>
+    <string name="newClassContent">New Class Content</string>
+    <string name="updateClassContent">Update Class Content</string>
+    <string name="newStudent">New Student</string>
     <string name="newClassTitle">Title</string>
     <string name="newClassLevel">Level</string>
     <string name="newClassDays">Days</string>
@@ -55,6 +60,7 @@
     <string name="studentUpdatedAlert">Student updated</string>
     <string name="studentDeletedAlert">Student deleted</string>
     <string name="studentTitle">Students</string>
+    <string name="updateStudent">Update Student</string>
 
 
     <string-array name="weekDays">

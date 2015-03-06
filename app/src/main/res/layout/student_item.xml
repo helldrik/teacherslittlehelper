@@ -1,43 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="150dp"
-    android:layout_height="250dp"
+    android:layout_width="160dp"
+    android:layout_height="260dp"
     android:padding="5dp"
     android:gravity="center">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@color/background_floating_material_dark"
+        android:background="@color/lightBlue"
         android:orientation="vertical"
         android:padding="5dp">
 
         <TextView
             android:text="@string/newStudentName"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            style="@style/title"/>
+            style="@style/titleInListItem"/>
             <TextView
                 android:id="@+id/studentListItem_name"
-                style="@style/title"
+                style="@style/content"
                 android:text="Student Name"/>
         <TextView
             android:text="@string/newStudentEmail"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            style="@style/title"/>
+            style="@style/titleInListItem"/>
             <TextView
                 android:id="@+id/studentListItem_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/content"
                 android:text="Email"/>
         <TextView
             android:text="@string/newStudentPhone"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            style="@style/title"/>
+            style="@style/titleInListItem"/>
             <TextView
                 android:id="@+id/studentListItem_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/content"
                 android:text="Phone"/>
 
     </LinearLayout>
