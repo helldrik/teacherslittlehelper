@@ -20,24 +20,30 @@ import android.widget.Toast;
 import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
+
+//TODO: ADDING A DATEPICKER AND UPDATE TIMESTAMP
 
 public class UpdateClassContentFragment extends Fragment {
 
     public static final String TAG="UpdateClassContentFragment";
+    //TODO:Making a Settings item to allow changing between different date formats
+    public static String DATE_FORMAT = "EUR";
 
     private static final String ARG_DATE = "date";
     private static final String ARG_PAGES = "pages";
     private static final String ARG_BOOK = "book";
     private static final String ARG_INFO = "info";
     private static final String ARG_ID = "classId";
+    private static final String ARG_TIMESTAMP = "timestamp";
 
     private String mSDate;
     private String mSBook;
     private String mSPages;
     private String mSInfo;
-    private int mId;
+    private int mId, mTimestamp;
 
     private View mRootView;
     private TextView mDate, mBook, mPages,mInfo;
@@ -47,7 +53,7 @@ public class UpdateClassContentFragment extends Fragment {
 
     private OnUpdateClassContentListener mListener;
 
-    public static UpdateClassContentFragment newInstance(String date, String book, String pages, String info, int id) {
+    public static UpdateClassContentFragment newInstance(String date, String book, String pages, String info, int id,int timestamp) {
         UpdateClassContentFragment fragment = new UpdateClassContentFragment();
         Bundle args = new Bundle();
         args.putString(ARG_DATE,date);
@@ -55,6 +61,8 @@ public class UpdateClassContentFragment extends Fragment {
         args.putString(ARG_BOOK, book);
         args.putString(ARG_INFO, info);
         args.putInt(ARG_ID, id);
+        args.putInt(ARG_TIMESTAMP,timestamp);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,6 +88,8 @@ public class UpdateClassContentFragment extends Fragment {
             mSPages = getArguments().getString(ARG_PAGES);
             mSInfo = getArguments().getString(ARG_INFO);
             mId = getArguments().getInt(ARG_ID);
+            mTimestamp = getArguments().getInt(ARG_TIMESTAMP);
+
             getData();
         }
     }
@@ -135,11 +145,37 @@ public class UpdateClassContentFragment extends Fragment {
                 mSPages = mPages.getText().toString();
                 mSInfo = mInfo.getText().toString();
 
+                if (DATE_FORMAT == "EUR") {
+                    try {
+                        int dividerPos = mSDate.indexOf(".");
+                        int day = Integer.parseInt(mSDate.substring(0, dividerPos));
+                        String sub = mSDate.substring(dividerPos + 1);
+                        dividerPos = sub.indexOf(".");
+                        int month = Integer.parseInt(sub.substring(0, dividerPos));
+                        int year = Integer.parseInt(sub.substring(dividerPos + 1));
+
+                        mTimestamp=day+month*30+year*365;
+                    }catch(Exception e){Log.e(TAG, "Could not convert date to timestamp in UpdateClassContent "+e);}
+                }
+                else if (DATE_FORMAT == "US"){
+                    try {
+                        int dividerPos = mSDate.indexOf("/");
+                        int month = Integer.parseInt(mSDate.substring(0, dividerPos));
+                        String sub = mSDate.substring(dividerPos + 1);
+                        dividerPos = sub.indexOf("/");
+                        int day = Integer.parseInt(sub.substring(0, dividerPos));
+                        int year = Integer.parseInt(sub.substring(dividerPos + 1));
+
+                        mTimestamp=day+month*30+year*365;
+                    }catch(Exception e){Log.e(TAG, "Could not convert date to timestamp in UpdateClassContent "+e);}
+                }
+
                 ContentValues vals = new ContentValues(4);
                 vals.put(DbContract.ClassContentEntry.COLUMN_BOOK, mSBook);
                 vals.put(DbContract.ClassContentEntry.COLUMN_INFO, mSInfo);
                 vals.put(DbContract.ClassContentEntry.COLUMN_PAGE, mSPages);
                 vals.put(DbContract.ClassContentEntry.COLUMN_DATE, mSDate);
+                vals.put(DbContract.ClassContentEntry.COLUMN_TIMESTAMP,mTimestamp);
 
                 Uri uri = DbContract.ClassContentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(mId)).build();
                 ContentResolver resolver = getActivity().getContentResolver();
@@ -149,9 +185,11 @@ public class UpdateClassContentFragment extends Fragment {
                         uri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_STUDENTKEY.buildUpon().appendPath(Integer.toString(mId)).build();
                         vals = new ContentValues();
                         vals.put(DbContract.StudentAttendanceEntry.COLUMN_STATUS, mAttendingStudents.get(i).status);
-                        resolver.update(uri, vals, DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT + " =?", new String[]{Integer.toString(mAttendingStudents.get(i).id)});
+                        resolver.update(uri, vals, DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT + " =? and "
+                                +DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+" =?",
+                                new String[]{Integer.toString(mAttendingStudents.get(i).id),Integer.toString(mId)});
                     }
-                    ClassContentAdapter.ClassContentAdapterValues updatedObj = new ClassContentAdapter.ClassContentAdapterValues(mId, mSDate, mSBook, mSPages, mSInfo);
+                    ClassContentAdapter.ClassContentAdapterValues updatedObj = new ClassContentAdapter.ClassContentAdapterValues(mId, mSDate,mTimestamp, mSBook, mSPages, mSInfo);
                     mListener.OnUpdateClassContent(updatedObj);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();
@@ -173,7 +211,7 @@ public class UpdateClassContentFragment extends Fragment {
                     //Delete all students in StudentAttendance associated with this classcontent
                     uri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Integer.toString(mId)).build();
                     resolver.delete(uri, null, null);
-                    ClassContentAdapter.ClassContentAdapterValues deletedObj = new ClassContentAdapter.ClassContentAdapterValues(mId, mSDate, mSBook, mSPages, mSInfo);
+                    ClassContentAdapter.ClassContentAdapterValues deletedObj = new ClassContentAdapter.ClassContentAdapterValues(mId, mSDate,mTimestamp, mSBook, mSPages, mSInfo);
                     mListener.onDeleteClassContent(deletedObj);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();

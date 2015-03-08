@@ -13,7 +13,7 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract.*;
 public class DbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     public static final String DATABASE_NAME ="teachersLittleHelperDB.db";
 
@@ -40,6 +40,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 ClassContentEntry._ID+" integer primary key autoincrement,"+
                 ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS+ " integer not null,"+
                 ClassContentEntry.COLUMN_DATE+" text not null, "+
+                ClassContentEntry.COLUMN_TIMESTAMP+" integer not null, "+
                 ClassContentEntry.COLUMN_BOOK+" text, "+
                 ClassContentEntry.COLUMN_PAGE+" text, "+
                 ClassContentEntry.COLUMN_INFO+" text, "+

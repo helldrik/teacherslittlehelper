@@ -59,7 +59,7 @@ public class ClassContentAdapter extends ArrayAdapter {
 
     @Override
     public void notifyDataSetChanged() {
-        Collections.sort(values, new ClassAdapterValuesIDComparator());
+        Collections.sort(values, new ClassContentAdapterValuesIDComparator());
         super.notifyDataSetChanged();
     }
 
@@ -70,8 +70,9 @@ public class ClassContentAdapter extends ArrayAdapter {
         String pages;
         String info;
         String date;
+        int timestamp;
 
-        public ClassContentAdapterValues(int id,String date,String book,String pages,String info){
+        public ClassContentAdapterValues(int id,String date, int timeStamp,String book,String pages,String info){
             this.id=id;
             this.date=date;
             this.book=book;
@@ -82,6 +83,7 @@ public class ClassContentAdapter extends ArrayAdapter {
         private ClassContentAdapterValues(Parcel in){
             id=in.readInt();
             date=in.readString();
+            timestamp=in.readInt();
             book=in.readString();
             pages=in.readString();
             info=in.readString();
@@ -97,6 +99,7 @@ public class ClassContentAdapter extends ArrayAdapter {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(id);
             dest.writeString(date);
+            dest.writeInt(timestamp);
             dest.writeString(book);
             dest.writeString(pages);
             dest.writeString(info);
@@ -114,10 +117,10 @@ public class ClassContentAdapter extends ArrayAdapter {
         };
     }
     //Custom ComparatorClass to sort classes by time
-    class ClassAdapterValuesIDComparator implements Comparator<ClassContentAdapterValues> {
+    class ClassContentAdapterValuesIDComparator implements Comparator<ClassContentAdapterValues> {
         @Override
         public int compare(ClassContentAdapterValues lhs, ClassContentAdapterValues rhs) {
-            return rhs.id - lhs.id;
+            return lhs.timestamp - rhs.timestamp;
         }
     }
 }

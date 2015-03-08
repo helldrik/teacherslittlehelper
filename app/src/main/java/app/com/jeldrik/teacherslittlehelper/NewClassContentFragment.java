@@ -48,6 +48,7 @@ public class NewClassContentFragment extends Fragment {
     private String sBook;
     private String sPages;
     private String sInfo;
+    private int mTimestamp;
     private ArrayList<StudentAdapter.StudentAdapterValues> mStudents;
 
     private AttendingStudentsAdapter mAdapter;
@@ -82,6 +83,7 @@ public class NewClassContentFragment extends Fragment {
             sInfo=savedInstanceState.getString("info");
             mStudents=savedInstanceState.getParcelableArrayList("students");
             mAttendingStudents=savedInstanceState.getParcelableArrayList("attendingStudents");
+            mTimestamp=savedInstanceState.getInt("timestamp");
         }
         else if (getArguments() != null) {
             mClassId = getArguments().getInt(ARG_CLASS_ID);
@@ -96,6 +98,7 @@ public class NewClassContentFragment extends Fragment {
                         getActivity().getResources().getIntArray(R.array.attendance).toString()));
             }
             Calendar c = Calendar.getInstance();
+            mTimestamp=c.get(Calendar.DAY_OF_MONTH)+c.get(Calendar.MONTH)*30+c.get(Calendar.YEAR)*365;
             if (DATE_FORMAT == "EUR")
                 mDate = Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "." + Integer.toString(c.get(Calendar.MONTH) + 1) + "." + Integer.toString(c.get(Calendar.YEAR));
             else if (DATE_FORMAT == "US")
@@ -111,6 +114,7 @@ public class NewClassContentFragment extends Fragment {
         outState.putString("book", sBook);
         outState.putString("pages", sPages);
         outState.putString("info", sInfo);
+        outState.putInt("timestamp",mTimestamp);
         outState.putParcelableArrayList("students",mStudents);
         outState.putParcelableArrayList("attendingStudents",mAdapter.mVals);
     }
@@ -140,13 +144,14 @@ public class NewClassContentFragment extends Fragment {
                 sPages=pages.getText().toString();
                 TextView info=(TextView)mRootView.findViewById(R.id.newClassContentFragmentNewInfo);
                 sInfo=info.getText().toString();
-
+                Log.v(TAG,"TimeStamp: "+mTimestamp);
                 ContentValues vals = new ContentValues(5);
                 vals.put(DbContract.ClassContentEntry.COLUMN_BOOK, sBook);
                 vals.put(DbContract.ClassContentEntry.COLUMN_INFO, sInfo);
                 vals.put(DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS, mClassId);
                 vals.put(DbContract.ClassContentEntry.COLUMN_PAGE, sPages);
                 vals.put(DbContract.ClassContentEntry.COLUMN_DATE, mDate);
+                vals.put(DbContract.ClassContentEntry.COLUMN_TIMESTAMP, mTimestamp);
 
                 ContentResolver resolver=getActivity().getContentResolver();
                 Uri returnUri=resolver.insert(DbContract.ClassContentEntry.CONTENT_URI,vals);
@@ -161,7 +166,7 @@ public class NewClassContentFragment extends Fragment {
                     returnUri=resolver.insert(DbContract.StudentAttendanceEntry.CONTENT_URI,vals);
                     //Log.v(TAG,"AttendanceId: "+returnUri.getLastPathSegment()+" "+mAttendingStudents.get(i).status);
                 }
-                ClassContentAdapter.ClassContentAdapterValues newVals=new ClassContentAdapter.ClassContentAdapterValues(id,mDate,sBook,sPages,sInfo);
+                ClassContentAdapter.ClassContentAdapterValues newVals=new ClassContentAdapter.ClassContentAdapterValues(id,mDate,mTimestamp,sBook,sPages,sInfo);
                 mListener.OnNewClassContent(newVals);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.popBackStack();
@@ -201,14 +206,16 @@ public class NewClassContentFragment extends Fragment {
         public void OnNewClassContent(ClassContentAdapter.ClassContentAdapterValues values);
     }
     //---------------------------------------------------------------------------------------------
-    public void setDate(String date){
+    public void setDate(String date, int timestamp){
         mDate=date;
+        mTimestamp=timestamp;
         Button dateBtn=(Button)mRootView.findViewById(R.id.newClassContentFragmentnewDate);
         dateBtn.setText(mDate);
     }
     public static class AddDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         int day,month,year;
+        int timestamp;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -216,12 +223,14 @@ public class NewClassContentFragment extends Fragment {
                 day=savedInstanceState.getInt("day");
                 month=savedInstanceState.getInt("month");
                 year=savedInstanceState.getInt("year");
+                timestamp=savedInstanceState.getInt("timestamp");
             }
             else {
                 final Calendar c = Calendar.getInstance();
                 day = c.get(Calendar.DAY_OF_MONTH);
                 month = c.get(Calendar.MONTH);
                 year = c.get(Calendar.YEAR);
+
             }
             return new DatePickerDialog(getActivity(),this,year,month,day);
         }
@@ -233,7 +242,8 @@ public class NewClassContentFragment extends Fragment {
                 date=Integer.toString(dayOfMonth)+"."+Integer.toString(monthOfYear+1)+"."+Integer.toString(year);
             else if(DATE_FORMAT=="US")
                 date=Integer.toString(monthOfYear+1)+"/"+Integer.toString(dayOfMonth)+"/"+Integer.toString(year);
-            ((MainActivity)getActivity()).forwardDatetoNewClassContentFragment(date);
+            timestamp=dayOfMonth+monthOfYear*30+year*365;
+            ((MainActivity)getActivity()).forwardDatetoNewClassContentFragment(date,timestamp);
 
         }
         //---------------------------------------------------------------------------------------------
@@ -243,6 +253,7 @@ public class NewClassContentFragment extends Fragment {
             outState.putInt("day",day);
             outState.putInt("month",month);
             outState.putInt("year",year);
+            outState.putInt("timestamp",timestamp);
         }
     }
 }

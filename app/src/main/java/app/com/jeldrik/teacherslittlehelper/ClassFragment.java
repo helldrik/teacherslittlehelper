@@ -279,10 +279,10 @@ public void updateMemberVars(String title,String days,String location,String hou
                 ClassContentAdapter.ClassContentAdapterValues val=(ClassContentAdapter.ClassContentAdapterValues)mclassContentAdapter.getItem(i);
                 if(val.id== vals.id){
                     mclassContentAdapter.remove(i);
-                    mclassContentAdapter.add(vals);
-                    mclassContentAdapter.notifyDataSetChanged();
+                    mclassContentAdapter.insert(vals,i);
                 }
             }
+            mclassContentAdapter.notifyDataSetChanged();
         }
     }
     //--------------------------------------------------------------------------------------------------
@@ -298,7 +298,7 @@ public void updateMemberVars(String title,String days,String location,String hou
 
                 Fragment frag = UpdateClassContentFragment.newInstance(mClassContentList.get(position).date,
                         mClassContentList.get(position).book,mClassContentList.get(position).pages,mClassContentList.get(position).info,
-                        mClassContentList.get(position).id);
+                        mClassContentList.get(position).id,mClassContentList.get(position).timestamp);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.FragmentContainer, frag, UpdateClassContentFragment.TAG);
                 transaction.addToBackStack(null);
@@ -350,7 +350,7 @@ public void updateMemberVars(String title,String days,String location,String hou
             cursor = resolver.query(uri, null, null, null, null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                mClassContentList.add(new ClassContentAdapter.ClassContentAdapterValues(cursor.getInt(4), cursor.getString(1), cursor.getString(0), cursor.getString(2), cursor.getString(3)));
+                mClassContentList.add(new ClassContentAdapter.ClassContentAdapterValues(cursor.getInt(5), cursor.getString(1),cursor.getInt(2), cursor.getString(0), cursor.getString(3), cursor.getString(4)));
                 cursor.moveToNext();
             }
             //getting Students

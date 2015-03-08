@@ -88,6 +88,7 @@ public class DbContract {
         //table name
         public static final String TABLE_NAME="classContent";
         public static final String COLUMN_DATE="date";
+        public static final String COLUMN_TIMESTAMP="timestamp";
         public static final String COLUMN_BOOK="book";
         public static final String COLUMN_PAGE="page";
         public static final String COLUMN_INFO="info";
