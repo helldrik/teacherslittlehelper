@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import app.com.jeldrik.teacherslittlehelper.data.ClassContentProvider;
@@ -90,6 +91,39 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mRootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        Calendar calendar=Calendar.getInstance();
+        int weekDay=calendar.get(Calendar.DAY_OF_WEEK);
+        if(weekDay==1){
+            LinearLayout sunday=(LinearLayout)mRootView.findViewById(R.id.sunday);
+            sunday.setBackgroundColor(getResources().getColor(R.color.White));
+        }
+        else if(weekDay==2){
+            LinearLayout monday=(LinearLayout)mRootView.findViewById(R.id.monday);
+            monday.setBackgroundColor(getResources().getColor(R.color.White));
+        }
+        else if(weekDay==3){
+            LinearLayout tuesday=(LinearLayout)mRootView.findViewById(R.id.tuesday);
+            tuesday.setBackgroundColor(getResources().getColor(R.color.White));
+        }
+        else if(weekDay==4){
+            LinearLayout wednesday=(LinearLayout)mRootView.findViewById(R.id.wednesday);
+            wednesday.setBackgroundColor(getResources().getColor(R.color.White));
+        }
+        else if(weekDay==5){
+            LinearLayout thursday=(LinearLayout)mRootView.findViewById(R.id.thursday);
+            thursday.setBackgroundColor(getResources().getColor(R.color.White));
+        }
+        else if(weekDay==6){
+            LinearLayout friday=(LinearLayout)mRootView.findViewById(R.id.friday);
+            friday.setBackgroundColor(getResources().getColor(R.color.White));
+        }
+        else if(weekDay==7){
+            LinearLayout saturday=(LinearLayout)mRootView.findViewById(R.id.saturday);
+            saturday.setBackgroundColor(getResources().getColor(R.color.White));
+        }
+
+
 
         for (int i = 0; i < 7; i++) {
 
@@ -195,7 +229,7 @@ public class MainFragment extends Fragment {
     //----------------------------------------------------------------------------------------------
     private void setListeners(){
         for (int i = 0; i < 7; i++) {
-            //TODO: fix bug that leads to nullpointer exception
+            //TODO: fix bug that leads to nullpointer exception -> done?
             mListView[i].setAdapter(mAdapter[i]);
 
             //clicking on a particular class
@@ -212,7 +246,7 @@ public class MainFragment extends Fragment {
                     transaction.commit();
                 }
             });
-
+            /*
             //ClickListener for mWeekdays
             mWeekdays[i].setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -220,15 +254,16 @@ public class MainFragment extends Fragment {
                     Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
                 }
             });
+            */
         }
     }
     //----------------------------------------------------------------------------------------------
     public void addNewClassToAdapter(ArrayList<Integer>days,String title,String startTime,String endTime, int id){
         for(int i=0;i<days.size();i++){
-            if (mAdapter[i] != null) {
+            if (mAdapter[days.get(i)] != null) {
                 MyAdapter.ClassAdapterValues obj=new MyAdapter.ClassAdapterValues(title,startTime,endTime,id);
-                mAdapter[i].add(obj);
-                mAdapter[i].notifyDataSetChanged();
+                mAdapter[days.get(i)].add(obj);
+                mAdapter[days.get(i)].notifyDataSetChanged();
             }
         }
 

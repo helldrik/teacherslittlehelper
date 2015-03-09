@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:textColor="@color/line"
+        style="@style/h1"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/newStudent"/>
 

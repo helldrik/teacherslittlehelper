@@ -24,7 +24,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginRight="5dp"
                 android:text="Title of class goes here"
-                style="@style/Header"
+                style="@style/h1"
                 android:layout_weight="1"/>
 
        </LinearLayout>
@@ -59,6 +59,7 @@
                 <TextView
                     style="@style/content"
                     android:text="@string/newClassDays"
+                    android:layout_marginBottom="5dp"
                     android:id="@+id/classFragment_days"
                     android:layout_weight="1"
                     />
@@ -73,7 +74,6 @@
                 <TextView
                     style="@style/title"
                     android:layout_marginRight="10dp"
-                    android:textColor="@color/lightBlue"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newClassHour"
                     />
@@ -81,6 +81,7 @@
                 <TextView
                     style="@style/content"
                     android:text="@string/newClassHour"
+                    android:layout_marginBottom="5dp"
                     android:id="@+id/classFragment_hour"
                     android:layout_weight="1"
                     />
@@ -101,6 +102,7 @@
                 <TextView
                     style="@style/content"
                     android:text="@string/newClassDuration"
+                    android:layout_marginBottom="5dp"
                     android:id="@+id/classFragment_duration"
                     android:layout_weight="1"
                     />
@@ -118,8 +120,9 @@
                     />
 
                 <TextView
-                    style="@style/content"
+                    style="@style/clickable"
                     android:text="@string/newClassLocation"
+                    android:layout_marginBottom="5dp"
                     android:id="@+id/classFragment_location"
                     android:layout_weight="1"
                     />
@@ -139,6 +142,7 @@
                 <TextView
                     style="@style/content"
                     android:text="@string/newClassLevel"
+                    android:layout_marginBottom="5dp"
                     android:id="@+id/classFragment_level"
                     android:layout_weight="1"
                     />
@@ -158,6 +162,7 @@
                 <TextView
                     style="@style/content"
                     android:text="@string/newClassInfo"
+                    android:layout_marginBottom="5dp"
                     android:id="@+id/classFragment_info"
                     android:layout_weight="1"
                     />
@@ -169,11 +174,13 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_span="2">
+                    android:layout_span="2"
+                    android:layout_marginBottom="5dp">
                     <TextView
                         style="@style/Header"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/studentTitle"/>
+                        android:text="@string/studentTitle"
+                        android:layout_marginBottom="5dp"/>
 
                     <org.lucasr.twowayview.TwoWayView
                         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -203,7 +210,8 @@
                     <TextView
                         style="@style/Header"
                         android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/contentTitle"/>
+                        android:text="@string/contentTitle"
+                        android:layout_marginBottom="5dp"/>
 
                     <org.lucasr.twowayview.TwoWayView
                         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -212,7 +220,7 @@
                         android:id="@+id/classContentListView"
                         style="@style/TwoWayView"
                         android:layout_width="fill_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:drawSelectorOnTop="false"/>
                 </LinearLayout>
             </TableRow>

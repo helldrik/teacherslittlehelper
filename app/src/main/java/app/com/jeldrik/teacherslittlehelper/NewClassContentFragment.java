@@ -157,7 +157,9 @@ public class NewClassContentFragment extends Fragment {
                 Uri returnUri=resolver.insert(DbContract.ClassContentEntry.CONTENT_URI,vals);
                 int id = Integer.parseInt(returnUri.getLastPathSegment());
                 //updating mAttendingStudents with any changes that have been made in the adapter
-                mAttendingStudents=mAdapter.mVals;
+                if(mStudents.size()>0) {
+                    mAttendingStudents = mAdapter.mVals;
+                }
                 for(int i=0;i<mAttendingStudents.size();i++){
                     vals=new ContentValues();
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT,id);

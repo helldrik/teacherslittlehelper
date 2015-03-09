@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
@@ -178,6 +179,16 @@ public class ClassFragment extends Fragment {
         level.setText(mLevel);
         TextView location=(TextView)rootView.findViewById(R.id.classFragment_location);
         location.setText(mLocation);
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String locationEscaped=mLocation.replace(" ","+");
+                Uri mapUri=Uri.parse("http://maps.google.com/maps?q="+locationEscaped);
+                Intent intent= new Intent(Intent.ACTION_VIEW,mapUri);
+                getActivity().startActivity(intent);
+            }
+        });
+
         TextView hour=(TextView)rootView.findViewById(R.id.classFragment_hour);
         hour.setText(mHour);
 
@@ -279,7 +290,7 @@ public void updateMemberVars(String title,String days,String location,String hou
                 ClassContentAdapter.ClassContentAdapterValues val=(ClassContentAdapter.ClassContentAdapterValues)mclassContentAdapter.getItem(i);
                 if(val.id== vals.id){
                     mclassContentAdapter.remove(i);
-                    mclassContentAdapter.insert(vals,i);
+                    mclassContentAdapter.insert(vals, i);
                 }
             }
             mclassContentAdapter.notifyDataSetChanged();
