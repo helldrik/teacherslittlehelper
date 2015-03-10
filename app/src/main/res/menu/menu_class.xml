@@ -19,7 +19,7 @@
     <group>
         <item
             android:id="@+id/AddStudent"
-            android:title="@string/addStudent"
+            android:title="@string/menuAddStudent"
             app:showAsAction="ifRoom"
             android:orderInCategory="4"></item>
         <item

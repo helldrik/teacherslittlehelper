@@ -169,18 +169,42 @@
 
 
             </TableRow>
+
+            <TableRow>
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:background="@color/line"
+                    android:layout_span="2"/>
+            </TableRow>
+
             <TableRow>
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_span="2"
-                    android:layout_marginBottom="5dp">
-                    <TextView
-                        style="@style/Header"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/studentTitle"
-                        android:layout_marginBottom="5dp"/>
+                    android:layout_marginBottom="10dp">
+                    <FrameLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp">
+
+                        <TextView
+                            style="@style/Header"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/studentTitle"
+                            android:layout_gravity="left|center_vertical"/>
+
+                        <ImageView
+                            android:layout_width="140dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="40dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_gravity="right|center_vertical"
+                            android:src="@drawable/arrows"/>
+                    </FrameLayout>
 
                     <org.lucasr.twowayview.TwoWayView
                         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -206,12 +230,28 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_marginBottom="10dp"
                     android:layout_span="2">
-                    <TextView
-                        style="@style/Header"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="@string/contentTitle"
-                        android:layout_marginBottom="5dp"/>
+                <FrameLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                        <TextView
+                            style="@style/Header"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="@string/contentTitle"
+                            android:layout_gravity="left|center_vertical"/>
+
+                        <ImageView
+                            android:layout_width="140dp"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="40dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_gravity="right|center_vertical"
+                            android:src="@drawable/arrows"/>
+                    </FrameLayout>
 
                     <org.lucasr.twowayview.TwoWayView
                         xmlns:android="http://schemas.android.com/apk/res/android"

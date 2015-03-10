@@ -13,9 +13,13 @@
     <string name="saturday">Sabado</string>
     <string name="sunday">Domingo</string>
 
+    <string name="add_class">Añadir Clase</string>
+    <string name="delete_Class">Borar Clase</string>
+    <string name="updateClass">Actualizar Clase</string>
+
     <string name="newClassTitle">Titulo</string>
     <string name="newClassLevel">Nivel</string>
-    <string name="newClassDays">Dias</string>
+    <string name="newClassDays">Días</string>
     <string name="newClassHour">Hora de Empezar</string>
     <string name="newClassDuration">Hora de Terminar</string>
     <string name="newClassInfo">Info</string>
@@ -25,11 +29,12 @@
     <string name="classUpdated">Clase actualizado</string>
 
     <string name="classFragment_studentsBtn">Alumnos</string>
-    <string name="addStudent">Añadir Alumno</string>
+    <string name="menuAddStudent">Añadir Alumno</string>
+    <string name="addStudent">Añadir</string>
     <string name="changeStudentData">Cambiar</string>
     <string name="deleteStudent">Borar</string>
 
-    <string name="AddContent">Añadir nuevo contenido</string>
+    <string name="AddContent">Nueva Fecha</string>
     <string name="NotifyAllStudents">Notificar á todos los alumnos </string>
 
     <string name="newDate">Fecha</string>
@@ -41,7 +46,7 @@
     <string name="contentAddedAlert">Contenido añadido</string>
     <string name="contentDeletedAlert">Contenido borado</string>
     <string name="contentUpdatedAlert">Contenido actualizado</string>
-    <string name="contentTitle">Contentido de cada clase</string>
+    <string name="contentTitle">Fechas</string>
 
     <string name="updateContent">actualizar</string>
     <string name="deleteContent">borar</string>
