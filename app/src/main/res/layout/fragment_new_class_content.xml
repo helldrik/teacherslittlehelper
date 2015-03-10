@@ -52,13 +52,20 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="@string/newBook"/>
 
+                <AutoCompleteTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newClassContentFragmentNewBook"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"/>
+<!--
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/newClassContentFragmentNewBook"
                     android:layout_weight="1"
                     android:layout_marginLeft="5dp"/>
-
+-->
             </TableRow>
             <TableRow android:layout_margin="5dp">
 

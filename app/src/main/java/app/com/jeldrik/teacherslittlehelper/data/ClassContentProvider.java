@@ -108,6 +108,15 @@ public class ClassContentProvider extends ContentProvider {
 
 
                 break;
+            case CLASSCONTENT:
+                cursor=mdataBase.query(ClassContentEntry.TABLE_NAME,new String[]{
+                        ClassContentEntry.COLUMN_BOOK,
+                        ClassContentEntry.COLUMN_DATE,
+                        ClassContentEntry.COLUMN_TIMESTAMP,
+                        ClassContentEntry.COLUMN_PAGE,
+                        ClassContentEntry.COLUMN_INFO,
+                        ClassContentEntry._ID},null,null,null,null,null);
+                break;
             case CLASSCONTENT_CLASS_ID:
                 classId=uri.getLastPathSegment();
                 cursor=mdataBase.query(ClassContentEntry.TABLE_NAME,new String[]{

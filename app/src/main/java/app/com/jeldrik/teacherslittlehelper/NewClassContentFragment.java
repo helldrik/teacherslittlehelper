@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -31,6 +33,7 @@ import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
@@ -56,6 +59,7 @@ public class NewClassContentFragment extends Fragment {
 
     private OnNewClassContentListener mListener;
     private View mRootView;
+    private AutoCompleteTextView mBook;
 
 
     //---------------------------------------------------------------------------------------------
@@ -124,6 +128,11 @@ public class NewClassContentFragment extends Fragment {
                              Bundle savedInstanceState) {
         mRootView=inflater.inflate(R.layout.fragment_new_class_content, container, false);
         createStudentsList();
+
+        mBook=(AutoCompleteTextView)mRootView.findViewById(R.id.newClassContentFragmentNewBook);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line, getBookselection());
+        mBook.setAdapter(adapter);
+
         Button dateBtn=(Button)mRootView.findViewById(R.id.newClassContentFragmentnewDate);
         dateBtn.setText(mDate);
         dateBtn.setOnClickListener(new Button.OnClickListener() {
@@ -138,8 +147,8 @@ public class NewClassContentFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                TextView book=(TextView)mRootView.findViewById(R.id.newClassContentFragmentNewBook);
-                sBook=book.getText().toString();
+
+                sBook=mBook.getText().toString();
                 TextView pages=(TextView)mRootView.findViewById(R.id.newClassContentFragmentNewPages);
                 sPages=pages.getText().toString();
                 TextView info=(TextView)mRootView.findViewById(R.id.newClassContentFragmentNewInfo);
@@ -214,6 +223,28 @@ public class NewClassContentFragment extends Fragment {
         Button dateBtn=(Button)mRootView.findViewById(R.id.newClassContentFragmentnewDate);
         dateBtn.setText(mDate);
     }
+    //---------------------------------------------------------------------------------------------
+    private String[] getBookselection(){
+
+        ArrayList<String> books=new ArrayList<>();
+        ContentResolver resolver=getActivity().getContentResolver();
+        Cursor cursor=resolver.query(DbContract.ClassContentEntry.CONTENT_URI,null,null,null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            books.add(cursor.getString(0));
+            Log.v(TAG,"books: "+cursor.getString(0));
+            cursor.moveToNext();
+        }
+        //getting rid of duplicates in arraylist
+        HashSet cleaner=new HashSet();
+        cleaner.addAll(books);
+        books.clear();
+        books.addAll(cleaner);
+        String[] string=new String[books.size()];
+        return books.toArray(string);
+    }
+    //---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
     public static class AddDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
 
         int day,month,year;
@@ -257,5 +288,6 @@ public class NewClassContentFragment extends Fragment {
             outState.putInt("year",year);
             outState.putInt("timestamp",timestamp);
         }
+
     }
 }

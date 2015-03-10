@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +23,7 @@ import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
@@ -46,7 +49,8 @@ public class UpdateClassContentFragment extends Fragment {
     private int mId, mTimestamp;
 
     private View mRootView;
-    private TextView mDate, mBook, mPages,mInfo;
+    private TextView mDate, mPages,mInfo;
+    private AutoCompleteTextView mBook;
 
     private AttendingStudentsAdapter mAdapter;
     private ArrayList<AttendingStudentsAdapter.AttendingStudentsAdapterValues> mAttendingStudents;
@@ -123,8 +127,10 @@ public class UpdateClassContentFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_update_class_content, container, false);
         mDate = (TextView) mRootView.findViewById(R.id.updateClassContentFragmentnewDate);
         mDate.setText(mSDate);
-        mBook = (TextView) mRootView.findViewById(R.id.updateClassContentFragmentNewBook);
+        mBook = (AutoCompleteTextView) mRootView.findViewById(R.id.updateClassContentFragmentNewBook);
         mBook.setText(mSBook);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line, getBookselection());
+        mBook.setAdapter(adapter);
         mPages = (TextView) mRootView.findViewById(R.id.updateClassContentFragmentNewPages);
         mPages.setText(mSPages);
         mInfo = (TextView) mRootView.findViewById(R.id.updateClassContentFragmentNewInfo);
@@ -242,6 +248,27 @@ public class UpdateClassContentFragment extends Fragment {
     public interface OnUpdateClassContentListener {
         public void OnUpdateClassContent(ClassContentAdapter.ClassContentAdapterValues updatedObj);
         public void onDeleteClassContent(ClassContentAdapter.ClassContentAdapterValues deletedObj);
+    }
+
+    //---------------------------------------------------------------------------------------------
+    private String[] getBookselection(){
+
+        ArrayList<String> books=new ArrayList<>();
+        ContentResolver resolver=getActivity().getContentResolver();
+        Cursor cursor=resolver.query(DbContract.ClassContentEntry.CONTENT_URI,null,null,null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            books.add(cursor.getString(0));
+            Log.v(TAG,"books: "+cursor.getString(0));
+            cursor.moveToNext();
+        }
+        //getting rid of duplicates in arraylist
+        HashSet cleaner=new HashSet();
+        cleaner.addAll(books);
+        books.clear();
+        books.addAll(cleaner);
+        String[] string=new String[books.size()];
+        return books.toArray(string);
     }
 
 }
