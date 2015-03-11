@@ -258,15 +258,10 @@ public class UpdateClassContentFragment extends Fragment {
         Cursor cursor=resolver.query(DbContract.ClassContentEntry.CONTENT_URI,null,null,null,null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
-            books.add(cursor.getString(0));
-            Log.v(TAG,"books: "+cursor.getString(0));
+            if(!books.contains(cursor.getString(0)))
+                books.add(cursor.getString(0));
             cursor.moveToNext();
         }
-        //getting rid of duplicates in arraylist
-        HashSet cleaner=new HashSet();
-        cleaner.addAll(books);
-        books.clear();
-        books.addAll(cleaner);
         String[] string=new String[books.size()];
         return books.toArray(string);
     }

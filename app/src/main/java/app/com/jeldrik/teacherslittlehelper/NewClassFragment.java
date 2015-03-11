@@ -11,6 +11,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -39,6 +41,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
@@ -58,6 +61,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
 
     private OnAddNewClassListener mListener;
     private Button mBtn, mTimeBtn,mEndTimeBtn;
+    private AutoCompleteTextView mLocation;
     View mRootView;
 
     @Override
@@ -143,6 +147,10 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
         // Inflate the layout for this fragment
         mRootView =inflater.inflate(R.layout.fragment_new_class, container, false);
 
+        mLocation=(AutoCompleteTextView)mRootView.findViewById(R.id.newClassLocation);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_dropdown_item_1line, getLocationSelection());
+        mLocation.setAdapter(adapter);
+
         setSpinners();
         Button daysBtn=(Button)mRootView.findViewById(R.id.newClassDays);
         daysBtn.setOnClickListener(new Button.OnClickListener(){
@@ -180,10 +188,9 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
             public void onClick(View v) {
 
                 EditText title=(EditText)mRootView.findViewById(R.id.newClassTitle);
-                EditText location=(EditText)mRootView.findViewById(R.id.newClassLocation);
                 EditText info=(EditText)mRootView.findViewById(R.id.newClassInfo);
 
-                if(title.getText().toString().matches("")||mSelectedDaysAsArray==null||location.getText().toString().matches(""))
+                if(title.getText().toString().matches("")||mSelectedDaysAsArray==null||mLocation.getText().toString().matches(""))
                     Toast.makeText(getActivity(),R.string.notAllFieldsFilledOutWarning,Toast.LENGTH_LONG).show();
                 else {
                     ContentValues vals = new ContentValues(7);
@@ -191,7 +198,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
                     vals.put(DbContract.ClassEntry.COLUMN_TIME, mTime);
                     vals.put(DbContract.ClassEntry.COLUMN_DATE, mSelectedDays);
                     vals.put(DbContract.ClassEntry.COLUMN_DURATION, mEndTime);
-                    vals.put(DbContract.ClassEntry.COLUMN_LOCATION, location.getText().toString());
+                    vals.put(DbContract.ClassEntry.COLUMN_LOCATION, mLocation.getText().toString());
                     vals.put(DbContract.ClassEntry.COLUMN_LEVEL, mLevel);
                     vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO, info.getText().toString());
 
@@ -270,6 +277,22 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
         lvlSpinner.setAdapter(lvlAdapter);
         lvlSpinner.setOnItemSelectedListener(this);
 
+    }
+    //---------------------------------------------------------------------------------------------
+    private String[] getLocationSelection(){
+
+        ArrayList<String> locations=new ArrayList<>();
+        ContentResolver resolver=getActivity().getContentResolver();
+        Cursor cursor=resolver.query(DbContract.ClassEntry.CONTENT_URI,null,null,null,null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            if(!locations.contains(cursor.getString(2)))
+                locations.add(cursor.getString(2));
+            Log.v(TAG,"books: "+cursor.getString(2));
+            cursor.moveToNext();
+        }
+        String[] string=new String[locations.size()];
+        return locations.toArray(string);
     }
     //---------------------------------------------------------------------------------------------
     //DialogFragment for selecting days

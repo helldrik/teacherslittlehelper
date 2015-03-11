@@ -66,7 +66,8 @@ public class ClassContentProvider extends ContentProvider {
         switch(mUriMatcher.match(uri)) {
             case CLASS:
                 cursor=mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{ClassEntry._ID,
-                        ClassEntry.COLUMN_TITLE},null,null, null, null, null);
+                        ClassEntry.COLUMN_TITLE,
+                        ClassEntry.COLUMN_LOCATION},null,null, null, null, null);
                 break;
             case CLASS_ID:
                 String id=uri.getLastPathSegment();
