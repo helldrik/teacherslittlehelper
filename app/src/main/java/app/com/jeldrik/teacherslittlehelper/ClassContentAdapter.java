@@ -75,6 +75,7 @@ public class ClassContentAdapter extends ArrayAdapter {
         public ClassContentAdapterValues(int id,String date, int timeStamp,String book,String pages,String info){
             this.id=id;
             this.date=date;
+            this.timestamp=timeStamp;
             this.book=book;
             this.pages=pages;
             this.info=info;
@@ -120,7 +121,7 @@ public class ClassContentAdapter extends ArrayAdapter {
     class ClassContentAdapterValuesIDComparator implements Comparator<ClassContentAdapterValues> {
         @Override
         public int compare(ClassContentAdapterValues lhs, ClassContentAdapterValues rhs) {
-            return lhs.timestamp - rhs.timestamp;
+            return rhs.timestamp - lhs.timestamp;
         }
     }
 }

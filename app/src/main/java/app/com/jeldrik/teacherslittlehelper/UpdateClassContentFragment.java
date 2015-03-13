@@ -79,11 +79,11 @@ public class UpdateClassContentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(savedInstanceState!=null){
-       /*     mSDate = savedInstanceState.getString("date");
+            mSDate = savedInstanceState.getString("date");
             mSBook = savedInstanceState.getString("book");
             mSPages = savedInstanceState.getString("pages");
             mSInfo = savedInstanceState.getString("info");
-            mId = savedInstanceState.getInt("id"); */
+            mId = savedInstanceState.getInt("id");
             mAttendingStudents=savedInstanceState.getParcelableArrayList("attendingStudents");
         }
         else if (getArguments() != null) {
@@ -117,6 +117,11 @@ public class UpdateClassContentFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString("date",mSDate);
+        outState.putString("book",mSBook);
+        outState.putString("pages",mSPages);
+        outState.putString("info",mSInfo);
+        outState.putInt("id",mId);
         outState.putParcelableArrayList("attendingStudents",mAdapter.mVals);
     }
 

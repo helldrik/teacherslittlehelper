@@ -153,7 +153,7 @@ public class NewClassContentFragment extends Fragment {
                 sPages=pages.getText().toString();
                 TextView info=(TextView)mRootView.findViewById(R.id.newClassContentFragmentNewInfo);
                 sInfo=info.getText().toString();
-                Log.v(TAG,"TimeStamp: "+mTimestamp);
+                //Log.v(TAG,"TimeStamp: "+mTimestamp);
                 ContentValues vals = new ContentValues(5);
                 vals.put(DbContract.ClassContentEntry.COLUMN_BOOK, sBook);
                 vals.put(DbContract.ClassContentEntry.COLUMN_INFO, sInfo);
@@ -270,7 +270,7 @@ public class NewClassContentFragment extends Fragment {
                 date=Integer.toString(dayOfMonth)+"."+Integer.toString(monthOfYear+1)+"."+Integer.toString(year);
             else if(DATE_FORMAT=="US")
                 date=Integer.toString(monthOfYear+1)+"/"+Integer.toString(dayOfMonth)+"/"+Integer.toString(year);
-            timestamp=dayOfMonth+monthOfYear*30+year*365;
+            timestamp=dayOfMonth+(monthOfYear+1)*30+year*365;
             ((MainActivity)getActivity()).forwardDatetoNewClassContentFragment(date,timestamp);
 
         }
