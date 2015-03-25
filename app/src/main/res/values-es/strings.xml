@@ -49,7 +49,7 @@
     <string name="contentTitle">Fechas</string>
 
     <string name="updateContent">actualizar</string>
-    <string name="deleteContent">borar</string>
+    <string name="deleteContent">Borrar</string>
 
     <string name="newStudentName">Nombre</string>
     <string name="newStudentPhone">Telefono</string>

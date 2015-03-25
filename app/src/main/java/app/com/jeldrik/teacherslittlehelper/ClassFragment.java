@@ -1,7 +1,9 @@
 package app.com.jeldrik.teacherslittlehelper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -126,11 +128,7 @@ public class ClassFragment extends Fragment {
                 transaction.commit();
                 break;
             case R.id.DeleteClass:
-                if (mListener != null) {
-                    mListener.onDelete(mID);
-                }
-                FragmentManager fm=getActivity().getSupportFragmentManager();
-                fm.popBackStack();
+                showAlertDialog();
                 break;
             case R.id.AddContent:
                 Fragment newClassContentFragment = NewClassContentFragment.newInstance(mID, mStudentList);
@@ -430,6 +428,39 @@ public void updateMemberVars(String title,String days,String location,String hou
             }
         }catch (JSONException e){Log.e("MainFragment","No valid JsonObject or wrong type in createAdapters() "+e);}
         return  humanReadableString;
+    }
+ //--------------------------------------------------------------------------------------------------
+    private void showAlertDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
+
+        // set title
+        alertDialogBuilder.setTitle(this.getActivity().getResources().getString(R.string.delete_Class));
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(true)
+                .setPositiveButton(this.getActivity().getResources().getString(R.string.delete_Class),new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        if (mListener != null) {
+                            mListener.onDelete(mID);
+                        }
+                        FragmentManager fm=getActivity().getSupportFragmentManager();
+                        fm.popBackStack();
+                    }
+                })
+                .setNegativeButton(this.getActivity().getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 
 }

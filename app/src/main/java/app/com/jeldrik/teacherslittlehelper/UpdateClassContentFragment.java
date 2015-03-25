@@ -1,8 +1,10 @@
 package app.com.jeldrik.teacherslittlehelper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -215,19 +217,7 @@ public class UpdateClassContentFragment extends Fragment {
         deleteBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = DbContract.ClassContentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(mId)).build();
-                ContentResolver resolver = getActivity().getContentResolver();
-                if (resolver.delete(uri, DbContract.ClassContentEntry._ID + " = ?", new String[]{Integer.toString(mId)}) > 0) {
-
-                    //Delete all students in StudentAttendance associated with this classcontent
-                    uri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Integer.toString(mId)).build();
-                    resolver.delete(uri, null, null);
-                    ClassContentAdapter.ClassContentAdapterValues deletedObj = new ClassContentAdapter.ClassContentAdapterValues(mId, mSDate,mTimestamp, mSBook, mSPages, mSInfo);
-                    mListener.onDeleteClassContent(deletedObj);
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    fm.popBackStack();
-                    Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.contentDeletedAlert), Toast.LENGTH_LONG).show();
-                }
+                showAlertDialog();
             }
         });
 
@@ -269,6 +259,48 @@ public class UpdateClassContentFragment extends Fragment {
         }
         String[] string=new String[books.size()];
         return books.toArray(string);
+    }
+ //--------------------------------------------------------------------------------------------------
+    private void showAlertDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
+
+        // set title
+        alertDialogBuilder.setTitle(this.getActivity().getResources().getString(R.string.deleteContent));
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(true)
+                .setPositiveButton(this.getActivity().getResources().getString(R.string.deleteContent),new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+
+                        Uri uri = DbContract.ClassContentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(mId)).build();
+                        ContentResolver resolver = getActivity().getContentResolver();
+                        if (resolver.delete(uri, DbContract.ClassContentEntry._ID + " = ?", new String[]{Integer.toString(mId)}) > 0) {
+
+                            //Delete all students in StudentAttendance associated with this classcontent
+                            uri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Integer.toString(mId)).build();
+                            resolver.delete(uri, null, null);
+                            ClassContentAdapter.ClassContentAdapterValues deletedObj = new ClassContentAdapter.ClassContentAdapterValues(mId, mSDate,mTimestamp, mSBook, mSPages, mSInfo);
+                            mListener.onDeleteClassContent(deletedObj);
+                            FragmentManager fm = getActivity().getSupportFragmentManager();
+                            fm.popBackStack();
+                            Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.contentDeletedAlert), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton(this.getActivity().getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 
 }

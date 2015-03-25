@@ -16,6 +16,8 @@
     <string name="saturday">Saturday</string>
     <string name="sunday">Sunday</string>
 
+    <string name="cancel">Cancel</string>
+
     <string name="add_class">Add Class</string>
     <string name="delete_Class">Delete Class</string>
     <string name="updateClass">Update Class</string>

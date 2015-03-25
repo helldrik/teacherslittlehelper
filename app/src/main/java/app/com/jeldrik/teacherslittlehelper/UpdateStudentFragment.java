@@ -1,9 +1,11 @@
 package app.com.jeldrik.teacherslittlehelper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -99,22 +101,7 @@ public class UpdateStudentFragment extends Fragment {
         deleteBtn.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //delete Student
-                ContentResolver resolver = getActivity().getContentResolver();
-                Uri uri = DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(studentAdapterVal.id)).build();
-
-                //Log.v("StudentAdapter", "delete Button pressed");
-                if (resolver.delete(uri, null, null) > 0) {
-                    //delete student from StudentAttendance table
-                    uri= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_STUDENTKEY.buildUpon().appendPath(Integer.toString(studentAdapterVal.id)).build();
-                    resolver.delete(uri,null,null);
-                    //by passing null instead of StudentAdapterValue student gets deleted from adapter
-                    mListener.onStudentUpdated(null,mPosition);
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    fm.popBackStack();
-                    Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.studentDeletedAlert), Toast.LENGTH_LONG).show();
-                }
+                showAlertDialog();
             }
         });
 
@@ -184,6 +171,49 @@ public class UpdateStudentFragment extends Fragment {
     public interface OnStudentUpdatedListener {
         // TODO: Update argument type and name
         public void onStudentUpdated(StudentAdapter.StudentAdapterValues vals,int position);
+    }
+    //--------------------------------------------------------------------------------------------------
+    private void showAlertDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
+
+        // set title
+        alertDialogBuilder.setTitle(this.getActivity().getResources().getString(R.string.deleteStudent));
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(true)
+                .setPositiveButton(this.getActivity().getResources().getString(R.string.deleteStudent),new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        //delete Student
+                        ContentResolver resolver = getActivity().getContentResolver();
+                        Uri uri = DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(studentAdapterVal.id)).build();
+
+                        //Log.v("StudentAdapter", "delete Button pressed");
+                        if (resolver.delete(uri, null, null) > 0) {
+                            //delete student from StudentAttendance table
+                            uri= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_STUDENTKEY.buildUpon().appendPath(Integer.toString(studentAdapterVal.id)).build();
+                            resolver.delete(uri,null,null);
+                            //by passing null instead of StudentAdapterValue student gets deleted from adapter
+                            mListener.onStudentUpdated(null,mPosition);
+                            FragmentManager fm = getActivity().getSupportFragmentManager();
+                            fm.popBackStack();
+                            Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.studentDeletedAlert), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .setNegativeButton(this.getActivity().getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 
 }
