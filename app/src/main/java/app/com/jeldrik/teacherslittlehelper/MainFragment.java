@@ -69,10 +69,6 @@ public class MainFragment extends Fragment {
             transaction.commit();
         }
 
-        else if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
     //----------------------------------------------------------------------------------------------

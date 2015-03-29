@@ -1,5 +1,7 @@
 package app.com.jeldrik.teacherslittlehelper;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -38,6 +40,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     .add(R.id.FragmentContainer, mainFragment)
                     .commit();
         }
+
      /*    SQLiteDatabase myDataBase=new DbHelper(this).getReadableDatabase();
 
        Cursor cursor=myDataBase.query(DbContract.ClassEntry.TABLE_NAME,new String[]{DbContract.ClassEntry.COLUMN_TITLE,DbContract.ClassEntry.COLUMN_LOCATION},null,null,null,null,null);
@@ -125,9 +128,14 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
+        if(id==R.id.sync){
+            // Create the account type and default account
+            Account newAccount = new Account("dummyaccount", "example.com");
+            AccountManager accountManager = (AccountManager) this.getSystemService(ACCOUNT_SERVICE);
+// If the account already exists no harm is done but
+// a warning will be logged.
+            accountManager.addAccountExplicitly(newAccount, null, null);
+            ContentResolver.requestSync(newAccount,"app.com.jeldrik.teacherslittlehelper.data.ClassContentProvider",Bundle.EMPTY);
         }
 
         return super.onOptionsItemSelected(item);
