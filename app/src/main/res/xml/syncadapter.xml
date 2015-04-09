@@ -1,8 +1,8 @@
 <sync-adapter
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:contentAuthority="app.com.jeldrik.teacherslittlehelper.data.ClassContentProvider"
-    android:accountType="example.com"
+    android:contentAuthority="app.com.jeldrik.teacherslittlehelper.data"
+    android:accountType="jeldrik.com"
     android:userVisible="false"
     android:supportsUploading="false"
     android:allowParallelSyncs="false"
-    android:isAlwaysSyncable="true"/>
+    android:isAlwaysSyncable="false"/>
