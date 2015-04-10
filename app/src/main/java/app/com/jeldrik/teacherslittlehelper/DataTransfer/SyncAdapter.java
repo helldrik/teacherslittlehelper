@@ -66,14 +66,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-        SyncResult result = new SyncResult();
         try {
-            Log.v(TAG,"syncdimp ");
             getData(provider);
-            Log.v(TAG,"syncdimp ");
         } catch (RemoteException | IOException e) {
             syncResult.hasHardError();
-            Log.e(TAG,"syncdimp error "+e);
+            Log.e(TAG,"sync error "+e);
         }
     }
     private void getData(ContentProviderClient contentProviderClient) throws RemoteException, IOException{

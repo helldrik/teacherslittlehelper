@@ -2,21 +2,34 @@ package app.com.jeldrik.teacherslittlehelper;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.security.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 import app.com.jeldrik.teacherslittlehelper.data.DbHelper;
@@ -28,6 +41,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         UpdateClassContentFragment.OnUpdateClassContentListener {
 
     MainFragment mainFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +159,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
          */
             ContentResolver.requestSync(mAccount, DbContract.AUTHORITY, settingsBundle);
             Toast.makeText(this,"Start syncing",Toast.LENGTH_LONG).show();
+            getUserData();
         }
 
         return super.onOptionsItemSelected(item);
@@ -253,7 +268,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
 
     //---------------------------------------------------------------------------------------------
-    //Authenticator
+    //Authenticator for using Syncadapter
     public static final String ACCOUNT_TYPE = "jeldrik.com";
     // The account name
     public static final String ACCOUNT = "dummyaccount";
@@ -281,5 +296,75 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
              */
         }
         return newAccount;
+    }
+    //---------------------------------------------------------------------------------------------
+    //Creating persistant storage for saving unique user id and timestamp of when Content was last updated
+    public void getUserData(){
+        File file= new File(getExternalFilesDir(null),"UserData.txt");
+        if(file.exists()) {
+            try {
+                FileInputStream fIn = new FileInputStream(file);
+                BufferedReader myReader = new BufferedReader(new InputStreamReader(fIn));
+                String aDataRow = "";
+                String aBuffer = "";
+                while ((aDataRow = myReader.readLine()) != null) {
+                    aBuffer += aDataRow + "\n";
+                }
+                myReader.close();
+                Toast.makeText(getBaseContext(),
+                        "Done reading file "+aBuffer,Toast.LENGTH_SHORT).show();
+                Log.v("MainFragment",aBuffer);
+            } catch (Exception e) {
+                Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            SetUserData();
+        }
+    }
+    //---------------------------------------------------------------------------------------------
+    //show alert window to input email for syncing
+    public void SetUserData(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Login");
+        alert.setMessage("Enter valid email address for syncing :");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String syncEmail=input.getText().toString();
+                File file= new File(getExternalFilesDir(null),"UserData.txt");
+                try {
+                    Calendar calendar = Calendar.getInstance();
+                    Date timestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+
+                    String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"email\":\""+syncEmail+"\"}]";
+
+                    FileOutputStream fOut = new FileOutputStream(file);
+                    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+                    myOutWriter.append(identifyer);
+                    myOutWriter.close();
+                    fOut.close();
+                    Log.v("MainFragment",identifyer);
+
+                } catch (Exception e) {
+                    Toast.makeText(getBaseContext(), e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+                return;
+            }
+        });
+        alert.show();
     }
 }
