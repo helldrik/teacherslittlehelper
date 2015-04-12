@@ -3,6 +3,6 @@
     android:contentAuthority="app.com.jeldrik.teacherslittlehelper.data"
     android:accountType="jeldrik.com"
     android:userVisible="false"
-    android:supportsUploading="false"
+    android:supportsUploading="true"
     android:allowParallelSyncs="false"
     android:isAlwaysSyncable="false"/>

@@ -14,11 +14,15 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,6 +45,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         UpdateClassContentFragment.OnUpdateClassContentListener {
 
     MainFragment mainFragment;
+    public String userEmail;
+    public long timestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +61,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     .add(R.id.FragmentContainer, mainFragment)
                     .commit();
         }
+        getUserData();
 
 
      /*    SQLiteDatabase myDataBase=new DbHelper(this).getReadableDatabase();
@@ -153,13 +160,14 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     ContentResolver.SYNC_EXTRAS_MANUAL, true);
             settingsBundle.putBoolean(
                     ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+            settingsBundle.putString("useremail",userEmail);
+            settingsBundle.putLong("timestamp",timestamp);
         /*
          * Request the sync for the default account, authority, and
          * manual sync settings
          */
             ContentResolver.requestSync(mAccount, DbContract.AUTHORITY, settingsBundle);
             Toast.makeText(this,"Start syncing",Toast.LENGTH_LONG).show();
-            getUserData();
         }
 
         return super.onOptionsItemSelected(item);
@@ -311,8 +319,13 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     aBuffer += aDataRow + "\n";
                 }
                 myReader.close();
+                JSONArray jarr=new JSONArray(aBuffer);
+                JSONObject json=jarr.getJSONObject(1);
+                userEmail=json.getString("email");
+                json=jarr.getJSONObject(0);
+                timestamp=json.getLong("timestamp");
                 Toast.makeText(getBaseContext(),
-                        "Done reading file "+aBuffer,Toast.LENGTH_SHORT).show();
+                        "Done reading file "+userEmail+" "+timestamp,Toast.LENGTH_SHORT).show();
                 Log.v("MainFragment",aBuffer);
             } catch (Exception e) {
                 Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_SHORT).show();
@@ -338,8 +351,9 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                 String syncEmail=input.getText().toString();
                 File file= new File(getExternalFilesDir(null),"UserData.txt");
                 try {
-                    Calendar calendar = Calendar.getInstance();
-                    Date timestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+                    Date date= new Date();
+                    //getTime() returns current time in milliseconds
+                    timestamp = date.getTime();
 
                     String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"email\":\""+syncEmail+"\"}]";
 

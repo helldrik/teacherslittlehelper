@@ -13,12 +13,28 @@ import android.os.RemoteException;
 import android.util.JsonReader;
 import android.util.Log;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
@@ -66,16 +82,44 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+
+        long timestamp=extras.getLong("timestamp");
+        String useremail=extras.getString("useremail");
         try {
             getData(provider);
         } catch (RemoteException | IOException e) {
             syncResult.hasHardError();
             Log.e(TAG,"sync error "+e);
         }
+        try{
+            sendUserData(useremail,timestamp);
+        }catch(IOException e) {
+            Log.e(TAG, "sync error " + e);
+        }
+    }
+    /*
+    returns the timestamp related to the user email saved on the server
+     */
+    private void sendUserData(String useremail, long timestamp) throws IOException{
+
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("http://www.jeldrik.com/dataSending/request.php");
+
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("request", "adUser"));
+        nameValuePairs.add(new BasicNameValuePair("email", useremail));
+        nameValuePairs.add(new BasicNameValuePair("timestamp", Long.toString(timestamp)));
+
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+        // Execute HTTP Post Request
+        HttpResponse response = httpclient.execute(httppost);
+        String responseBody = EntityUtils.toString(response.getEntity());
+        Log.v(TAG,"Server answer: "+responseBody);
     }
     private void getData(ContentProviderClient contentProviderClient) throws RemoteException, IOException{
         URL url=null;
-        try{url =new URL("http","192.168.1.144",80,"/teachersLittleHelper/dataSending");}
+        try{url =new URL("http","jeldrik.com",80," /dataSending");}
         catch(MalformedURLException e){Log.e(TAG,"Error in the url structure "+e);}
 
         URLConnection conn=url.openConnection();
