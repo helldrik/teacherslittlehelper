@@ -67,7 +67,12 @@ public class ClassContentProvider extends ContentProvider {
             case CLASS:
                 cursor=mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{ClassEntry._ID,
                         ClassEntry.COLUMN_TITLE,
-                        ClassEntry.COLUMN_LOCATION},null,null, null, null, null);
+                        ClassEntry.COLUMN_LOCATION,
+                        ClassEntry.COLUMN_DURATION,
+                        ClassEntry.COLUMN_EXTRA_INFO,
+                        ClassEntry.COLUMN_LEVEL,
+                        ClassEntry.COLUMN_TIME,
+                        ClassEntry.COLUMN_DATE},null,null, null, null, null);
                 break;
             case CLASS_ID:
                 String id=uri.getLastPathSegment();
@@ -85,6 +90,14 @@ public class ClassContentProvider extends ContentProvider {
                         ClassEntry.COLUMN_TIME,
                         ClassEntry.COLUMN_DURATION,
                         ClassEntry.COLUMN_DATE}, null, null, null, null, null);
+                break;
+            case STUDENT:
+                cursor=mdataBase.query(StudentEntry.TABLE_NAME,new String[]{
+                        StudentEntry.COLUMN_STUDENT_NAME,
+                        StudentEntry.COLUMN_PHONE,
+                        StudentEntry.COLUMN_EMAIL,
+                        StudentEntry.COLUMN_FOREIGN_KEY_CLASS,
+                        StudentEntry._ID},null,null,null,null,null);
                 break;
             case STUDENT_CLASS_ID:
                 String classId=uri.getLastPathSegment();
@@ -128,6 +141,15 @@ public class ClassContentProvider extends ContentProvider {
                         ClassContentEntry.COLUMN_INFO,
                         ClassContentEntry._ID},ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS+" =?",new String[]{classId},null,null,ClassContentEntry.COLUMN_TIMESTAMP+" desc");
                 break;
+
+            case STUDENTATTENDANCE:
+                cursor=mdataBase.query(StudentAttendanceEntry.TABLE_NAME,new String[]{
+                        StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT,
+                        StudentAttendanceEntry.COLUMN_STATUS,
+                        StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT,
+                        StudentAttendanceEntry._ID},null,null,null,null,null);
+                break;
+
             case STUDENTATTENDANCE_CLASSCONTENT_ID:
                 String classContentId=uri.getLastPathSegment();
                 String query="Select "+StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry._ID+","

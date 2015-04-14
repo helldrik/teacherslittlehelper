@@ -22,6 +22,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -92,7 +95,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             Log.e(TAG,"sync error "+e);
         }
         try{
-            sendUserData(useremail,timestamp);
+            sendUserData(useremail, timestamp);
         }catch(IOException e) {
             Log.e(TAG, "sync error " + e);
         }
@@ -106,7 +109,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         HttpPost httppost = new HttpPost("http://www.jeldrik.com/dataSending/request.php");
 
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-        nameValuePairs.add(new BasicNameValuePair("request", "adUser"));
+        nameValuePairs.add(new BasicNameValuePair("request", "checkUser"));
         nameValuePairs.add(new BasicNameValuePair("email", useremail));
         nameValuePairs.add(new BasicNameValuePair("timestamp", Long.toString(timestamp)));
 
@@ -115,7 +118,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // Execute HTTP Post Request
         HttpResponse response = httpclient.execute(httppost);
         String responseBody = EntityUtils.toString(response.getEntity());
-        Log.v(TAG,"Server answer: "+responseBody);
+        Log.v(TAG, "Testing "+responseBody);
+        try {
+            JSONArray jarr = new JSONArray(responseBody);
+            JSONObject json = jarr.getJSONObject(0);
+            String msg = json.getString("message");
+            long oldTimeStamp=0;
+            if(msg.equals("success")) {
+                json = jarr.getJSONObject(1);
+                oldTimeStamp = json.getLong("timestamp");
+            }
+            Log.v(TAG, "Server answer: " + msg+" "+oldTimeStamp);
+        }catch(JSONException e){Log.e(TAG, "Error parsing JSON object "+e);}
     }
     private void getData(ContentProviderClient contentProviderClient) throws RemoteException, IOException{
         URL url=null;

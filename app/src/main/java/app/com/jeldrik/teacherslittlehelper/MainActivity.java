@@ -152,22 +152,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if(id==R.id.sync){
-            // Create the dummy account
-            mAccount = CreateSyncAccount(this);
-            // Pass the settings flags by inserting them in a bundle
-            Bundle settingsBundle = new Bundle();
-            settingsBundle.putBoolean(
-                    ContentResolver.SYNC_EXTRAS_MANUAL, true);
-            settingsBundle.putBoolean(
-                    ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-            settingsBundle.putString("useremail",userEmail);
-            settingsBundle.putLong("timestamp",timestamp);
-        /*
-         * Request the sync for the default account, authority, and
-         * manual sync settings
-         */
-            ContentResolver.requestSync(mAccount, DbContract.AUTHORITY, settingsBundle);
-            Toast.makeText(this,"Start syncing",Toast.LENGTH_LONG).show();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -296,7 +281,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
              * then call context.setIsSyncable(account, AUTHORITY, 1)
              * here.
              */
-            Toast.makeText(context,"New Account",Toast.LENGTH_LONG).show();
+            //Toast.makeText(context,"New Account",Toast.LENGTH_LONG).show();
         } else {
             /*
              * The account exists or some other error occurred. Log this, report it,
@@ -324,11 +309,11 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                 userEmail=json.getString("email");
                 json=jarr.getJSONObject(0);
                 timestamp=json.getLong("timestamp");
-                Toast.makeText(getBaseContext(),
-                        "Done reading file "+userEmail+" "+timestamp,Toast.LENGTH_SHORT).show();
-                Log.v("MainFragment",aBuffer);
+                sync();
+                //Toast.makeText(getBaseContext(),"Done reading file "+userEmail+" "+timestamp,Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
-                Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_LONG).show();
+                Log.e("MainActivity", "TTT: "+ e.getMessage());
             }
         }
         else {
@@ -348,21 +333,22 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
 
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String syncEmail=input.getText().toString();
+                userEmail=input.getText().toString();
                 File file= new File(getExternalFilesDir(null),"UserData.txt");
                 try {
                     Date date= new Date();
                     //getTime() returns current time in milliseconds
                     timestamp = date.getTime();
 
-                    String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"email\":\""+syncEmail+"\"}]";
+                    String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"email\":\""+userEmail+"\"}]";
 
                     FileOutputStream fOut = new FileOutputStream(file);
                     OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
                     myOutWriter.append(identifyer);
                     myOutWriter.close();
                     fOut.close();
-                    Log.v("MainFragment",identifyer);
+                    //Log.v("MainFragment",identifyer);
+                    sync();
 
                 } catch (Exception e) {
                     Toast.makeText(getBaseContext(), e.getMessage(),
@@ -380,5 +366,20 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             }
         });
         alert.show();
+    }
+    public void sync(){
+        // Create the dummy account
+        mAccount = CreateSyncAccount(this);
+        // Pass the settings flags by inserting them in a bundle
+        Bundle settingsBundle = new Bundle();
+        settingsBundle.putBoolean(
+                ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        settingsBundle.putBoolean(
+                ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        settingsBundle.putString("useremail", userEmail);
+        settingsBundle.putLong("timestamp", timestamp);
+
+        ContentResolver.requestSync(mAccount, DbContract.AUTHORITY, settingsBundle);
+        Toast.makeText(this, "Syncing", Toast.LENGTH_LONG).show();
     }
 }
