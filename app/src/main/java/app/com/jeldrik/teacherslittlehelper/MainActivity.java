@@ -7,10 +7,12 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -47,6 +49,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     MainFragment mainFragment;
     public String userEmail;
     public long timestamp;
+    public MyContentObserver myContentObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     .add(R.id.FragmentContainer, mainFragment)
                     .commit();
         }
-        getUserData();
+
 
      /*    SQLiteDatabase myDataBase=new DbHelper(this).getReadableDatabase();
 
@@ -162,6 +165,24 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         //Save the fragment's instance
         getSupportFragmentManager().putFragment(outState,"mainFragment",mainFragment);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getContentResolver().unregisterContentObserver(myContentObserver);
+        Log.v("MainActivity", "ttt MyContentObserver unregistered");
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getUserData();
+        myContentObserver=new MyContentObserver(null);
+        getContentResolver().registerContentObserver(DbContract.BASE_CONTENT_URI, true,myContentObserver);
+        //SetUserData();
+    }
+
     //---------------------------------------------------------------------------------------------
     //LISTENER METHODS
     //---------------------------------------------------------------------------------------------
@@ -308,7 +329,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                 json=jarr.getJSONObject(0);
                 timestamp=json.getLong("timestamp");
                 sync();
-                //Toast.makeText(getBaseContext(),"Done reading file "+userEmail+" "+timestamp,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(),"Done reading file "+userEmail+" "+timestamp,Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_LONG).show();
                 Log.e("MainActivity", "TTT: "+ e.getMessage());
@@ -337,8 +358,6 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     Date date= new Date();
                     //getTime() returns current time in milliseconds
                     timestamp = date.getTime();
-
-                    timestamp=0;
 
                     String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"email\":\""+userEmail+"\"}]";
 
@@ -375,11 +394,79 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         settingsBundle.putBoolean(
                 ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(
-                ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+                ContentResolver.SYNC_EXTRAS_EXPEDITED, false);
         settingsBundle.putString("useremail", userEmail);
         settingsBundle.putLong("timestamp", timestamp);
 
         ContentResolver.requestSync(mAccount, DbContract.AUTHORITY, settingsBundle);
         Toast.makeText(this, "Syncing", Toast.LENGTH_LONG).show();
+    }
+
+    private class MyContentObserver extends ContentObserver{
+
+
+        /**
+         * Creates a content observer.
+         *
+         * @param handler The handler to run {@link #onChange} on, or null if none.
+         */
+        public MyContentObserver(Handler handler) {
+            super(handler);
+            Log.v("MainActivity", "ttt MyContentObserver");
+        }
+        @Override
+        public void onChange(boolean selfChange) {
+            this.onChange(selfChange, null);
+            Log.v("MainActivity", "ttt Changing data in ContentProvider ee");
+
+            File file= new File(getExternalFilesDir(null),"UserData.txt");
+            if(file.exists()) {
+                try {
+                    Date date= new Date();
+                    timestamp = date.getTime();
+                    String identifyer = "[{\"timestamp\":\"" + timestamp + "\"},{\"email\":\"" + userEmail + "\"}]";
+
+                    FileOutputStream fOut = new FileOutputStream(file);
+                    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+                    myOutWriter.append(identifyer);
+                    myOutWriter.close();
+                    fOut.close();
+                    Log.v("MainFragment","ttt Timestamp updated "+identifyer);
+                    //sync();
+
+                } catch (Exception e) {
+                    Toast.makeText(getBaseContext(), e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            // depending on the handler you might be on the UI
+            // thread, so be cautious!
+            Log.v("MainActivity", "ttt Changing data in ContentProvider");
+            File file= new File(getExternalFilesDir(null),"UserData.txt");
+            if(file.exists()) {
+                try {
+                    Date date= new Date();
+                    timestamp = date.getTime();
+                    String identifyer = "[{\"timestamp\":\"" + timestamp + "\"},{\"email\":\"" + userEmail + "\"}]";
+
+                    FileOutputStream fOut = new FileOutputStream(file);
+                    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+                    myOutWriter.append(identifyer);
+                    myOutWriter.close();
+                    fOut.close();
+                    Log.v("MainFragment","ttt Timestamp updated "+identifyer);
+                    //sync();
+
+                } catch (Exception e) {
+                    Toast.makeText(getBaseContext(), e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }

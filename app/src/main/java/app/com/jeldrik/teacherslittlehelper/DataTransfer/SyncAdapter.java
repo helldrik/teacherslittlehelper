@@ -136,9 +136,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 json = jarr.getJSONObject(1);
                 oldTimeStamp = json.getLong("timestamp");
                 //TODO: send data to server if local timestamp is newer than server timestamp else download data from server
-                try {
-                    sendUserData(provider);
-                }catch(RemoteException e){Log.e(TAG,"Error in sendUserInfo: "+e);}
+                if(oldTimeStamp<timestamp) {
+                    try {
+                        sendUserData(provider);
+                    } catch (RemoteException e) {
+                        Log.e(TAG, "Error in sendUserInfo: " + e);
+                    }
+                }
             }
 
             Log.v(TAG, "Server answer: " + msg+" "+oldTimeStamp);
@@ -212,12 +216,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String page = cursor.getString(3);
             String info = cursor.getString(4);
             int id = cursor.getInt(5);
+            int classId=cursor.getInt(6);
 
             jsonClassContent += "{\"" + DbContract.ClassContentEntry.TABLE_NAME + "\":{\"" + DbContract.ClassContentEntry._ID + "\":\"" + id + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_BOOK + "\":\"" + book + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_DATE + "\":\"" + date + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_TIMESTAMP + "\":\"" + timestamp + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_INFO + "\":\"" + info + "\","
+                    + "\"" + DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS + "\":\"" + classId + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_PAGE + "\":\"" + page + "\"}}";
             // Log.v(TAG, "JSONdata: "+jsonStudent);
             if (!cursor.isLast())

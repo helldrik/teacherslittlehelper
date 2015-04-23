@@ -129,7 +129,8 @@ public class ClassContentProvider extends ContentProvider {
                         ClassContentEntry.COLUMN_TIMESTAMP,
                         ClassContentEntry.COLUMN_PAGE,
                         ClassContentEntry.COLUMN_INFO,
-                        ClassContentEntry._ID},null,null,null,null,null);
+                        ClassContentEntry._ID,
+                        ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS},null,null,null,null,null);
                 break;
             case CLASSCONTENT_CLASS_ID:
                 classId=uri.getLastPathSegment();
@@ -212,6 +213,7 @@ public class ClassContentProvider extends ContentProvider {
         if(rowId>0)
             noteUri= ContentUris.withAppendedId(uri,rowId);
 
+        getContext().getContentResolver().notifyChange(uri,null);
         return noteUri;
 /*
         vals.put(DbContract.ClassEntry.COLUMN_TITLE,"the Title");
@@ -275,6 +277,7 @@ public class ClassContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
+        getContext().getContentResolver().notifyChange(uri,null);
         return affectedRows;
     }
 
@@ -309,6 +312,7 @@ public class ClassContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
+        getContext().getContentResolver().notifyChange(uri,null);
         return affectedRows;
     }
 }
