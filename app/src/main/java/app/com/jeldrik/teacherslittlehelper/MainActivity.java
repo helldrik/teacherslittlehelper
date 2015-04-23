@@ -63,7 +63,6 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         }
         getUserData();
 
-
      /*    SQLiteDatabase myDataBase=new DbHelper(this).getReadableDatabase();
 
        Cursor cursor=myDataBase.query(DbContract.ClassEntry.TABLE_NAME,new String[]{DbContract.ClassEntry.COLUMN_TITLE,DbContract.ClassEntry.COLUMN_LOCATION},null,null,null,null,null);
@@ -152,7 +151,6 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if(id==R.id.sync){
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -339,6 +337,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     Date date= new Date();
                     //getTime() returns current time in milliseconds
                     timestamp = date.getTime();
+
+                    timestamp=0;
 
                     String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"email\":\""+userEmail+"\"}]";
 

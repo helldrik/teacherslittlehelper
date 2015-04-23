@@ -196,7 +196,7 @@ public class MainFragment extends Fragment {
                     String title=cursor.getString(1);
                     String startTime=cursor.getString(2);
                     String endTime=cursor.getString(3);
-                    Log.v("MYCURSOR","Show data in class: "+id+" "+title+" "+startTime+" "+cursor.getString(4));
+
                     try {
                         JSONObject json = new JSONObject(cursor.getString(4));
                         JSONArray jarr=json.optJSONArray("selectedDays");
