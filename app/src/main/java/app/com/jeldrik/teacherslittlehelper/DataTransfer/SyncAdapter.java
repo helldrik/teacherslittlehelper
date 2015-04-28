@@ -121,7 +121,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // Execute HTTP Post Request
         HttpResponse response = httpclient.execute(httppost);
         String responseBody = EntityUtils.toString(response.getEntity());
-        Log.v(TAG, "Testing "+responseBody);
+
         try {
             JSONArray jarr = new JSONArray(responseBody);
             JSONObject json = jarr.getJSONObject(0);
@@ -135,21 +135,33 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             else if(msg.equals("oldTimestamp")) {
                 json = jarr.getJSONObject(1);
                 oldTimeStamp = json.getLong("timestamp");
-                //TODO: send data to server if local timestamp is newer than server timestamp else download data from server
+
                 if(oldTimeStamp<timestamp) {
+
                     try {
-                        sendUserData(provider);
+                        sendUserData(provider,useremail,timestamp);
                     } catch (RemoteException e) {
                         Log.e(TAG, "Error in sendUserInfo: " + e);
                     }
+
                 }
+                else if(oldTimeStamp>timestamp) {
+                    //TODO: get data to server if local timestamp is older than server timestamp
+                }
+
+                try{
+                    getUserData(provider, useremail);
+                } catch (RemoteException e) {
+                    Log.e(TAG, "Error in sendUserInfo: " + e);
+                }
+
             }
 
-            Log.v(TAG, "Server answer: " + msg+" "+oldTimeStamp);
+           // Log.v(TAG, "Server answer: " + msg+" "+oldTimeStamp);
         }catch(JSONException e){Log.e(TAG, "Error parsing JSON object in sendUserInfo "+e);}
     }
     //--------------------------------------------------------------------------------------------------
-    private void sendUserData(ContentProviderClient provider) throws RemoteException,IOException{
+    private void sendUserData(ContentProviderClient provider, String useremail, long timestamp) throws RemoteException,IOException{
         Cursor cursor= provider.query(DbContract.ClassEntry.CONTENT_URI,null, null, null, null);
         cursor.moveToFirst();
         String jsonClass="[";
@@ -164,6 +176,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String date = cursor.getString(7);
             //date is already json formated we just have to delete the starting "{" to put it into our new jsonString
             date=date.substring(1);
+            Log.v(TAG,"tuyen : "+date);
+
 
             jsonClass += "{\"" + DbContract.ClassEntry.TABLE_NAME + "\":{\"" + DbContract.ClassEntry._ID + "\":\"" + id + "\","
                     + "\"" + DbContract.ClassEntry.COLUMN_TITLE + "\":\"" + title + "\","
@@ -212,7 +226,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         while(!cursor.isAfterLast()) {
             String book = cursor.getString(0);
             String date = cursor.getString(1);
-            String timestamp = cursor.getString(2);
+            String tableTimestamp = cursor.getString(2);
             String page = cursor.getString(3);
             String info = cursor.getString(4);
             int id = cursor.getInt(5);
@@ -221,7 +235,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             jsonClassContent += "{\"" + DbContract.ClassContentEntry.TABLE_NAME + "\":{\"" + DbContract.ClassContentEntry._ID + "\":\"" + id + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_BOOK + "\":\"" + book + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_DATE + "\":\"" + date + "\","
-                    + "\"" + DbContract.ClassContentEntry.COLUMN_TIMESTAMP + "\":\"" + timestamp + "\","
+                    + "\"" + DbContract.ClassContentEntry.COLUMN_TIMESTAMP + "\":\"" + tableTimestamp + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_INFO + "\":\"" + info + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS + "\":\"" + classId + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_PAGE + "\":\"" + page + "\"}}";
@@ -263,8 +277,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         nameValuePairs.add(new BasicNameValuePair("jsonStudent", jsonStudent));
         nameValuePairs.add(new BasicNameValuePair("jsonClassContent", jsonClassContent));
         nameValuePairs.add(new BasicNameValuePair("jsonStudentAttendance", jsonStudentAttendance));
-        //TODO: create and save new timestamp locally and send to server
-        //nameValuePairs.add(new BasicNameValuePair("timestamp", Long.toString(timestamp)));
+        nameValuePairs.add(new BasicNameValuePair("timestamp", Long.toString(timestamp)));
+        nameValuePairs.add(new BasicNameValuePair("email", useremail));
 
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"utf-8"));
 
@@ -272,6 +286,104 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         HttpResponse response = httpclient.execute(httppost);
         String responseBody = EntityUtils.toString(response.getEntity());
         Log.v(TAG,"Server answer: "+responseBody);
+
+    }
+    //--------------------------------------------------------------------------------------------------
+    private void getUserData(ContentProviderClient provider, String useremail) throws RemoteException,IOException{
+
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost("http://www.jeldrik.com/dataSending/request.php");
+
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("request", "getData"));
+        nameValuePairs.add(new BasicNameValuePair("email", useremail));
+
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"utf-8"));
+
+        // Execute HTTP Post Request
+        HttpResponse response = httpclient.execute(httppost);
+        String responseBody = EntityUtils.toString(response.getEntity());
+        try {
+            JSONObject json = new JSONObject(responseBody);
+            JSONArray classArr = json.optJSONArray("class");
+            if(classArr!=null){
+                for (int i=0;i<classArr.length();i++) {
+                    JSONObject classObj = classArr.getJSONObject(i);
+                    /*
+                    Log.v(TAG,"ttt "+classObj.getString("_id"));
+                    Log.v(TAG,"ttt "+classObj.getString("title"));
+                    Log.v(TAG,"ttt "+classObj.getString("location"));
+                    Log.v(TAG,"ttt "+classObj.getString("date"));
+                    Log.v(TAG,"ttt "+classObj.getString("startTime"));
+                    Log.v(TAG,"ttt "+classObj.getString("endTime"));
+                    Log.v(TAG,"ttt "+classObj.getString("level"));
+                    Log.v(TAG,"ttt "+classObj.getString("info"));
+                    */
+
+                    String dateAsJson="{\"selectedDays\":"+classObj.getString("date")+"}";
+
+                    ContentValues vals = new ContentValues();
+
+                    vals.put(DbContract.ClassEntry.COLUMN_TITLE, classObj.getString("title"));
+                    vals.put(DbContract.ClassEntry.COLUMN_TIME, classObj.getString("startTime"));
+                    vals.put(DbContract.ClassEntry.COLUMN_DATE, dateAsJson);
+                    vals.put(DbContract.ClassEntry.COLUMN_DURATION, classObj.getString("endTime"));
+                    vals.put(DbContract.ClassEntry.COLUMN_LOCATION, classObj.getString("location"));
+                    vals.put(DbContract.ClassEntry.COLUMN_LEVEL, classObj.getString("level"));
+                    vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO, classObj.getString("info"));
+
+                    Uri uri= DbContract.ClassEntry.CONTENT_URI.buildUpon().appendPath(classObj.getString("_id")).build();
+
+                    if(provider.update(uri,vals,null,null)==0) {
+                        provider.insert(DbContract.ClassEntry.CONTENT_URI, vals);
+                        //Log.v(TAG,"ttt "+classObj.getString("title")+" inserted");
+                    }
+                    else
+                        Log.v(TAG,"getUserData() "+classObj.getString("title")+" updated");
+                }
+            }else
+                Log.e(TAG, "Json that got ret returned from Server is not valid");
+
+            JSONArray classContentArr = json.optJSONArray("classContent");
+            if(classContentArr!=null){
+                for (int i=0;i<classContentArr.length();i++) {
+                    JSONObject classContentObj = classContentArr.getJSONObject(i);
+
+                    ContentValues vals = new ContentValues();
+
+                    vals.put(DbContract.ClassContentEntry.COLUMN_DATE, classContentObj.getString("date"));
+                    vals.put(DbContract.ClassContentEntry.COLUMN_TIMESTAMP, classContentObj.getString("timestamp"));
+                    vals.put(DbContract.ClassContentEntry.COLUMN_BOOK, classContentObj.getString("book"));
+                    vals.put(DbContract.ClassContentEntry.COLUMN_PAGE, classContentObj.getString("page"));
+                    vals.put(DbContract.ClassContentEntry.COLUMN_INFO, classContentObj.getString("info"));
+                    vals.put(DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS, classContentObj.getString("classID"));
+
+                    Uri uri = DbContract.ClassContentEntry.CONTENT_URI.buildUpon().appendPath(classContentObj.getString("_id")).build();
+
+                    if (provider.update(uri, vals, null, null) == 0) {
+                        provider.insert(DbContract.ClassContentEntry.CONTENT_URI, vals);
+                        Log.v(TAG, "ttt " + classContentObj.getString("_id") + " inserted");
+                    } else
+                        Log.v(TAG, "ttt " + classContentObj.getString("_id") + " updated");
+                }
+
+            }else
+                Log.e(TAG,"Json that got ret returned from Server is not valid");
+
+            JSONArray studentArr = json.optJSONArray("student");
+            if(studentArr!=null){
+
+            }else
+                Log.e(TAG,"Json that got ret returned from Server is not valid");
+
+            JSONArray studentAttendanceArr = json.optJSONArray("studentAttendance");
+            if(studentArr!=null){
+
+            }else
+                Log.e(TAG,"Json that got ret returned from Server is not valid");
+
+        }catch(JSONException e){Log.e(TAG, "Error in getUserData() "+e);}
+        Log.v(TAG,"Server answerr: "+responseBody);
 
     }
     //--------------------------------------------------------------------------------------------------

@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -55,9 +56,16 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainFragment=new MainFragment();
-        if(savedInstanceState!=null)
-            mainFragment=(MainFragment)getSupportFragmentManager().getFragment(savedInstanceState,"mainFragment");
+
+        if(savedInstanceState!=null) {
+            mainFragment = (MainFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mainFragment");
+            timestamp=savedInstanceState.getLong("timestamp");
+            userEmail=savedInstanceState.getString("userEmail");
+        }
+        else {
+            mainFragment=new MainFragment();
+            getUserData();
+        }
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -154,6 +162,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if(id==R.id.sync){
+            SetUserData();
         }
 
         return super.onOptionsItemSelected(item);
@@ -164,22 +173,24 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         super.onSaveInstanceState(outState);
         //Save the fragment's instance
         getSupportFragmentManager().putFragment(outState,"mainFragment",mainFragment);
+        outState.putLong("timestamp",timestamp);
+        outState.putString("userEmail",userEmail);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         getContentResolver().unregisterContentObserver(myContentObserver);
         Log.v("MainActivity", "ttt MyContentObserver unregistered");
 
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        getUserData();
+    protected void onRestart() {
+        super.onRestart();
         myContentObserver=new MyContentObserver(null);
         getContentResolver().registerContentObserver(DbContract.BASE_CONTENT_URI, true,myContentObserver);
+        sync();
         //SetUserData();
     }
 
@@ -312,7 +323,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     //---------------------------------------------------------------------------------------------
     //Creating persistant storage for saving unique user id and timestamp of when Content was last updated
     public void getUserData(){
-        File file= new File(getExternalFilesDir(null),"UserData.txt");
+        File file = new File((getFileStreamPath("UserData.txt").getPath()));
+       // File file= new File(getExternalFilesDir(null),"UserData.txt");
         if(file.exists()) {
             try {
                 FileInputStream fIn = new FileInputStream(file);
@@ -353,15 +365,20 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 userEmail=input.getText().toString();
-                File file= new File(getExternalFilesDir(null),"UserData.txt");
+                //File file= new File(getExternalFilesDir(null),"UserData.txt");
+                FileOutputStream fOut=null;
+                try {
+                    fOut = openFileOutput("UserData.txt", MODE_PRIVATE);
+                }catch(FileNotFoundException e){Log.e("MAinActivity", "Could not create new File: "+e);}
+
                 try {
                     Date date= new Date();
                     //getTime() returns current time in milliseconds
-                    timestamp = date.getTime();
+                    //timestamp = date.getTime();
+                    timestamp=0;
 
                     String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"email\":\""+userEmail+"\"}]";
 
-                    FileOutputStream fOut = new FileOutputStream(file);
                     OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
                     myOutWriter.append(identifyer);
                     myOutWriter.close();
@@ -372,6 +389,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                 } catch (Exception e) {
                     Toast.makeText(getBaseContext(), e.getMessage(),
                             Toast.LENGTH_SHORT).show();
+                    Log.e("MainActivity", "Error in MAinActivity of Teacherslittlehelper: "+ e.getMessage());
                 }
                 return;
             }
@@ -419,7 +437,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             this.onChange(selfChange, null);
             Log.v("MainActivity", "ttt Changing data in ContentProvider ee");
 
-            File file= new File(getExternalFilesDir(null),"UserData.txt");
+            //File file= new File(getExternalFilesDir(null),"UserData.txt");
+            File file = new File((getFileStreamPath("UserData.txt").getPath()));
             if(file.exists()) {
                 try {
                     Date date= new Date();
@@ -439,6 +458,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                             Toast.LENGTH_SHORT).show();
                 }
             }
+            else
+                Log.e("MainActivity", "ttt File  "+getFileStreamPath("UserData.txt").getPath()+" does not exist");
 
         }
 
@@ -447,7 +468,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             // depending on the handler you might be on the UI
             // thread, so be cautious!
             Log.v("MainActivity", "ttt Changing data in ContentProvider");
-            File file= new File(getExternalFilesDir(null),"UserData.txt");
+            //File file= new File(getExternalFilesDir(null),"UserData.txt");
+            File file = new File((getFileStreamPath("UserData.txt").getPath()));
             if(file.exists()) {
                 try {
                     Date date= new Date();
@@ -467,6 +489,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                             Toast.LENGTH_SHORT).show();
                 }
             }
+            else
+                Log.e("MainActivity", "ttt File  "+getFileStreamPath("UserData.txt").getPath()+" does not exist");
         }
     }
 }
