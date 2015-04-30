@@ -49,6 +49,7 @@ public class ClassContentProvider extends ContentProvider {
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT_WITH_FOREIGNKEY+"/#",CLASSCONTENT_CLASS_ID);
 
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE,STUDENTATTENDANCE);
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE+"/#",STUDENTATTENDANCE_ID);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE_WITH_CLASSCONTENT_ID+"/#",STUDENTATTENDANCE_CLASSCONTENT_ID);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE_WITH_STUDENT_ID+"/#",STUDENTATTENDANCE_STUDENT_ID);
     }
@@ -214,6 +215,7 @@ public class ClassContentProvider extends ContentProvider {
             noteUri= ContentUris.withAppendedId(uri,rowId);
 
         getContext().getContentResolver().notifyChange(uri,null);
+        Log.v("ClassContentProvider","notifyChange in insert called");
         return noteUri;
 /*
         vals.put(DbContract.ClassEntry.COLUMN_TITLE,"the Title");
@@ -278,6 +280,7 @@ public class ClassContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
         getContext().getContentResolver().notifyChange(uri,null);
+        Log.v("ClassContentProvider","notifyChange in delete called");
         return affectedRows;
     }
 
@@ -309,10 +312,16 @@ public class ClassContentProvider extends ContentProvider {
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.update(StudentAttendanceEntry.TABLE_NAME,values,selection,selectionArgs);
                 break;
+            case STUDENTATTENDANCE_ID:
+                String studentAttendanceId=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(StudentAttendanceEntry.TABLE_NAME,values,StudentAttendanceEntry._ID+" = ?",new String[]{studentAttendanceId});
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
         getContext().getContentResolver().notifyChange(uri,null);
+        Log.v("ClassContentProvider","notifyChange in update called");
         return affectedRows;
     }
 }

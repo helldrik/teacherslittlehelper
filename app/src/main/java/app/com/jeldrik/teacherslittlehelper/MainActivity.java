@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -49,8 +50,10 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
 
     MainFragment mainFragment;
     public String userEmail;
+    boolean syncing;
     public long timestamp;
     public MyContentObserver myContentObserver;
+    public SharedPreferences mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             mainFragment = (MainFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mainFragment");
             timestamp=savedInstanceState.getLong("timestamp");
             userEmail=savedInstanceState.getString("userEmail");
+            syncing=savedInstanceState.getBoolean("syncing");
         }
         else {
             mainFragment=new MainFragment();
@@ -175,19 +179,20 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         getSupportFragmentManager().putFragment(outState,"mainFragment",mainFragment);
         outState.putLong("timestamp",timestamp);
         outState.putString("userEmail",userEmail);
+        outState.putBoolean("syncing",syncing);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         getContentResolver().unregisterContentObserver(myContentObserver);
         Log.v("MainActivity", "ttt MyContentObserver unregistered");
 
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
         myContentObserver=new MyContentObserver(null);
         getContentResolver().registerContentObserver(DbContract.BASE_CONTENT_URI, true,myContentObserver);
         sync();
@@ -337,6 +342,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                 myReader.close();
                 JSONArray jarr=new JSONArray(aBuffer);
                 JSONObject json=jarr.getJSONObject(1);
+                syncing=json.getBoolean("syncing");
+                json=jarr.getJSONObject(2);
                 userEmail=json.getString("email");
                 json=jarr.getJSONObject(0);
                 timestamp=json.getLong("timestamp");
@@ -376,8 +383,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     //getTime() returns current time in milliseconds
                     //timestamp = date.getTime();
                     timestamp=0;
-
-                    String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"email\":\""+userEmail+"\"}]";
+                    syncing=false;
+                    String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"syncing\":\""+syncing+"\"},{\"email\":\""+userEmail+"\"}]";
 
                     OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
                     myOutWriter.append(identifyer);

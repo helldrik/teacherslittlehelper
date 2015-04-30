@@ -372,12 +372,48 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
             JSONArray studentArr = json.optJSONArray("student");
             if(studentArr!=null){
+                for (int i=0;i<studentArr.length();i++) {
+                    JSONObject studentObj = studentArr.getJSONObject(i);
+
+                    ContentValues vals = new ContentValues();
+
+                    vals.put(DbContract.StudentEntry.COLUMN_STUDENT_NAME, studentObj.getString("studentName"));
+                    vals.put(DbContract.StudentEntry.COLUMN_EMAIL, studentObj.getString("email"));
+                    vals.put(DbContract.StudentEntry.COLUMN_PHONE, studentObj.getString("phone"));
+                    vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS, studentObj.getString("classID"));
+
+
+                    Uri uri = DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(studentObj.getString("_id")).build();
+
+                    if (provider.update(uri, vals, null, null) == 0) {
+                        provider.insert(DbContract.StudentEntry.CONTENT_URI, vals);
+                        Log.v(TAG, "ttt " + studentObj.getString("_id") + " inserted");
+                    } else
+                        Log.v(TAG, "ttt " + studentObj.getString("_id") + " updated");
+                }
 
             }else
                 Log.e(TAG,"Json that got ret returned from Server is not valid");
 
             JSONArray studentAttendanceArr = json.optJSONArray("studentAttendance");
-            if(studentArr!=null){
+            if(studentAttendanceArr!=null){
+                for (int i=0;i<studentAttendanceArr.length();i++) {
+                    JSONObject studentAttendanceObj = studentAttendanceArr.getJSONObject(i);
+
+                    ContentValues vals = new ContentValues();
+
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_STATUS, studentAttendanceObj.getString("status"));
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT, studentAttendanceObj.getString("studentId"));
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT, studentAttendanceObj.getString("classContentId"));
+
+                    Uri uri = DbContract.StudentAttendanceEntry.CONTENT_URI.buildUpon().appendPath(studentAttendanceObj.getString("_id")).build();
+
+                    if (provider.update(uri, vals, null, null) == 0) {
+                        provider.insert(DbContract.StudentAttendanceEntry.CONTENT_URI, vals);
+                        Log.v(TAG, "ttt " + studentAttendanceObj.getString("_id") + " inserted");
+                    } else
+                        Log.v(TAG, "ttt " + studentAttendanceObj.getString("_id") + " updated");
+                }
 
             }else
                 Log.e(TAG,"Json that got ret returned from Server is not valid");
