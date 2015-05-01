@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
@@ -204,6 +206,7 @@ public class UpdateClassFragment extends Fragment {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();
                     Toast.makeText(getActivity(),R.string.classUpdated,Toast.LENGTH_LONG).show();
+
                 }
                 else{
                     Toast.makeText(getActivity(),"Could not update",Toast.LENGTH_LONG).show();

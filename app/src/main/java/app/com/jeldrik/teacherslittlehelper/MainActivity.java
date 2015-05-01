@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
 
     MainFragment mainFragment;
     public String userEmail;
-    boolean syncing;
+    public boolean startSyncing;
     public long timestamp;
     public MyContentObserver myContentObserver;
     public SharedPreferences mSettings;
@@ -64,7 +65,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             mainFragment = (MainFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mainFragment");
             timestamp=savedInstanceState.getLong("timestamp");
             userEmail=savedInstanceState.getString("userEmail");
-            syncing=savedInstanceState.getBoolean("syncing");
+            startSyncing=savedInstanceState.getBoolean("syncing");
         }
         else {
             mainFragment=new MainFragment();
@@ -77,78 +78,6 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     .commit();
         }
 
-
-     /*    SQLiteDatabase myDataBase=new DbHelper(this).getReadableDatabase();
-
-       Cursor cursor=myDataBase.query(DbContract.ClassEntry.TABLE_NAME,new String[]{DbContract.ClassEntry.COLUMN_TITLE,DbContract.ClassEntry.COLUMN_LOCATION},null,null,null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
-            Log.v("MYCURSOR",cursor.getString(0)+" location: "+cursor.getString(1));
-            cursor.moveToNext();
-        }
-        String q="Select student.studentName,class.title from student inner join class on student.classID=class._id;";
-        Cursor cursor=myDataBase.rawQuery(q,null);
-        if(cursor.moveToFirst()) {
-            while (!cursor.isAfterLast()) {
-                Log.v("MYCURSOR", cursor.getString(0) + " location: " + cursor.getString(1));
-                cursor.moveToNext();
-            }
-        }
-
-        myDataBase.close();
-
-        ContentValues vals=new ContentValues(7);
-        vals.put(DbContract.ClassEntry.COLUMN_TITLE,"the Title2");
-        vals.put(DbContract.ClassEntry.COLUMN_TIME,"19:00");
-        vals.put(DbContract.ClassEntry.COLUMN_DATE,"Monday");
-        vals.put(DbContract.ClassEntry.COLUMN_DURATION, 60);
-        vals.put(DbContract.ClassEntry.COLUMN_LOCATION,"Madrid");
-        vals.put(DbContract.ClassEntry.COLUMN_LEVEL,"A2");
-        vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO,"no extra infos");
-
-        ContentResolver resolver=getContentResolver();
-        Uri returnUri=resolver.insert(DbContract.ClassEntry.CONTENT_URI,vals);
-        Log.v("MainActivity",returnUri.toString());
-
-        ContentValues vals=new ContentValues();
-        vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT,2);
-        vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT,3);
-        vals.put(DbContract.StudentAttendanceEntry.COLUMN_STATUS,"ill");
-        ContentResolver resolver=getContentResolver();
-        Uri returnUri=resolver.insert(DbContract.StudentAttendanceEntry.CONTENT_URI,vals);
-        Log.v("MainActivity","return uri: "+returnUri.toString());
-/*
-        ContentValues vals=new ContentValues();
-        vals.put(DbContract.StudentEntry.COLUMN_STUDENT_NAME, "Emmir");
-        vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS,2);
-        ContentResolver resolver=getContentResolver();
-        Uri returnUri=resolver.insert(DbContract.StudentEntry.CONTENT_URI,vals);
-/*
-        vals=new ContentValues();
-        vals.put(DbContract.ClassContentEntry.COLUMN_DATE, "ayer");
-        vals.put(DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS,2);
-        resolver=getContentResolver();
-        returnUri=resolver.insert(DbContract.ClassContentEntry.CONTENT_URI,vals);
-*/
-        /*
-        resolver = this.getContentResolver();
-        Uri uri2= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_STUDENTKEY.buildUpon().appendPath("2").build();
-        resolver = this.getContentResolver();
-        resolver.delete(uri2,null,null);
-
-        uri2= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath("2").build();
-        resolver = this.getContentResolver();
-        resolver.delete(uri2,null,null);
-
-        resolver = this.getContentResolver();
-        Uri uri= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath("1").build();
-        Cursor cursor=resolver.query(uri,null,null,null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
-            Log.v("MYCURSOR","ID: "+cursor.getString(0)+" Foreign Key Student: "+cursor.getString(1)+" Status: "+cursor.getString(2)+" Student Name: "+cursor.getString(3));
-            cursor.moveToNext();
-        }
-        */
     }
 
 
@@ -179,7 +108,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         getSupportFragmentManager().putFragment(outState,"mainFragment",mainFragment);
         outState.putLong("timestamp",timestamp);
         outState.putString("userEmail",userEmail);
-        outState.putBoolean("syncing",syncing);
+        outState.putBoolean("syncing",startSyncing);
     }
 
     @Override
@@ -188,15 +117,20 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         getContentResolver().unregisterContentObserver(myContentObserver);
         Log.v("MainActivity", "ttt MyContentObserver unregistered");
 
+        mSettings=getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor=mSettings.edit();
+        editor.putString("userEmail",userEmail);
+        editor.putLong("timestamp",timestamp);
+        editor.putBoolean("syncing",startSyncing);
+        editor.commit();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        myContentObserver=new MyContentObserver(null);
+        myContentObserver=new MyContentObserver(new Handler(Looper.getMainLooper()));
         getContentResolver().registerContentObserver(DbContract.BASE_CONTENT_URI, true,myContentObserver);
-        sync();
-        //SetUserData();
     }
 
     //---------------------------------------------------------------------------------------------
@@ -261,31 +195,45 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     public void onStudentUpdated(StudentAdapter.StudentAdapterValues vals,int position) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.updateStudents(vals, position);
-
+        Date date= new Date();
+        timestamp = date.getTime();
+        startSyncing=true;
     }
     //---------------------------------------------------------------------------------------------
     @Override
     public void OnNewClassContent(ClassContentAdapter.ClassContentAdapterValues values) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.newClassContent(values);
+        Date date= new Date();
+        timestamp = date.getTime();
+        startSyncing=true;
     }
     //---------------------------------------------------------------------------------------------
     @Override
     public void OnUpdateClassContent(ClassContentAdapter.ClassContentAdapterValues values) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.upDateClassContent(values);
+        Date date= new Date();
+        timestamp = date.getTime();
+        startSyncing=true;
     }
     //---------------------------------------------------------------------------------------------
     @Override
     public void onDeleteClassContent(ClassContentAdapter.ClassContentAdapterValues deletedObj) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.deleteClassContent(deletedObj);
+        Date date= new Date();
+        timestamp = date.getTime();
+        startSyncing=true;
     }
     //---------------------------------------------------------------------------------------------
     @Override
     public void onStudentAdded(StudentAdapter.StudentAdapterValues newStudent) {
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.updateStudents(newStudent,-1);
+        Date date= new Date();
+        timestamp = date.getTime();
+        startSyncing=true;
     }
     //---------------------------------------------------------------------------------------------
     @Override
@@ -293,6 +241,9 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         ClassFragment frag=(ClassFragment)getSupportFragmentManager().findFragmentByTag(ClassFragment.TAG);
         frag.updateMemberVars(title,days,location,startTime,endTime,level,info);
         mainFragment.updateClassinAdapter(days,title,startTime,endTime,id);
+        Date date= new Date();
+        timestamp = date.getTime();
+        startSyncing=true;
     }
 
     //---------------------------------------------------------------------------------------------
@@ -328,35 +279,15 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     //---------------------------------------------------------------------------------------------
     //Creating persistant storage for saving unique user id and timestamp of when Content was last updated
     public void getUserData(){
-        File file = new File((getFileStreamPath("UserData.txt").getPath()));
-       // File file= new File(getExternalFilesDir(null),"UserData.txt");
-        if(file.exists()) {
-            try {
-                FileInputStream fIn = new FileInputStream(file);
-                BufferedReader myReader = new BufferedReader(new InputStreamReader(fIn));
-                String aDataRow = "";
-                String aBuffer = "";
-                while ((aDataRow = myReader.readLine()) != null) {
-                    aBuffer += aDataRow + "\n";
-                }
-                myReader.close();
-                JSONArray jarr=new JSONArray(aBuffer);
-                JSONObject json=jarr.getJSONObject(1);
-                syncing=json.getBoolean("syncing");
-                json=jarr.getJSONObject(2);
-                userEmail=json.getString("email");
-                json=jarr.getJSONObject(0);
-                timestamp=json.getLong("timestamp");
-                sync();
-                Toast.makeText(getBaseContext(),"Done reading file "+userEmail+" "+timestamp,Toast.LENGTH_LONG).show();
-            } catch (Exception e) {
-                Toast.makeText(getBaseContext(), e.getMessage(),Toast.LENGTH_LONG).show();
-                Log.e("MainActivity", "TTT: "+ e.getMessage());
-            }
-        }
-        else {
+        mSettings=getPreferences(MODE_PRIVATE);
+        userEmail=mSettings.getString("userEmail","");
+        timestamp=mSettings.getLong("timestamp",0);
+        startSyncing=mSettings.getBoolean("syncing",true);
+        if(userEmail.equals("")){
             SetUserData();
         }
+        else
+            sync();
     }
     //---------------------------------------------------------------------------------------------
     //show alert window to input email for syncing
@@ -372,32 +303,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 userEmail=input.getText().toString();
-                //File file= new File(getExternalFilesDir(null),"UserData.txt");
-                FileOutputStream fOut=null;
-                try {
-                    fOut = openFileOutput("UserData.txt", MODE_PRIVATE);
-                }catch(FileNotFoundException e){Log.e("MAinActivity", "Could not create new File: "+e);}
-
-                try {
-                    Date date= new Date();
-                    //getTime() returns current time in milliseconds
-                    //timestamp = date.getTime();
-                    timestamp=0;
-                    syncing=false;
-                    String identifyer = "[{\"timestamp\":\""+timestamp+"\"},{\"syncing\":\""+syncing+"\"},{\"email\":\""+userEmail+"\"}]";
-
-                    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-                    myOutWriter.append(identifyer);
-                    myOutWriter.close();
-                    fOut.close();
-                    //Log.v("MainFragment",identifyer);
-                    sync();
-
-                } catch (Exception e) {
-                    Toast.makeText(getBaseContext(), e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                    Log.e("MainActivity", "Error in MAinActivity of Teacherslittlehelper: "+ e.getMessage());
-                }
+                timestamp=0;
+                sync();
                 return;
             }
         });
@@ -424,7 +331,10 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         settingsBundle.putLong("timestamp", timestamp);
 
         ContentResolver.requestSync(mAccount, DbContract.AUTHORITY, settingsBundle);
-        Toast.makeText(this, "Syncing", Toast.LENGTH_LONG).show();
+
+        startSyncing=false;
+
+        Toast.makeText(this,"Syncing",Toast.LENGTH_LONG).show();
     }
 
     private class MyContentObserver extends ContentObserver{
@@ -443,30 +353,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         public void onChange(boolean selfChange) {
             this.onChange(selfChange, null);
             Log.v("MainActivity", "ttt Changing data in ContentProvider ee");
-
-            //File file= new File(getExternalFilesDir(null),"UserData.txt");
-            File file = new File((getFileStreamPath("UserData.txt").getPath()));
-            if(file.exists()) {
-                try {
-                    Date date= new Date();
-                    timestamp = date.getTime();
-                    String identifyer = "[{\"timestamp\":\"" + timestamp + "\"},{\"email\":\"" + userEmail + "\"}]";
-
-                    FileOutputStream fOut = new FileOutputStream(file);
-                    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-                    myOutWriter.append(identifyer);
-                    myOutWriter.close();
-                    fOut.close();
-                    Log.v("MainFragment","ttt Timestamp updated "+identifyer);
-                    //sync();
-
-                } catch (Exception e) {
-                    Toast.makeText(getBaseContext(), e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-            else
-                Log.e("MainActivity", "ttt File  "+getFileStreamPath("UserData.txt").getPath()+" does not exist");
+            if(startSyncing)
+                sync();
 
         }
 
@@ -474,30 +362,10 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         public void onChange(boolean selfChange, Uri uri) {
             // depending on the handler you might be on the UI
             // thread, so be cautious!
-            Log.v("MainActivity", "ttt Changing data in ContentProvider");
-            //File file= new File(getExternalFilesDir(null),"UserData.txt");
-            File file = new File((getFileStreamPath("UserData.txt").getPath()));
-            if(file.exists()) {
-                try {
-                    Date date= new Date();
-                    timestamp = date.getTime();
-                    String identifyer = "[{\"timestamp\":\"" + timestamp + "\"},{\"email\":\"" + userEmail + "\"}]";
+            Log.v("MainActivity", "ttt Changing data in ContentProvider "+timestamp+" "+startSyncing);
+            if(startSyncing)
+                sync();
 
-                    FileOutputStream fOut = new FileOutputStream(file);
-                    OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-                    myOutWriter.append(identifyer);
-                    myOutWriter.close();
-                    fOut.close();
-                    Log.v("MainFragment","ttt Timestamp updated "+identifyer);
-                    //sync();
-
-                } catch (Exception e) {
-                    Toast.makeText(getBaseContext(), e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-            else
-                Log.e("MainActivity", "ttt File  "+getFileStreamPath("UserData.txt").getPath()+" does not exist");
         }
     }
 }

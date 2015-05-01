@@ -1,6 +1,7 @@
 package app.com.jeldrik.teacherslittlehelper;
 
 import android.content.ContentResolver;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import app.com.jeldrik.teacherslittlehelper.data.ClassContentProvider;
@@ -323,6 +325,13 @@ public class MainFragment extends Fragment {
                 }
             }
         }
+        Date date= new Date();
+        long timestamp = date.getTime();
+        SharedPreferences settings=getActivity().getPreferences(getActivity().MODE_PRIVATE);
+        SharedPreferences.Editor editor=settings.edit();
+        editor.putBoolean("syncing",true);
+        editor.putLong("timestamp",timestamp);
+        editor.commit();
 
     }
 }

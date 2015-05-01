@@ -11,6 +11,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
@@ -215,6 +217,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
                     mListener.onAddNewClass(mSelectedDaysAsArray, title.getText().toString(),mTime,mEndTime,id);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();
+
                 }
             }
         });

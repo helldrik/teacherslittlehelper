@@ -321,7 +321,7 @@ public class ClassContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
         getContext().getContentResolver().notifyChange(uri,null);
-        Log.v("ClassContentProvider","notifyChange in update called");
+        //Log.v("ClassContentProvider","notifyChange in update called "+id);
         return affectedRows;
     }
 }

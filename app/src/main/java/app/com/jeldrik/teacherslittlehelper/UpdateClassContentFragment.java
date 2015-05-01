@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
@@ -207,6 +209,8 @@ public class UpdateClassContentFragment extends Fragment {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack();
                     Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.contentUpdatedAlert), Toast.LENGTH_LONG).show();
+
+
                 }
             }
         });
@@ -285,6 +289,7 @@ public class UpdateClassContentFragment extends Fragment {
                             FragmentManager fm = getActivity().getSupportFragmentManager();
                             fm.popBackStack();
                             Toast.makeText(getActivity(), getActivity().getResources().getText(R.string.contentDeletedAlert), Toast.LENGTH_LONG).show();
+
                         }
                     }
                 })
