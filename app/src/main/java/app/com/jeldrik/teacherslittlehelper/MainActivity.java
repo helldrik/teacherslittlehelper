@@ -119,10 +119,12 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
 
         mSettings=getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor editor=mSettings.edit();
-        editor.putString("userEmail",userEmail);
-        editor.putLong("timestamp",timestamp);
+
         editor.putBoolean("syncing",startSyncing);
         editor.commit();
+
+        //TODO: delete this
+        sync();
 
     }
 
@@ -133,6 +135,14 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         getContentResolver().registerContentObserver(DbContract.BASE_CONTENT_URI, true,myContentObserver);
     }
 
+    private void updateUserData(){
+        ContentValues vals = new ContentValues();
+        vals.put(DbContract.UserEntry.COLUMN_USER_EMAIL,userEmail);
+        vals.put(DbContract.UserEntry.COLUMN_TIMESTAMP,timestamp);
+        getContentResolver().update(DbContract.UserEntry.CONTENT_URI,vals,null,null);
+        Log.v("MainActivity","timestamp in updateUserData: "+timestamp);
+    }
+
     //---------------------------------------------------------------------------------------------
     //LISTENER METHODS
     //---------------------------------------------------------------------------------------------
@@ -140,12 +150,20 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     public void onAddNewClass(ArrayList days,String title, String startTime,String endTime, int id) {
         //Toast.makeText(this,day+" "+msg,Toast.LENGTH_LONG).show();
         mainFragment.addNewClassToAdapter(days,title,startTime,endTime,id);
+        Date date= new Date();
+        timestamp = date.getTime();
+        startSyncing=true;
+        updateUserData();
     }
     //---------------------------------------------------------------------------------------------
     @Override
     public void onDelete(int id) {
         try {
             mainFragment.deleteClassfromAdapter(id);
+            Date date= new Date();
+            timestamp = date.getTime();
+            startSyncing=true;
+            updateUserData();
         }catch(Exception e){
             Log.e("MainActivity","Something went wrong her: "+e);
             Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show();
@@ -198,6 +216,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         Date date= new Date();
         timestamp = date.getTime();
         startSyncing=true;
+        updateUserData();
     }
     //---------------------------------------------------------------------------------------------
     @Override
@@ -207,6 +226,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         Date date= new Date();
         timestamp = date.getTime();
         startSyncing=true;
+        updateUserData();
     }
     //---------------------------------------------------------------------------------------------
     @Override
@@ -216,6 +236,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         Date date= new Date();
         timestamp = date.getTime();
         startSyncing=true;
+        updateUserData();
     }
     //---------------------------------------------------------------------------------------------
     @Override
@@ -225,6 +246,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         Date date= new Date();
         timestamp = date.getTime();
         startSyncing=true;
+        updateUserData();
     }
     //---------------------------------------------------------------------------------------------
     @Override
@@ -234,6 +256,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         Date date= new Date();
         timestamp = date.getTime();
         startSyncing=true;
+        updateUserData();
     }
     //---------------------------------------------------------------------------------------------
     @Override
@@ -244,6 +267,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         Date date= new Date();
         timestamp = date.getTime();
         startSyncing=true;
+        updateUserData();
     }
 
     //---------------------------------------------------------------------------------------------
@@ -280,9 +304,15 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     //Creating persistant storage for saving unique user id and timestamp of when Content was last updated
     public void getUserData(){
         mSettings=getPreferences(MODE_PRIVATE);
-        userEmail=mSettings.getString("userEmail","");
-        timestamp=mSettings.getLong("timestamp",0);
         startSyncing=mSettings.getBoolean("syncing",true);
+        userEmail="";
+        Cursor cursor= getContentResolver().query(DbContract.UserEntry.CONTENT_URI,null, null, null, null);
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()) {
+            userEmail=cursor.getString(1);
+            timestamp=cursor.getLong(2);
+            cursor.moveToNext();
+        }
         if(userEmail.equals("")){
             SetUserData();
         }
@@ -304,6 +334,12 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             public void onClick(DialogInterface dialog, int whichButton) {
                 userEmail=input.getText().toString();
                 timestamp=0;
+                getContentResolver().delete(DbContract.UserEntry.CONTENT_URI,null,null);
+                ContentValues vals = new ContentValues();
+                vals.put(DbContract.UserEntry.COLUMN_USER_EMAIL,userEmail);
+                vals.put(DbContract.UserEntry.COLUMN_TIMESTAMP,timestamp);
+                Uri returnUri=getContentResolver().insert(DbContract.UserEntry.CONTENT_URI,vals);
+
                 sync();
                 return;
             }
@@ -320,19 +356,19 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
     public void sync(){
         // Create the dummy account
-        mAccount = CreateSyncAccount(this);
+        if(mAccount==null)
+            mAccount = CreateSyncAccount(this);
         // Pass the settings flags by inserting them in a bundle
         Bundle settingsBundle = new Bundle();
         settingsBundle.putBoolean(
                 ContentResolver.SYNC_EXTRAS_MANUAL, true);
         settingsBundle.putBoolean(
                 ContentResolver.SYNC_EXTRAS_EXPEDITED, false);
-        settingsBundle.putString("useremail", userEmail);
-        settingsBundle.putLong("timestamp", timestamp);
 
         ContentResolver.requestSync(mAccount, DbContract.AUTHORITY, settingsBundle);
 
         startSyncing=false;
+
 
         Toast.makeText(this,"Syncing",Toast.LENGTH_LONG).show();
     }
@@ -353,6 +389,13 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         public void onChange(boolean selfChange) {
             this.onChange(selfChange, null);
             Log.v("MainActivity", "ttt Changing data in ContentProvider ee");
+            Cursor cursor= getContentResolver().query(DbContract.UserEntry.CONTENT_URI,null, null, null, null);
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()) {
+                userEmail=cursor.getString(1);
+                timestamp=cursor.getLong(2);
+                cursor.moveToNext();
+            }
             if(startSyncing)
                 sync();
 
@@ -363,8 +406,16 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             // depending on the handler you might be on the UI
             // thread, so be cautious!
             Log.v("MainActivity", "ttt Changing data in ContentProvider "+timestamp+" "+startSyncing);
+            Cursor cursor= getContentResolver().query(DbContract.UserEntry.CONTENT_URI,null, null, null, null);
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()) {
+                userEmail=cursor.getString(1);
+                timestamp=cursor.getLong(2);
+                cursor.moveToNext();
+            }
             if(startSyncing)
                 sync();
+
 
         }
     }

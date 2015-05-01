@@ -30,6 +30,7 @@ public class ClassContentProvider extends ContentProvider {
     private static final int STUDENTATTENDANCE_ID=8;
     private static final int STUDENTATTENDANCE_STUDENT_ID=801;
     private static final int STUDENTATTENDANCE_CLASSCONTENT_ID=802;
+    private static final int USER=9;
 
     private static final UriMatcher mUriMatcher=new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -52,6 +53,8 @@ public class ClassContentProvider extends ContentProvider {
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE+"/#",STUDENTATTENDANCE_ID);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE_WITH_CLASSCONTENT_ID+"/#",STUDENTATTENDANCE_CLASSCONTENT_ID);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE_WITH_STUDENT_ID+"/#",STUDENTATTENDANCE_STUDENT_ID);
+
+        mUriMatcher.addURI(AUTHORITY,PATH_USER,USER);
     }
 
     SQLiteDatabase mdataBase;
@@ -167,6 +170,11 @@ public class ClassContentProvider extends ContentProvider {
                 Log.v("MYContentProvider"," QUERY: "+query);
                 cursor=mdataBase.rawQuery(query,null);
                 break;
+            case USER:
+                cursor=mdataBase.query(UserEntry.TABLE_NAME, new String[]{UserEntry._ID,
+                        UserEntry.COLUMN_USER_EMAIL,
+                        UserEntry.COLUMN_TIMESTAMP},null,null, null, null, null);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -205,6 +213,9 @@ public class ClassContentProvider extends ContentProvider {
             case STUDENTATTENDANCE:
                 table=StudentAttendanceEntry.TABLE_NAME;
                 break;
+            case USER:
+                table=UserEntry.TABLE_NAME;
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
 
@@ -215,7 +226,6 @@ public class ClassContentProvider extends ContentProvider {
             noteUri= ContentUris.withAppendedId(uri,rowId);
 
         getContext().getContentResolver().notifyChange(uri,null);
-        Log.v("ClassContentProvider","notifyChange in insert called");
         return noteUri;
 /*
         vals.put(DbContract.ClassEntry.COLUMN_TITLE,"the Title");
@@ -276,11 +286,14 @@ public class ClassContentProvider extends ContentProvider {
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.delete(StudentAttendanceEntry.TABLE_NAME,StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+"=?",new String[]{classContentId});
                 break;
+            case USER:
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.delete(UserEntry.TABLE_NAME,null,null);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
         getContext().getContentResolver().notifyChange(uri,null);
-        Log.v("ClassContentProvider","notifyChange in delete called");
         return affectedRows;
     }
 
@@ -316,6 +329,11 @@ public class ClassContentProvider extends ContentProvider {
                 String studentAttendanceId=uri.getLastPathSegment();
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.update(StudentAttendanceEntry.TABLE_NAME,values,StudentAttendanceEntry._ID+" = ?",new String[]{studentAttendanceId});
+                break;
+            case USER:
+                Log.v("ClassContentProvider", "timestamp in provider: "+values.get(UserEntry.COLUMN_TIMESTAMP));
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(UserEntry.TABLE_NAME,values,null,null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);

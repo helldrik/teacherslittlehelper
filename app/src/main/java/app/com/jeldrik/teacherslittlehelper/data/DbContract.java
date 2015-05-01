@@ -31,6 +31,24 @@ public class DbContract {
     public static final String PATH_STUDENT_ATTENDANCE ="studentAttendance";
     public static final String PATH_STUDENT_ATTENDANCE_WITH_CLASSCONTENT_ID ="studentAttendanceWithClassContentId";
     public static final String PATH_STUDENT_ATTENDANCE_WITH_STUDENT_ID ="studentAttendanceWithStudentId";
+    public static final String PATH_USER="user";
+
+//--------------------------------------------------------------------------------------------------
+    /* Inner class that defines the table contents of the user table */
+    public static final class UserEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_USER).build();
+
+        public static final String CONTENT_TYPE =
+                "vnd.android.cursor.dir/" + AUTHORITY + "/" + PATH_USER;
+        public static final String CONTENT_ITEM_TYPE =
+                "vnd.android.cursor.item/" + AUTHORITY + "/" + PATH_USER;
+
+        //table name
+        public static final String TABLE_NAME = "user";
+        public static final String COLUMN_USER_EMAIL = "email";
+        public static final String COLUMN_TIMESTAMP = "timestamp";
+    }
 
 //--------------------------------------------------------------------------------------------------
     /* Inner class that defines the table contents of the student table */

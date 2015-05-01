@@ -88,8 +88,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
 
-        long timestamp=extras.getLong("timestamp");
-        String useremail=extras.getString("useremail");
+        long timestamp=0;//extras.getLong("timestamp");
+        String useremail="";
+
+        try {
+            Cursor cursor = provider.query(DbContract.UserEntry.CONTENT_URI, null, null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                useremail = cursor.getString(1);
+                timestamp = cursor.getLong(2);
+                cursor.moveToNext();
+            }
+        }catch(RemoteException e){Log.e(TAG, "Database error in onPerformSync " + e);}
       /*  try {
             getData(provider);
         } catch (RemoteException | IOException e) {
@@ -136,8 +146,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 json = jarr.getJSONObject(1);
                 oldTimeStamp = json.getLong("timestamp");
 
+                //We have new local data -> trying to upload it to the server
                 if(oldTimeStamp<timestamp) {
-
+                    Log.v(TAG, "local timestamp is newer: "+timestamp);
                     try {
                         sendUserData(provider,useremail,timestamp);
                     } catch (RemoteException e) {
@@ -145,14 +156,23 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     }
 
                 }
+                //There is new data on the server
                 else if(oldTimeStamp>timestamp) {
-                    //TODO: get data to server if local timestamp is older than server timestamp
-                }
 
-                try{
-                    getUserData(provider, useremail);
-                } catch (RemoteException e) {
-                    Log.e(TAG, "Error in sendUserInfo: " + e);
+                    try{
+                        getUserData(provider, useremail);
+                        //Updating the timestamp with the server timestamp
+                        ContentValues vals = new ContentValues();
+                        vals.put(DbContract.UserEntry.COLUMN_TIMESTAMP,oldTimeStamp);
+                        int affectedRows=provider.update(DbContract.UserEntry.CONTENT_URI,vals,null,null);
+                        Log.v(TAG, "server timestamp is newer: "+timestamp+" "+oldTimeStamp+" "+affectedRows);
+                    } catch (RemoteException e) {
+                        Log.e(TAG, "Error in sendUserInfo: " + e);
+                    }
+
+                }
+                else{
+                    Log.v(TAG, "local timestamp is equal Server timestamp: "+timestamp+" = "+oldTimeStamp);
                 }
 
             }
@@ -298,7 +318,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         nameValuePairs.add(new BasicNameValuePair("request", "getData"));
         nameValuePairs.add(new BasicNameValuePair("email", useremail));
 
-        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs,"utf-8"));
+        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs, "utf-8"));
 
         // Execute HTTP Post Request
         HttpResponse response = httpclient.execute(httppost);
@@ -419,7 +439,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 Log.e(TAG,"Json that got ret returned from Server is not valid");
 
         }catch(JSONException e){Log.e(TAG, "Error in getUserData() "+e);}
-        Log.v(TAG,"Server answerr: "+responseBody);
+       // Log.v(TAG,"Server answerr: "+responseBody);
 
     }
     //--------------------------------------------------------------------------------------------------

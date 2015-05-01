@@ -13,7 +13,7 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract.*;
 public class DbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     public static final String DATABASE_NAME ="teachersLittleHelperDB.db";
 
@@ -24,6 +24,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+        //user table
+        final String SQL_CREATE_USER_TABLE="create table "+UserEntry.TABLE_NAME+" ("+
+                UserEntry._ID+" integer primary key autoincrement,"+
+                UserEntry.COLUMN_USER_EMAIL+ " text not null,"+
+                UserEntry.COLUMN_TIMESTAMP+" integer not null);";
 
         //student table
         final String SQL_CREATE_STUDENT_TABLE="create table "+StudentEntry.TABLE_NAME+" ("+
@@ -69,6 +75,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 +"foreign key("+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+") references "
                 +ClassContentEntry.TABLE_NAME+"("+ClassContentEntry._ID+"));";
 
+        db.execSQL(SQL_CREATE_USER_TABLE);
         db.execSQL(SQL_CREATE_CLASS_TABLE);
         db.execSQL(SQL_CREATE_CLASSCONTENT_TABLE);
         db.execSQL(SQL_CREATE_STUDENT_TABLE);
@@ -80,7 +87,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // If you want to update the schema without wiping data, commenting out the next 2 lines
         // should be your top priority before modifying this method.
-
+        db.execSQL("DROP TABLE IF EXISTS " + UserEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ClassEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ClassContentEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + StudentEntry.TABLE_NAME);
