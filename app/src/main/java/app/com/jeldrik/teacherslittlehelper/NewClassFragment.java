@@ -61,6 +61,8 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
     private String mLevel;
     private String mTime, mEndTime;
 
+    private long mTimestamp;
+
     private OnAddNewClassListener mListener;
     private Button mBtn, mTimeBtn,mEndTimeBtn;
     private AutoCompleteTextView mLocation;
@@ -195,7 +197,7 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
                 if(title.getText().toString().matches("")||mSelectedDaysAsArray==null||mLocation.getText().toString().matches(""))
                     Toast.makeText(getActivity(),R.string.notAllFieldsFilledOutWarning,Toast.LENGTH_LONG).show();
                 else {
-                    ContentValues vals = new ContentValues(7);
+                    ContentValues vals = new ContentValues();
                     vals.put(DbContract.ClassEntry.COLUMN_TITLE, title.getText().toString());
                     vals.put(DbContract.ClassEntry.COLUMN_TIME, mTime);
                     vals.put(DbContract.ClassEntry.COLUMN_DATE, mSelectedDays);
@@ -203,6 +205,10 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
                     vals.put(DbContract.ClassEntry.COLUMN_LOCATION, mLocation.getText().toString());
                     vals.put(DbContract.ClassEntry.COLUMN_LEVEL, mLevel);
                     vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO, info.getText().toString());
+
+                    Date date=new Date();
+                    mTimestamp=date.getTime();
+                    vals.put(DbContract.ClassEntry.COLUMN_TIMESTAMP, mTimestamp);
 
                     ContentResolver resolver = getActivity().getContentResolver();
                     Uri returnUri = resolver.insert(DbContract.ClassEntry.CONTENT_URI, vals);

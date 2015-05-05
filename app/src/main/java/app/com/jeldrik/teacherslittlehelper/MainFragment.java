@@ -325,14 +325,6 @@ public class MainFragment extends Fragment {
                 }
             }
         }
-        Date date= new Date();
-        long timestamp = date.getTime();
-        SharedPreferences settings=getActivity().getPreferences(getActivity().MODE_PRIVATE);
-        SharedPreferences.Editor editor=settings.edit();
-        editor.putBoolean("syncing",true);
-        editor.putLong("timestamp",timestamp);
-        editor.commit();
-
     }
 }
 

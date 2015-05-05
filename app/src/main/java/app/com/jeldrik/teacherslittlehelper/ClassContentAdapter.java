@@ -13,9 +13,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by jeldrik on 21/02/15.
@@ -70,9 +73,9 @@ public class ClassContentAdapter extends ArrayAdapter {
         String pages;
         String info;
         String date;
-        int timestamp;
+        long timestamp;
 
-        public ClassContentAdapterValues(int id,String date, int timeStamp,String book,String pages,String info){
+        public ClassContentAdapterValues(int id,String date, long timeStamp,String book,String pages,String info){
             this.id=id;
             this.date=date;
             this.timestamp=timeStamp;
@@ -84,7 +87,7 @@ public class ClassContentAdapter extends ArrayAdapter {
         private ClassContentAdapterValues(Parcel in){
             id=in.readInt();
             date=in.readString();
-            timestamp=in.readInt();
+            timestamp=in.readLong();
             book=in.readString();
             pages=in.readString();
             info=in.readString();
@@ -100,7 +103,7 @@ public class ClassContentAdapter extends ArrayAdapter {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(id);
             dest.writeString(date);
-            dest.writeInt(timestamp);
+            dest.writeLong(timestamp);
             dest.writeString(book);
             dest.writeString(pages);
             dest.writeString(info);
@@ -121,7 +124,17 @@ public class ClassContentAdapter extends ArrayAdapter {
     class ClassContentAdapterValuesIDComparator implements Comparator<ClassContentAdapterValues> {
         @Override
         public int compare(ClassContentAdapterValues lhs, ClassContentAdapterValues rhs) {
-            return rhs.timestamp - lhs.timestamp;
+            long timestamp1=0;
+            long timestamp2=0;
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date parsedDate1 = dateFormat.parse(rhs.date);
+                timestamp1 = parsedDate1.getTime();
+                Date parsedDate2 = dateFormat.parse(lhs.date);
+                timestamp2 = parsedDate2.getTime();
+            }catch(ParseException e){Log.e("ClassContentAdapter"," Date is not parseable to timestamp");}
+
+            return Long.compare(timestamp1,timestamp2);
         }
     }
 }

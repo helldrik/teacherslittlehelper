@@ -47,7 +47,7 @@
     <string name="AddContent">Add new content</string>
     <string name="NotifyAllStudents">Notify all students</string>
 
-    <string name="newDate">Date</string>
+    <string name="newDate">Date(y-m-d)</string>
     <string name="newBook">Book used</string>
     <string name="newPages">Pages</string>
     <string name="newInfo">Info</string>

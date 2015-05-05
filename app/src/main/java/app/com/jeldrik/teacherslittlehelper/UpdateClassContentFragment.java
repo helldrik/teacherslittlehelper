@@ -50,7 +50,8 @@ public class UpdateClassContentFragment extends Fragment {
     private String mSBook;
     private String mSPages;
     private String mSInfo;
-    private int mId, mTimestamp;
+    private int mId;
+    long mTimestamp;
 
     private View mRootView;
     private TextView mDate, mPages,mInfo;
@@ -61,7 +62,7 @@ public class UpdateClassContentFragment extends Fragment {
 
     private OnUpdateClassContentListener mListener;
 
-    public static UpdateClassContentFragment newInstance(String date, String book, String pages, String info, int id,int timestamp) {
+    public static UpdateClassContentFragment newInstance(String date, String book, String pages, String info, int id,long timestamp) {
         UpdateClassContentFragment fragment = new UpdateClassContentFragment();
         Bundle args = new Bundle();
         args.putString(ARG_DATE,date);
@@ -69,7 +70,7 @@ public class UpdateClassContentFragment extends Fragment {
         args.putString(ARG_BOOK, book);
         args.putString(ARG_INFO, info);
         args.putInt(ARG_ID, id);
-        args.putInt(ARG_TIMESTAMP,timestamp);
+        args.putLong(ARG_TIMESTAMP, timestamp);
 
         fragment.setArguments(args);
         return fragment;
@@ -89,6 +90,7 @@ public class UpdateClassContentFragment extends Fragment {
             mSInfo = savedInstanceState.getString("info");
             mId = savedInstanceState.getInt("id");
             mAttendingStudents=savedInstanceState.getParcelableArrayList("attendingStudents");
+            mTimestamp=savedInstanceState.getLong("timestamp");
         }
         else if (getArguments() != null) {
             mSDate = getArguments().getString(ARG_DATE);
@@ -96,7 +98,7 @@ public class UpdateClassContentFragment extends Fragment {
             mSPages = getArguments().getString(ARG_PAGES);
             mSInfo = getArguments().getString(ARG_INFO);
             mId = getArguments().getInt(ARG_ID);
-            mTimestamp = getArguments().getInt(ARG_TIMESTAMP);
+            mTimestamp = getArguments().getLong(ARG_TIMESTAMP);
 
             getData();
         }
@@ -105,27 +107,31 @@ public class UpdateClassContentFragment extends Fragment {
     private void getData() {
         mAttendingStudents=new ArrayList<>();
         ContentResolver resolver=getActivity().getContentResolver();
-        Uri uri= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Integer.toString(mId)).build();
+        Uri uri= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
         Cursor cursor=resolver.query(uri,null,null,null,null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
-            int id=cursor.getInt(1);
+            int id=cursor.getInt(3);
             String status=cursor.getString(2);
-            String name=cursor.getString(3);
+            String name=cursor.getString(4);
+            Long studentTimestamp=cursor.getLong(1);
             //Log.v(TAG,"theStatus: "+id+" "+status+" "+name);
-            mAttendingStudents.add(new AttendingStudentsAdapter.AttendingStudentsAdapterValues(id,name,status));
+            mAttendingStudents.add(new AttendingStudentsAdapter.AttendingStudentsAdapterValues(id,name,status,studentTimestamp));
             cursor.moveToNext();
+            Log.v(TAG,"Data: "+id+status+studentTimestamp);
         }
+        Log.v(TAG,"Class Content timestamp: "+mTimestamp);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("date",mSDate);
+        outState.putString("date", mSDate);
         outState.putString("book",mSBook);
         outState.putString("pages",mSPages);
         outState.putString("info",mSInfo);
-        outState.putInt("id",mId);
+        outState.putInt("id", mId);
+        outState.putLong("timestamp",mTimestamp);
         outState.putParcelableArrayList("attendingStudents",mAdapter.mVals);
     }
 
@@ -159,7 +165,7 @@ public class UpdateClassContentFragment extends Fragment {
                 mSBook = mBook.getText().toString();
                 mSPages = mPages.getText().toString();
                 mSInfo = mInfo.getText().toString();
-
+                   /*
                 if (DATE_FORMAT == "EUR") {
                     try {
                         int dividerPos = mSDate.indexOf(".");
@@ -184,7 +190,7 @@ public class UpdateClassContentFragment extends Fragment {
                         mTimestamp=day+month*30+year*365;
                     }catch(Exception e){Log.e(TAG, "Could not convert date to timestamp in UpdateClassContent "+e);}
                 }
-
+                */
                 ContentValues vals = new ContentValues(4);
                 vals.put(DbContract.ClassContentEntry.COLUMN_BOOK, mSBook);
                 vals.put(DbContract.ClassContentEntry.COLUMN_INFO, mSInfo);
@@ -202,7 +208,7 @@ public class UpdateClassContentFragment extends Fragment {
                         vals.put(DbContract.StudentAttendanceEntry.COLUMN_STATUS, mAttendingStudents.get(i).status);
                         resolver.update(uri, vals, DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT + " =? and "
                                 +DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+" =?",
-                                new String[]{Integer.toString(mAttendingStudents.get(i).id),Integer.toString(mId)});
+                                new String[]{Long.toString(mAttendingStudents.get(i).timestamp),Long.toString(mTimestamp)});
                     }
                     ClassContentAdapter.ClassContentAdapterValues updatedObj = new ClassContentAdapter.ClassContentAdapterValues(mId, mSDate,mTimestamp, mSBook, mSPages, mSInfo);
                     mListener.OnUpdateClassContent(updatedObj);

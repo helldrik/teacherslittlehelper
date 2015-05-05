@@ -76,7 +76,8 @@ public class ClassContentProvider extends ContentProvider {
                         ClassEntry.COLUMN_EXTRA_INFO,
                         ClassEntry.COLUMN_LEVEL,
                         ClassEntry.COLUMN_TIME,
-                        ClassEntry.COLUMN_DATE},null,null, null, null, null);
+                        ClassEntry.COLUMN_DATE,
+                        ClassEntry.COLUMN_TIMESTAMP},null,null, null, null, null);
                 break;
             case CLASS_ID:
                 String id=uri.getLastPathSegment();
@@ -86,7 +87,8 @@ public class ClassContentProvider extends ContentProvider {
                         ClassEntry.COLUMN_LEVEL,
                         ClassEntry.COLUMN_LOCATION,
                         ClassEntry.COLUMN_TIME,
-                        ClassEntry.COLUMN_TITLE},ClassEntry._ID+" =?", new String[]{id}, null, null, null);
+                        ClassEntry.COLUMN_TITLE,
+                        ClassEntry.COLUMN_TIMESTAMP},ClassEntry._ID+" =?", new String[]{id}, null, null, null);
                 break;
             case CLASS_DAY_TITLE_HOUR_ID:
                 cursor = mdataBase.query(DbContract.ClassEntry.TABLE_NAME, new String[]{
@@ -101,16 +103,18 @@ public class ClassContentProvider extends ContentProvider {
                         StudentEntry.COLUMN_PHONE,
                         StudentEntry.COLUMN_EMAIL,
                         StudentEntry.COLUMN_FOREIGN_KEY_CLASS,
-                        StudentEntry._ID},null,null,null,null,null);
+                        StudentEntry._ID,
+                        StudentEntry.COLUMN_TIMESTAMP},null,null,null,null,null);
                 break;
             case STUDENT_CLASS_ID:
-                String classId=uri.getLastPathSegment();
+                String classTimestamp=uri.getLastPathSegment();
                 cursor=mdataBase.query(StudentEntry.TABLE_NAME, new String[]{
                         StudentEntry._ID,
                         StudentEntry.COLUMN_STUDENT_NAME,
                         StudentEntry.COLUMN_EMAIL,
-                        StudentEntry.COLUMN_PHONE
-                },StudentEntry.COLUMN_FOREIGN_KEY_CLASS+" =?", new String[]{classId}, null, null, null);
+                        StudentEntry.COLUMN_PHONE,
+                        StudentEntry.COLUMN_TIMESTAMP
+                },StudentEntry.COLUMN_FOREIGN_KEY_CLASS+" =?", new String[]{classTimestamp}, null, null, null);
 
                /* String query="Select "+StudentEntry.TABLE_NAME+"."+StudentEntry._ID+","
                                                    +StudentEntry.TABLE_NAME+"."+StudentEntry.COLUMN_STUDENT_NAME+","
@@ -137,14 +141,14 @@ public class ClassContentProvider extends ContentProvider {
                         ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS},null,null,null,null,null);
                 break;
             case CLASSCONTENT_CLASS_ID:
-                classId=uri.getLastPathSegment();
+                classTimestamp=uri.getLastPathSegment();
                 cursor=mdataBase.query(ClassContentEntry.TABLE_NAME,new String[]{
                         ClassContentEntry.COLUMN_BOOK,
                         ClassContentEntry.COLUMN_DATE,
                         ClassContentEntry.COLUMN_TIMESTAMP,
                         ClassContentEntry.COLUMN_PAGE,
                         ClassContentEntry.COLUMN_INFO,
-                        ClassContentEntry._ID},ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS+" =?",new String[]{classId},null,null,ClassContentEntry.COLUMN_TIMESTAMP+" desc");
+                        ClassContentEntry._ID},ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS+" =?",new String[]{classTimestamp},null,null,ClassContentEntry.COLUMN_DATE+" desc");
                 break;
 
             case STUDENTATTENDANCE:
@@ -152,19 +156,20 @@ public class ClassContentProvider extends ContentProvider {
                         StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT,
                         StudentAttendanceEntry.COLUMN_STATUS,
                         StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT,
-                        StudentAttendanceEntry._ID},null,null,null,null,null);
+                        StudentAttendanceEntry._ID,
+                        StudentAttendanceEntry.COLUMN_TIMESTAMP},null,null,null,null,null);
                 break;
-
             case STUDENTATTENDANCE_CLASSCONTENT_ID:
                 String classContentId=uri.getLastPathSegment();
                 String query="Select "+StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry._ID+","
                         +StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+","
                         +StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry.COLUMN_STATUS+","
+                        +StudentEntry.TABLE_NAME+"."+StudentEntry._ID+","
                         +StudentEntry.TABLE_NAME+"."+StudentEntry.COLUMN_STUDENT_NAME
 
                         +" from "+StudentAttendanceEntry.TABLE_NAME+" inner join "+StudentEntry.TABLE_NAME+" on "
                         +StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+" = "
-                        +StudentEntry.TABLE_NAME+"."+StudentEntry._ID+" where "
+                        +StudentEntry.TABLE_NAME+"."+StudentEntry.COLUMN_TIMESTAMP+" where "
                         +StudentAttendanceEntry.TABLE_NAME+"."+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+" = "+classContentId+";";
 
                 Log.v("MYContentProvider"," QUERY: "+query);
@@ -226,6 +231,7 @@ public class ClassContentProvider extends ContentProvider {
             noteUri= ContentUris.withAppendedId(uri,rowId);
 
         getContext().getContentResolver().notifyChange(uri,null);
+
         return noteUri;
 /*
         vals.put(DbContract.ClassEntry.COLUMN_TITLE,"the Title");
@@ -294,6 +300,7 @@ public class ClassContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
         getContext().getContentResolver().notifyChange(uri,null);
+
         return affectedRows;
     }
 
@@ -339,7 +346,7 @@ public class ClassContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
         getContext().getContentResolver().notifyChange(uri,null);
-        //Log.v("ClassContentProvider","notifyChange in update called "+id);
+
         return affectedRows;
     }
 }

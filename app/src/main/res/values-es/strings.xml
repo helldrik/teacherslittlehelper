@@ -14,7 +14,7 @@
     <string name="sunday">Domingo</string>
 
     <string name="add_class">Añadir Clase</string>
-    <string name="delete_Class">Borar Clase</string>
+    <string name="delete_Class">Borrar Clase</string>
     <string name="updateClass">Actualizar Clase</string>
 
     <string name="newClassTitle">Titulo</string>
@@ -32,12 +32,12 @@
     <string name="menuAddStudent">Añadir Alumno</string>
     <string name="addStudent">Añadir</string>
     <string name="changeStudentData">Cambiar</string>
-    <string name="deleteStudent">Borar</string>
+    <string name="deleteStudent">Borrar</string>
 
     <string name="AddContent">Nueva Fecha</string>
     <string name="NotifyAllStudents">Notificar á todos los alumnos </string>
 
-    <string name="newDate">Fecha</string>
+    <string name="newDate">Fecha(a-m-d)</string>
     <string name="newBook">Libro usado</string>
     <string name="newPages">Paginas</string>
     <string name="newInfo">Info</string>

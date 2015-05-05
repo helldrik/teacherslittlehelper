@@ -13,7 +13,7 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract.*;
 public class DbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 10;
 
     public static final String DATABASE_NAME ="teachersLittleHelperDB.db";
 
@@ -38,20 +38,21 @@ public class DbHelper extends SQLiteOpenHelper {
                StudentEntry.COLUMN_STUDENT_NAME+" text not null, "+
                StudentEntry.COLUMN_EMAIL+" text, "+
                StudentEntry.COLUMN_PHONE+" text, "+
+               StudentEntry.COLUMN_TIMESTAMP+" integer not null, "+
                " foreign key (" +StudentEntry.COLUMN_FOREIGN_KEY_CLASS+ ") references "+
-                ClassEntry.TABLE_NAME+" ("+ClassEntry._ID+"));";
+                ClassEntry.TABLE_NAME+" ("+ClassEntry.COLUMN_TIMESTAMP+"));";
 
         //classContent table
         final String SQL_CREATE_CLASSCONTENT_TABLE="create table "+ClassContentEntry.TABLE_NAME+" ("+
                 ClassContentEntry._ID+" integer primary key autoincrement,"+
                 ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS+ " integer not null,"+
-                ClassContentEntry.COLUMN_DATE+" text not null, "+
+                ClassContentEntry.COLUMN_DATE+" DATETIME not null, "+
                 ClassContentEntry.COLUMN_TIMESTAMP+" integer not null, "+
                 ClassContentEntry.COLUMN_BOOK+" text, "+
                 ClassContentEntry.COLUMN_PAGE+" text, "+
                 ClassContentEntry.COLUMN_INFO+" text, "+
                 " foreign key (" +ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS+ ") references "+
-                ClassEntry.TABLE_NAME+" ("+ClassEntry._ID+"));";
+                ClassEntry.TABLE_NAME+" ("+ClassEntry.COLUMN_TIMESTAMP+"));";
 
         //class table
         final String SQL_CREATE_CLASS_TABLE="create table "+ClassEntry.TABLE_NAME+" ("+
@@ -62,6 +63,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 ClassEntry.COLUMN_TIME+" text not null, "+
                 ClassEntry.COLUMN_DURATION+" text not null, "+
                 ClassEntry.COLUMN_LEVEL+" text, "+
+                ClassEntry.COLUMN_TIMESTAMP+" integer not null, "+
                 ClassEntry.COLUMN_EXTRA_INFO+" text);";
 
         //class studentAttendance
@@ -70,10 +72,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+ " integer, "
                 +StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+ " integer, "
                 +StudentAttendanceEntry.COLUMN_STATUS+" text, "
+                +StudentAttendanceEntry.COLUMN_TIMESTAMP+" integer not null, "
                 +"foreign key("+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT+") references "
-                +StudentEntry.TABLE_NAME+"("+StudentEntry._ID+"), "
+                +StudentEntry.TABLE_NAME+"("+StudentEntry.COLUMN_TIMESTAMP+"), "
                 +"foreign key("+StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT+") references "
-                +ClassContentEntry.TABLE_NAME+"("+ClassContentEntry._ID+"));";
+                +ClassContentEntry.TABLE_NAME+"("+ClassContentEntry.COLUMN_TIMESTAMP+"));";
 
         db.execSQL(SQL_CREATE_USER_TABLE);
         db.execSQL(SQL_CREATE_CLASS_TABLE);

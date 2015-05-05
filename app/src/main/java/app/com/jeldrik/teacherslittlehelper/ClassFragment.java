@@ -47,6 +47,7 @@ public class ClassFragment extends Fragment {
     public static final String TAG="ClassFragment";
     private int position;
     private int mID;
+    private long mTimestamp;
 
     private View rootView;
 
@@ -92,6 +93,7 @@ public class ClassFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(savedInstanceState!=null){
+            mTimestamp=savedInstanceState.getLong("timestamp");
             position=savedInstanceState.getInt("position");
             mID=savedInstanceState.getInt("id");
             mClassContentList = savedInstanceState.getParcelableArrayList("ClassContentList");
@@ -131,14 +133,14 @@ public class ClassFragment extends Fragment {
                 showAlertDialog();
                 break;
             case R.id.AddContent:
-                Fragment newClassContentFragment = NewClassContentFragment.newInstance(mID, mStudentList);
+                Fragment newClassContentFragment = NewClassContentFragment.newInstance(mTimestamp, mStudentList);
                 transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.FragmentContainer, newClassContentFragment, NewClassContentFragment.TAG);
                 transaction.addToBackStack(null);
                 transaction.commit();
                 break;
             case R.id.AddStudent:
-                Fragment newStudentFragment=NewStudentFragment.newInstance(mID);
+                Fragment newStudentFragment=NewStudentFragment.newInstance(mTimestamp);
                 transaction=getFragmentManager().beginTransaction();
                 transaction.replace(R.id.FragmentContainer,newStudentFragment);
                 transaction.addToBackStack(null);
@@ -335,6 +337,7 @@ public void updateMemberVars(String title,String days,String location,String hou
             mLocation=savedInstanceState.getString("location");
             mHour=savedInstanceState.getString("hour");
             mTitle=savedInstanceState.getString("title");
+            mTimestamp=savedInstanceState.getLong("timestamp");
         }
         else {
             ContentResolver resolver = getActivity().getContentResolver();
@@ -350,26 +353,27 @@ public void updateMemberVars(String title,String days,String location,String hou
                 mLocation = cursor.getString(4);
                 mHour = cursor.getString(5);
                 mTitle = cursor.getString(6);
+                mTimestamp=cursor.getLong(7);
                 cursor.moveToNext();
             }
             //getting classContent
             mClassContentList = new ArrayList<>();
             resolver = getActivity().getContentResolver();
-            uri = DbContract.ClassContentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Integer.toString(mID)).build();
+            uri = DbContract.ClassContentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
             cursor = resolver.query(uri, null, null, null, null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                mClassContentList.add(new ClassContentAdapter.ClassContentAdapterValues(cursor.getInt(5), cursor.getString(1),cursor.getInt(2), cursor.getString(0), cursor.getString(3), cursor.getString(4)));
+                mClassContentList.add(new ClassContentAdapter.ClassContentAdapterValues(cursor.getInt(5), cursor.getString(1),cursor.getLong(2), cursor.getString(0), cursor.getString(3), cursor.getString(4)));
                 cursor.moveToNext();
             }
             //getting Students
             mStudentList = new ArrayList<>();
             resolver=getActivity().getContentResolver();
-            uri= DbContract.StudentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Integer.toString(mID)).build();
+            uri= DbContract.StudentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
             cursor=resolver.query(uri,null,null,null,null);
             cursor.moveToFirst();
             while(!cursor.isAfterLast()){
-                mStudentList.add(new StudentAdapter.StudentAdapterValues(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3)));
+                mStudentList.add(new StudentAdapter.StudentAdapterValues(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getLong(4)));
                 cursor.moveToNext();
             }
         }

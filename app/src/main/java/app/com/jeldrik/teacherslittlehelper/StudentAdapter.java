@@ -100,12 +100,14 @@ public class StudentAdapter extends ArrayAdapter {
         String name;
         String email;
         String phone;
+        long timestamp;
 
-        public StudentAdapterValues(int id,String name,String email,String phone){
+        public StudentAdapterValues(int id,String name,String email,String phone,long timestamp){
             this.id=id;
             this.name=name;
             this.email=email;
             this.phone=phone;
+            this.timestamp=timestamp;
         }
 
         private StudentAdapterValues(Parcel in){
@@ -113,6 +115,7 @@ public class StudentAdapter extends ArrayAdapter {
             name=in.readString();
             email=in.readString();
             phone=in.readString();
+            timestamp=in.readLong();
         }
 
 
@@ -127,6 +130,7 @@ public class StudentAdapter extends ArrayAdapter {
             dest.writeString(name);
             dest.writeString(email);
             dest.writeString(phone);
+            dest.writeLong(timestamp);
 
         }
         public static final Parcelable.Creator<StudentAdapterValues> CREATOR

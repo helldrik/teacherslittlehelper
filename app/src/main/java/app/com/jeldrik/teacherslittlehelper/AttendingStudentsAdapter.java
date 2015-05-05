@@ -57,7 +57,7 @@ public class AttendingStudentsAdapter extends ArrayAdapter {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mVals.set(listPos,new AttendingStudentsAdapterValues(mVals.get(listPos).id,mVals.get(listPos).name,parent.getItemAtPosition(position).toString()));
+                mVals.set(listPos,new AttendingStudentsAdapterValues(mVals.get(listPos).id,mVals.get(listPos).name,parent.getItemAtPosition(position).toString(),mVals.get(listPos).timestamp));
             }
 
             @Override
@@ -71,19 +71,22 @@ public class AttendingStudentsAdapter extends ArrayAdapter {
     //implements Parcelable to be able to store it in Savedinstancestate bundle
     static class AttendingStudentsAdapterValues implements Parcelable {
         int id;
+        long timestamp;
         String name;
         String status;
 
-        public AttendingStudentsAdapterValues(int id,String name,String status){
+        public AttendingStudentsAdapterValues(int id,String name,String status,long timestamp){
             this.id=id;
             this.name=name;
             this.status=status;
+            this.timestamp=timestamp;
         }
 
         private AttendingStudentsAdapterValues(Parcel in){
             id=in.readInt();
             name=in.readString();
             status=in.readString();
+            timestamp=in.readLong();
         }
 
 
@@ -97,6 +100,7 @@ public class AttendingStudentsAdapter extends ArrayAdapter {
             dest.writeInt(id);
             dest.writeString(name);
             dest.writeString(status);
+            dest.writeLong(timestamp);
         }
         public static final Parcelable.Creator<AttendingStudentsAdapterValues> CREATOR
                 = new Parcelable.Creator<AttendingStudentsAdapterValues>() {

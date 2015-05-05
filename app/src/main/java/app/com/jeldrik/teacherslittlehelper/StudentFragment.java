@@ -113,7 +113,7 @@ public class StudentFragment extends Fragment {
         Cursor cursor=resolver.query(uri,null,null,null,null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
-            vals.add(new StudentAdapter.StudentAdapterValues(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3)));
+            vals.add(new StudentAdapter.StudentAdapterValues(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getLong(4)));
             cursor.moveToNext();
         }
         return vals;

@@ -14,6 +14,8 @@ import android.os.RemoteException;
 import android.util.JsonReader;
 import android.util.Log;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -22,6 +24,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +33,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -131,6 +135,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // Execute HTTP Post Request
         HttpResponse response = httpclient.execute(httppost);
         String responseBody = EntityUtils.toString(response.getEntity());
+        Log.v(TAG," Server answer in sendUserInfo :"+responseBody);
 
         try {
             JSONArray jarr = new JSONArray(responseBody);
@@ -194,9 +199,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String level = cursor.getString(5);
             String startTime = cursor.getString(6);
             String date = cursor.getString(7);
+            long classTimestamp = cursor.getLong(8);
             //date is already json formated we just have to delete the starting "{" to put it into our new jsonString
             date=date.substring(1);
-            Log.v(TAG,"tuyen : "+date);
 
 
             jsonClass += "{\"" + DbContract.ClassEntry.TABLE_NAME + "\":{\"" + DbContract.ClassEntry._ID + "\":\"" + id + "\","
@@ -206,6 +211,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     + "\"" + DbContract.ClassEntry.COLUMN_LEVEL + "\":\"" + level + "\","
                     + "\"" + DbContract.ClassEntry.COLUMN_TIME + "\":\"" + startTime + "\","
                     + "\"" + DbContract.ClassEntry.COLUMN_DURATION + "\":\"" + endTime + "\","
+                    + "\"" + DbContract.ClassEntry.COLUMN_TIMESTAMP + "\":\"" + classTimestamp + "\","
                     + date + "}";
             //Log.v(TAG, "JSONdata: "+json);
             if (!cursor.isLast())
@@ -225,11 +231,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String email = cursor.getString(2);
             String foreignKey = cursor.getString(3);
             int id = cursor.getInt(4);
+            long studentTimestamp=cursor.getLong(5);
 
             jsonStudent += "{\"" + DbContract.StudentEntry.TABLE_NAME + "\":{\"" + DbContract.StudentEntry._ID + "\":\"" + id + "\","
                     + "\"" + DbContract.StudentEntry.COLUMN_STUDENT_NAME + "\":\"" + name + "\","
                     + "\"" + DbContract.StudentEntry.COLUMN_PHONE + "\":\"" + phone + "\","
                     + "\"" + DbContract.StudentEntry.COLUMN_EMAIL + "\":\"" + email + "\","
+                    + "\"" + DbContract.StudentEntry.COLUMN_TIMESTAMP + "\":\"" + studentTimestamp + "\","
                     + "\"" + DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS + "\":\"" + foreignKey + "\"}}";
            // Log.v(TAG, "JSONdata: "+jsonStudent);
             if (!cursor.isLast())
@@ -276,10 +284,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String status = cursor.getString(1);
             String foreignKeyStudent = cursor.getString(2);
             int id = cursor.getInt(3);
+            long studentAttTimestamp=cursor.getLong(4);
 
             jsonStudentAttendance += "{\"" + DbContract.StudentAttendanceEntry.TABLE_NAME + "\":{\"" +  DbContract.StudentAttendanceEntry._ID + "\":\"" + id + "\","
                     + "\"" +  DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT + "\":\"" + foreignKeyClassContent + "\","
                     + "\"" + DbContract.StudentAttendanceEntry.COLUMN_STATUS + "\":\"" + status + "\","
+                    + "\"" + DbContract.StudentAttendanceEntry.COLUMN_TIMESTAMP + "\":\"" + studentAttTimestamp + "\","
                     + "\"" + DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT + "\":\"" + foreignKeyStudent + "\"}}";
             // Log.v(TAG, "JSONdata: "+jsonStudent);
             if (!cursor.isLast())
@@ -305,7 +315,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         // Execute HTTP Post Request
         HttpResponse response = httpclient.execute(httppost);
         String responseBody = EntityUtils.toString(response.getEntity());
-        Log.v(TAG,"Server answer: "+responseBody);
+        Log.v(TAG,"Server answer in sendUserData: "+responseBody);
 
     }
     //--------------------------------------------------------------------------------------------------
@@ -322,7 +332,29 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         // Execute HTTP Post Request
         HttpResponse response = httpclient.execute(httppost);
-        String responseBody = EntityUtils.toString(response.getEntity());
+
+        Header[] allHeaders=response.getAllHeaders();
+        for(int i=0;i<allHeaders.length;i++)
+            Log.v(TAG, "HEADER: " + allHeaders[i].toString());
+
+
+
+        InputStream inputStream = response.getEntity().getContent();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream,"UTF-8");
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder stringBuilder = new StringBuilder();
+        String bufferedStrChunk = null;
+        while((bufferedStrChunk = bufferedReader.readLine()) != null){
+            stringBuilder.append(bufferedStrChunk);
+        }
+        String responseBody=stringBuilder.toString();
+    /*
+        HttpEntity entity=response.getEntity();
+        Log.v(TAG,"Encoding: "+EntityUtils.getContentCharSet (entity));
+        String responseBody = EntityUtils.toString(entity, HTTP.UTF_8);
+        Log.v(TAG, "Encoding: " + EntityUtils.getContentCharSet(entity));
+    */
+
         try {
             JSONObject json = new JSONObject(responseBody);
             JSONArray classArr = json.optJSONArray("class");
@@ -351,6 +383,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     vals.put(DbContract.ClassEntry.COLUMN_LOCATION, classObj.getString("location"));
                     vals.put(DbContract.ClassEntry.COLUMN_LEVEL, classObj.getString("level"));
                     vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO, classObj.getString("info"));
+                    vals.put(DbContract.ClassEntry.COLUMN_TIMESTAMP, classObj.getString("timestamp"));
 
                     Uri uri= DbContract.ClassEntry.CONTENT_URI.buildUpon().appendPath(classObj.getString("_id")).build();
 
@@ -401,7 +434,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     vals.put(DbContract.StudentEntry.COLUMN_EMAIL, studentObj.getString("email"));
                     vals.put(DbContract.StudentEntry.COLUMN_PHONE, studentObj.getString("phone"));
                     vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS, studentObj.getString("classID"));
-
+                    vals.put(DbContract.StudentEntry.COLUMN_TIMESTAMP, studentObj.getString("timestamp"));
 
                     Uri uri = DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(studentObj.getString("_id")).build();
 
@@ -425,6 +458,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_STATUS, studentAttendanceObj.getString("status"));
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT, studentAttendanceObj.getString("studentId"));
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT, studentAttendanceObj.getString("classContentId"));
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_TIMESTAMP, studentAttendanceObj.getString("timestamp"));
 
                     Uri uri = DbContract.StudentAttendanceEntry.CONTENT_URI.buildUpon().appendPath(studentAttendanceObj.getString("_id")).build();
 
@@ -439,7 +473,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 Log.e(TAG,"Json that got ret returned from Server is not valid");
 
         }catch(JSONException e){Log.e(TAG, "Error in getUserData() "+e);}
-       // Log.v(TAG,"Server answerr: "+responseBody);
+         Log.v(TAG,"Server answer in getUserData: "+responseBody);
 
     }
     //--------------------------------------------------------------------------------------------------

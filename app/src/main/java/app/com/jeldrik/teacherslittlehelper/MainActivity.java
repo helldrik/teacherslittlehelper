@@ -157,6 +157,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
     //---------------------------------------------------------------------------------------------
     @Override
+    //TODO: delete students and content related to this class
     public void onDelete(int id) {
         try {
             mainFragment.deleteClassfromAdapter(id);

@@ -24,10 +24,10 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
 public class NewStudentFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_CLASS_ID = "classId";
+    private static final String ARG_CLASS_TIMESTAMP = "classTimestamp";
 
 
-    private int mClassId;
+    private long mClassTimestamp;
     private String name;
     private String email;
     private String phone;
@@ -35,10 +35,10 @@ public class NewStudentFragment extends Fragment {
     private View mRootView;
     private OnStudentAddedListener mListener;
 
-    public static NewStudentFragment newInstance(int classId) {
+    public static NewStudentFragment newInstance(long classTimestamp) {
         NewStudentFragment fragment = new NewStudentFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_CLASS_ID, classId);
+        args.putLong(ARG_CLASS_TIMESTAMP, classTimestamp);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,20 +53,20 @@ public class NewStudentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(savedInstanceState!=null) {
-            mClassId=savedInstanceState.getInt("classId");
+            mClassTimestamp=savedInstanceState.getLong("classTimestamp");
             name=savedInstanceState.getString("name");
             email=savedInstanceState.getString("email");
             phone=savedInstanceState.getString("phone");
         }
         else if (getArguments() != null) {
-            mClassId = getArguments().getInt(ARG_CLASS_ID);
+            mClassTimestamp = getArguments().getLong(ARG_CLASS_TIMESTAMP);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("classId",mClassId);
+        outState.putLong("classTimestamp",mClassTimestamp);
         outState.putString("name",name);
         outState.putString("email",email);
         outState.putString("phone",phone);
@@ -96,7 +96,10 @@ public class NewStudentFragment extends Fragment {
                 vals.put(DbContract.StudentEntry.COLUMN_STUDENT_NAME, name);
                 vals.put(DbContract.StudentEntry.COLUMN_EMAIL, email);
                 vals.put(DbContract.StudentEntry.COLUMN_PHONE,phone);
-                vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS,mClassId);
+                vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS,mClassTimestamp);
+                Date date=new Date();
+                long timestamp=date.getTime();
+                vals.put(DbContract.StudentEntry.COLUMN_TIMESTAMP,timestamp);
 
                 ContentResolver resolver = getActivity().getContentResolver();
                 Uri returnUri = resolver.insert(DbContract.StudentEntry.CONTENT_URI, vals);
@@ -104,7 +107,7 @@ public class NewStudentFragment extends Fragment {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 fm.popBackStack();
                 Toast.makeText(getActivity(),getActivity().getResources().getText(R.string.studentAddedAlert),Toast.LENGTH_LONG).show();
-                mListener.onStudentAdded(new StudentAdapter.StudentAdapterValues(id,name,email,phone));
+                mListener.onStudentAdded(new StudentAdapter.StudentAdapterValues(id,name,email,phone,timestamp));
 
                 //Hiding the keyboard
                 InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);

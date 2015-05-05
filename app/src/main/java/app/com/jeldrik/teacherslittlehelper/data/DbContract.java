@@ -68,6 +68,7 @@ public class DbContract {
         public static final String COLUMN_STUDENT_NAME="studentName";
         public static final String COLUMN_EMAIL="email";
         public static final String COLUMN_PHONE="phone";
+        public static final String COLUMN_TIMESTAMP="timeStamp";
         public static final String COLUMN_FOREIGN_KEY_CLASS="classID";
     }
  //--------------------------------------------------------------------------------------------------
@@ -90,6 +91,7 @@ public class DbContract {
         public static final String COLUMN_DURATION="duration";
         public static final String COLUMN_LEVEL="level";
         public static final String COLUMN_EXTRA_INFO="extraInfo";
+        public static final String COLUMN_TIMESTAMP="timeStamp";
     }
 //--------------------------------------------------------------------------------------------------
     /* Inner class that defines the table contents of the classContent table */
@@ -131,6 +133,7 @@ public class DbContract {
         public static final String COLUMN_STATUS="studentStatus";
         public static final String COLUMN_FOREIGN_KEY_STUDENT="studentId";
         public static final String COLUMN_FOREIGN_KEY_CLASSCONTENT="classContentID";
+        public static final String COLUMN_TIMESTAMP="timeStamp";
     }
 
 }
