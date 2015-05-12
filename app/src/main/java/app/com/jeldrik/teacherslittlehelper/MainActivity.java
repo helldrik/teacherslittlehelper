@@ -2,6 +2,7 @@ package app.com.jeldrik.teacherslittlehelper;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -139,7 +140,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         ContentValues vals = new ContentValues();
         vals.put(DbContract.UserEntry.COLUMN_USER_EMAIL,userEmail);
         vals.put(DbContract.UserEntry.COLUMN_TIMESTAMP,timestamp);
-        getContentResolver().update(DbContract.UserEntry.CONTENT_URI,vals,null,null);
+        getContentResolver().update(DbContract.UserEntry.CONTENT_URI, vals, null, null);
         Log.v("MainActivity","timestamp in updateUserData: "+timestamp);
     }
 
@@ -416,8 +417,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             }
             if(startSyncing)
                 sync();
-
-
+            else
+                mainFragment.getData();
         }
     }
 }

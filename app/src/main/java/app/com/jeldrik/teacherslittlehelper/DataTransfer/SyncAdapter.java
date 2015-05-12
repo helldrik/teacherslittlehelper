@@ -229,7 +229,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             String name = cursor.getString(0);
             String phone = cursor.getString(1);
             String email = cursor.getString(2);
-            String foreignKey = cursor.getString(3);
+            long foreignKey = cursor.getLong(3);
             int id = cursor.getInt(4);
             long studentTimestamp=cursor.getLong(5);
 
@@ -254,11 +254,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         while(!cursor.isAfterLast()) {
             String book = cursor.getString(0);
             String date = cursor.getString(1);
-            String tableTimestamp = cursor.getString(2);
+            long tableTimestamp = cursor.getLong(2);
             String page = cursor.getString(3);
             String info = cursor.getString(4);
             int id = cursor.getInt(5);
-            int classId=cursor.getInt(6);
+            long classId=cursor.getLong(6);
 
             jsonClassContent += "{\"" + DbContract.ClassContentEntry.TABLE_NAME + "\":{\"" + DbContract.ClassContentEntry._ID + "\":\"" + id + "\","
                     + "\"" + DbContract.ClassContentEntry.COLUMN_BOOK + "\":\"" + book + "\","
@@ -282,7 +282,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         while(!cursor.isAfterLast()) {
             String foreignKeyClassContent = cursor.getString(0);
             String status = cursor.getString(1);
-            String foreignKeyStudent = cursor.getString(2);
+            long foreignKeyStudent = cursor.getLong(2);
             int id = cursor.getInt(3);
             long studentAttTimestamp=cursor.getLong(4);
 
@@ -383,7 +383,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     vals.put(DbContract.ClassEntry.COLUMN_LOCATION, classObj.getString("location"));
                     vals.put(DbContract.ClassEntry.COLUMN_LEVEL, classObj.getString("level"));
                     vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO, classObj.getString("info"));
-                    vals.put(DbContract.ClassEntry.COLUMN_TIMESTAMP, classObj.getString("timestamp"));
+                    vals.put(DbContract.ClassEntry.COLUMN_TIMESTAMP, classObj.getLong("timestamp"));
 
                     Uri uri= DbContract.ClassEntry.CONTENT_URI.buildUpon().appendPath(classObj.getString("_id")).build();
 
@@ -405,11 +405,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     ContentValues vals = new ContentValues();
 
                     vals.put(DbContract.ClassContentEntry.COLUMN_DATE, classContentObj.getString("date"));
-                    vals.put(DbContract.ClassContentEntry.COLUMN_TIMESTAMP, classContentObj.getString("timestamp"));
+                    vals.put(DbContract.ClassContentEntry.COLUMN_TIMESTAMP, classContentObj.getLong("timestamp"));
                     vals.put(DbContract.ClassContentEntry.COLUMN_BOOK, classContentObj.getString("book"));
                     vals.put(DbContract.ClassContentEntry.COLUMN_PAGE, classContentObj.getString("page"));
                     vals.put(DbContract.ClassContentEntry.COLUMN_INFO, classContentObj.getString("info"));
-                    vals.put(DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS, classContentObj.getString("classID"));
+                    vals.put(DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS, classContentObj.getLong("classID"));
 
                     Uri uri = DbContract.ClassContentEntry.CONTENT_URI.buildUpon().appendPath(classContentObj.getString("_id")).build();
 
@@ -433,8 +433,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     vals.put(DbContract.StudentEntry.COLUMN_STUDENT_NAME, studentObj.getString("studentName"));
                     vals.put(DbContract.StudentEntry.COLUMN_EMAIL, studentObj.getString("email"));
                     vals.put(DbContract.StudentEntry.COLUMN_PHONE, studentObj.getString("phone"));
-                    vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS, studentObj.getString("classID"));
-                    vals.put(DbContract.StudentEntry.COLUMN_TIMESTAMP, studentObj.getString("timestamp"));
+                    vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS, studentObj.getLong("classID"));
+                    vals.put(DbContract.StudentEntry.COLUMN_TIMESTAMP, studentObj.getLong("timestamp"));
 
                     Uri uri = DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(studentObj.getString("_id")).build();
 
@@ -456,9 +456,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     ContentValues vals = new ContentValues();
 
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_STATUS, studentAttendanceObj.getString("status"));
-                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT, studentAttendanceObj.getString("studentId"));
-                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT, studentAttendanceObj.getString("classContentId"));
-                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_TIMESTAMP, studentAttendanceObj.getString("timestamp"));
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT, studentAttendanceObj.getLong("studentId"));
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT, studentAttendanceObj.getLong("classContentId"));
+                    vals.put(DbContract.StudentAttendanceEntry.COLUMN_TIMESTAMP, studentAttendanceObj.getLong("timestamp"));
 
                     Uri uri = DbContract.StudentAttendanceEntry.CONTENT_URI.buildUpon().appendPath(studentAttendanceObj.getString("_id")).build();
 

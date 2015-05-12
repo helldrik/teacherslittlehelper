@@ -191,7 +191,7 @@ public class UpdateClassContentFragment extends Fragment {
                     }catch(Exception e){Log.e(TAG, "Could not convert date to timestamp in UpdateClassContent "+e);}
                 }
                 */
-                ContentValues vals = new ContentValues(4);
+                ContentValues vals = new ContentValues();
                 vals.put(DbContract.ClassContentEntry.COLUMN_BOOK, mSBook);
                 vals.put(DbContract.ClassContentEntry.COLUMN_INFO, mSInfo);
                 vals.put(DbContract.ClassContentEntry.COLUMN_PAGE, mSPages);

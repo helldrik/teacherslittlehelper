@@ -155,9 +155,6 @@ public class MainFragment extends Fragment {
     //----------------------------------------------------------------------------------------------
     public void onSaveInstanceState(Bundle savedState){
         super.onSaveInstanceState(savedState);
-        //TODO:fixing bug that leads to NullPointer Exception
-        //http://stackoverflow.com/questions/15313598/once-for-all-how-to-correctly-save-instance-state-of-fragments-in-back-stack
-
         for (int i = 0; i < 7; i++) {
             try {
                 ArrayList<MyAdapter.ClassAdapterValues> values=new ArrayList<MyAdapter.ClassAdapterValues>();
@@ -173,7 +170,7 @@ public class MainFragment extends Fragment {
     {
         super.onPause();
     }
-
+    //----------------------------------------------------------------------------------------------
     private void createAdapters(Bundle savedInstanceState){
         if(mAdapter==null) {
             ArrayList<MyAdapter.ClassAdapterValues> list = new ArrayList<MyAdapter.ClassAdapterValues>();
@@ -183,42 +180,8 @@ public class MainFragment extends Fragment {
                     list = savedInstanceState.getParcelableArrayList("Day" + i);
                     mAdapter[i] = new MyAdapter(getActivity(), list);
                 }
-            }else {
-                ContentResolver resolver = getActivity().getContentResolver();
-                Cursor cursor= resolver.query(DbContract.CLASS_DAY_TITLE_HOUR_ID,null, null, null, null);
-                cursor.moveToFirst();
-                //the arraylists of every day a saved in a list
-                ArrayList<List<MyAdapter.ClassAdapterValues>> listGroup= new ArrayList<List<MyAdapter.ClassAdapterValues>>(7);
-                for(int i=0;i<7;i++) {
-                    listGroup.add(new ArrayList<MyAdapter.ClassAdapterValues>());
-                }
-
-                while(!cursor.isAfterLast()){
-                    int id=cursor.getInt(0);
-                    String title=cursor.getString(1);
-                    String startTime=cursor.getString(2);
-                    String endTime=cursor.getString(3);
-
-                    try {
-                        JSONObject json = new JSONObject(cursor.getString(4));
-                        JSONArray jarr=json.optJSONArray("selectedDays");
-                        if (jarr != null) {
-                            for (int i=0;i<jarr.length();i++){
-                                MyAdapter.ClassAdapterValues obj = new MyAdapter.ClassAdapterValues(title,startTime,endTime,id);
-                                //Log.v("MYCURSOR",id+" "+title+" "+startTime+" "+jarr.get(i));
-                                ArrayList<MyAdapter.ClassAdapterValues> tempList=(ArrayList)listGroup.get(jarr.getInt(i));
-                                tempList.add(obj);
-                                listGroup.set(jarr.getInt(i),tempList);
-                            }
-                        }
-                    }catch (JSONException e){Log.e("MainFragment","No valid JsonObject or wrong type in createAdapters() "+e);}
-
-                    cursor.moveToNext();
-                }
-                for (int i=0;i<7;i++) {
-                    mAdapter[i] = new MyAdapter(getActivity(), (ArrayList)listGroup.get(i));
-                }
-            }
+            }else
+                getData();
         }
         else{
             Log.v(TAG,"mAdapter  already exists");
@@ -227,7 +190,6 @@ public class MainFragment extends Fragment {
     //----------------------------------------------------------------------------------------------
     private void setListeners(){
         for (int i = 0; i < 7; i++) {
-            //TODO: fix bug that leads to nullpointer exception -> done?
             mListView[i].setAdapter(mAdapter[i]);
 
             //clicking on a particular class
@@ -244,15 +206,44 @@ public class MainFragment extends Fragment {
                     transaction.commit();
                 }
             });
-            /*
-            //ClickListener for mWeekdays
-            mWeekdays[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getActivity(), v.getResources().getResourceName(v.getId()), Toast.LENGTH_LONG).show();
+        }
+    }
+    //----------------------------------------------------------------------------------------------
+    public void getData(){
+        ContentResolver resolver = getActivity().getContentResolver();
+        Cursor cursor= resolver.query(DbContract.CLASS_DAY_TITLE_HOUR_ID,null, null, null, null);
+        cursor.moveToFirst();
+        //the arraylists of every day a saved in a list
+        ArrayList<List<MyAdapter.ClassAdapterValues>> listGroup= new ArrayList<List<MyAdapter.ClassAdapterValues>>(7);
+        for(int i=0;i<7;i++) {
+            listGroup.add(new ArrayList<MyAdapter.ClassAdapterValues>());
+        }
+
+        while(!cursor.isAfterLast()){
+            int id=cursor.getInt(0);
+            String title=cursor.getString(1);
+            String startTime=cursor.getString(2);
+            String endTime=cursor.getString(3);
+
+            try {
+                JSONObject json = new JSONObject(cursor.getString(4));
+                JSONArray jarr=json.optJSONArray("selectedDays");
+                if (jarr != null) {
+                    for (int i=0;i<jarr.length();i++){
+                        MyAdapter.ClassAdapterValues obj = new MyAdapter.ClassAdapterValues(title,startTime,endTime,id);
+                        //Log.v("MYCURSOR",id+" "+title+" "+startTime+" "+jarr.get(i));
+                        ArrayList<MyAdapter.ClassAdapterValues> tempList=(ArrayList)listGroup.get(jarr.getInt(i));
+                        tempList.add(obj);
+                        listGroup.set(jarr.getInt(i),tempList);
+                    }
                 }
-            });
-            */
+            }catch (JSONException e){Log.e("MainFragment","No valid JsonObject or wrong type in createAdapters() "+e);}
+
+            cursor.moveToNext();
+        }
+        for (int i=0;i<7;i++) {
+            mAdapter[i] = new MyAdapter(getActivity(), (ArrayList)listGroup.get(i));
+            mAdapter[i].notifyDataSetChanged();
         }
     }
     //----------------------------------------------------------------------------------------------
