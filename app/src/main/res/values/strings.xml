@@ -8,6 +8,11 @@
     <string name="app_name">TeachersLittleHelper</string>
     <string name="action_settings">Settings</string>
 
+    <string name="selectAccount">Choose account for syncing:</string>
+    <string name="about">about</string>
+    <string name="aboutTitle">About TeachersLittleHelper</string>
+    <string name="aboutContent">Organize your classes and students in an easy way.\nKeep track of what you are doing\nSend notifications to one or all students of a class</string>
+
     <string name="monday">Monday</string>
     <string name="tuesday">Tuesday</string>
     <string name="wednesday">Wednesday</string>

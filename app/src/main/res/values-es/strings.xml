@@ -5,6 +5,10 @@
     <string name="hello_world">Hola Mundo!</string>
     <string name="action_settings">Adjustes</string>
 
+    <string name="selectAccount">Elige Cuenta para sincronizar:</string>
+    <string name="about">acerca de</string>
+    <string name="aboutTitle">Acerca de TeachersLittleHelper</string>
+
     <string name="monday">Lunes</string>
     <string name="tuesday">Martes</string>
     <string name="wednesday">Miercoles</string>

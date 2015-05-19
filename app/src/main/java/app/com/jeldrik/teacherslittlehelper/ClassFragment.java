@@ -37,7 +37,7 @@ import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 
 
 public class ClassFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     
     private static final String ARG_PARAM2 = "param2";
@@ -74,7 +74,6 @@ public class ClassFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment ClassFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ClassFragment newInstance(int param2, int param3) {
         ClassFragment fragment = new ClassFragment();
         Bundle args = new Bundle();
@@ -443,17 +442,33 @@ public void updateMemberVars(String title,String days,String location,String hou
         // set dialog message
         alertDialogBuilder
                 .setCancelable(true)
-                .setPositiveButton(this.getActivity().getResources().getString(R.string.delete_Class),new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                .setPositiveButton(this.getActivity().getResources().getString(R.string.delete_Class), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         if (mListener != null) {
                             mListener.onDelete(mID);
+                            //Deleting all students classcontents and attendances related to this class
+                            ContentResolver resolver = getActivity().getContentResolver();
+                            Uri uri = DbContract.ClassContentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
+                            Cursor cursor = resolver.query(uri, null, null, null, null);
+                            if (cursor != null) {
+                                cursor.moveToFirst();
+                                while (!cursor.isAfterLast()) {
+                                    long timestamp = cursor.getLong(2);
+                                    Uri deleteUri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Long.toString(timestamp)).build();
+                                    resolver.delete(deleteUri, null, null);
+                                    cursor.moveToNext();
+                                }
+                                resolver.delete(uri, null, null);
+                            }
+                            Uri studentUri = DbContract.StudentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
+                            resolver.delete(studentUri,null,null);
                         }
-                        FragmentManager fm=getActivity().getSupportFragmentManager();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
                         fm.popBackStack();
                     }
                 })
-                .setNegativeButton(this.getActivity().getResources().getString(R.string.cancel),new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                .setNegativeButton(this.getActivity().getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, just close
                         // the dialog box and do nothing
                         dialog.cancel();

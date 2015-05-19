@@ -275,12 +275,22 @@ public class ClassContentProvider extends ContentProvider {
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.delete(StudentEntry.TABLE_NAME,StudentEntry._ID+"=?",new String[]{id});
                 break;
+            case STUDENT_CLASS_ID:
+                id=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.delete(StudentEntry.TABLE_NAME,StudentEntry.COLUMN_FOREIGN_KEY_CLASS+"=?",new String[]{id});
+                break;
             case CLASSCONTENT:
                 break;
             case CLASSCONTENT_ID:
                 String classId=uri.getLastPathSegment();
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.delete(ClassContentEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            case CLASSCONTENT_CLASS_ID:
+                String foreignKeyClass=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.delete(ClassContentEntry.TABLE_NAME,ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS+"=?",new String[]{foreignKeyClass});
                 break;
             case STUDENTATTENDANCE_STUDENT_ID:
                 String studentId=uri.getLastPathSegment();

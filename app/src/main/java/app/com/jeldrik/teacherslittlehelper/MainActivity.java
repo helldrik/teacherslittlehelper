@@ -40,6 +40,7 @@ import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import app.com.jeldrik.teacherslittlehelper.data.DbContract;
 import app.com.jeldrik.teacherslittlehelper.data.DbHelper;
@@ -78,7 +79,6 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                     .add(R.id.FragmentContainer, mainFragment)
                     .commit();
         }
-
     }
 
 
@@ -95,8 +95,8 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if(id==R.id.sync){
-            SetUserData();
+        if(id==R.id.about){
+            showAboutText();
         }
 
         return super.onOptionsItemSelected(item);
@@ -158,7 +158,6 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     }
     //---------------------------------------------------------------------------------------------
     @Override
-    //TODO: delete students and content related to this class
     public void onDelete(int id) {
         try {
             mainFragment.deleteClassfromAdapter(id);
@@ -325,9 +324,32 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
     //show alert window to input email for syncing
     public void SetUserData(){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Login");
-        alert.setMessage("Enter valid email address for syncing :");
+        alert.setTitle(this.getResources().getString(R.string.selectAccount));
+        //alert.setMessage("Choose account for syncing :");
+        ArrayList<String> list=new ArrayList<>();
+        Account[] accounts =AccountManager.get(this).getAccountsByType("com.google");
+        for(int i=0;i<accounts.length;i++) {
+            list.add(accounts[i].name);
+            Log.v("MainActivity","Accounts: "+accounts[i].name);
+        }
+        final CharSequence[] items = list.toArray(new CharSequence[list.size()]);
+        alert.setSingleChoiceItems(items,0,new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.v("MAIN","Account: "+items[which].toString());
+                userEmail=items[which].toString();
+                timestamp=0;
+                getContentResolver().delete(DbContract.UserEntry.CONTENT_URI,null,null);
+                ContentValues vals = new ContentValues();
+                vals.put(DbContract.UserEntry.COLUMN_USER_EMAIL,userEmail);
+                vals.put(DbContract.UserEntry.COLUMN_TIMESTAMP,timestamp);
+                Uri returnUri=getContentResolver().insert(DbContract.UserEntry.CONTENT_URI,vals);
 
+                sync();
+                dialog.dismiss();
+            }
+        });
+/*
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
         alert.setView(input);
@@ -346,14 +368,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
                 return;
             }
         });
-
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-                return;
-            }
-        });
+*/
         alert.show();
     }
     public void sync(){
@@ -372,7 +387,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         startSyncing=false;
 
 
-        Toast.makeText(this,"Syncing",Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"Syncing",Toast.LENGTH_LONG).show();
     }
 
     private class MyContentObserver extends ContentObserver{
@@ -420,5 +435,19 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             else
                 mainFragment.getData();
         }
+    }
+    //---------------------------------------------------------------------------------------------
+    //show alert window with about info text
+    public void showAboutText(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle(this.getResources().getString(R.string.aboutTitle));
+        alert.setMessage(getResources().getString(R.string.aboutContent));
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+               dialog.dismiss();
+            }
+        });
+
+        alert.show();
     }
 }
