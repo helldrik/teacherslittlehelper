@@ -110,10 +110,13 @@ public class NewClassContentFragment extends Fragment {
 
             Calendar c = Calendar.getInstance();
             mTimestamp=c.get(Calendar.DAY_OF_MONTH)+c.get(Calendar.MONTH)*30+c.get(Calendar.YEAR)*365;
+            /*
             if (DATE_FORMAT == "EUR")
                 mDate = Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "." + Integer.toString(c.get(Calendar.MONTH) + 1) + "." + Integer.toString(c.get(Calendar.YEAR));
             else if (DATE_FORMAT == "US")
                 mDate = Integer.toString(c.get(Calendar.MONTH) + 1) + "/" + Integer.toString(c.get(Calendar.DAY_OF_MONTH)) + "/" + Integer.toString(c.get(Calendar.YEAR));
+                */
+            mDate = Integer.toString(c.get(Calendar.YEAR))+"-"+Integer.toString(c.get(Calendar.MONTH) + 1) + "-" + Integer.toString(c.get(Calendar.DAY_OF_MONTH));
         }
     }
     //---------------------------------------------------------------------------------------------
@@ -182,11 +185,11 @@ public class NewClassContentFragment extends Fragment {
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT,mTimestamp);
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT,mAttendingStudents.get(i).timestamp);
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_STATUS,mAttendingStudents.get(i).status);
-                    long timeStamp=date.getTime();
+                    long timeStamp=date.getTime()+i+1;
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_TIMESTAMP,timeStamp);
                     returnUri=resolver.insert(DbContract.StudentAttendanceEntry.CONTENT_URI,vals);
                     //Log.v(TAG,"AttendanceId: "+returnUri.getLastPathSegment()+" "+mAttendingStudents.get(i).status);
-                    Log.v(TAG," mAttendingStudents timestamp: "+mAttendingStudents.get(i).timestamp);
+                    //Log.v(TAG," mAttendingStudents timestamp: "+mAttendingStudents.get(i).timestamp);
                 }
                 //TODO: check if we add mTimestamp or mClassTimestamp
                 ClassContentAdapter.ClassContentAdapterValues newVals=new ClassContentAdapter.ClassContentAdapterValues(id,mDate,mTimestamp,sBook,sPages,sInfo);
@@ -241,14 +244,19 @@ public class NewClassContentFragment extends Fragment {
         ArrayList<String> books=new ArrayList<>();
         ContentResolver resolver=getActivity().getContentResolver();
         Cursor cursor=resolver.query(DbContract.ClassContentEntry.CONTENT_URI,null,null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
-            if(!books.contains(cursor.getString(0)))
-                books.add(cursor.getString(0));
-            cursor.moveToNext();
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                if(!books.contains(cursor.getString(0)))
+                    books.add(cursor.getString(0));
+                cursor.moveToNext();
+            }
+            String[] string=new String[books.size()];
+            return books.toArray(string);
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
-        String[] string=new String[books.size()];
-        return books.toArray(string);
     }
     //---------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------
@@ -278,10 +286,12 @@ public class NewClassContentFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             String date="";
+            /*
             if(DATE_FORMAT=="EUR")
                 date=Integer.toString(dayOfMonth)+"."+Integer.toString(monthOfYear+1)+"."+Integer.toString(year);
             else if(DATE_FORMAT=="US")
                 date=Integer.toString(monthOfYear+1)+"/"+Integer.toString(dayOfMonth)+"/"+Integer.toString(year);
+                */
             timestamp=dayOfMonth+(monthOfYear+1)*30+year*365;
             monthOfYear+=1;
             date=year+"-"+monthOfYear+"-"+dayOfMonth;

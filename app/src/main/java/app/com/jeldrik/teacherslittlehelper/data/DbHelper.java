@@ -19,7 +19,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context) {
         super(context,DATABASE_NAME, null, DATABASE_VERSION);
-        Log.v("dbHelper","Database created");
+        //Log.v("dbHelper","Database created");
     }
 
     @Override

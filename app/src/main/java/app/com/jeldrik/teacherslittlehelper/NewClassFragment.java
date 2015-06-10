@@ -293,15 +293,19 @@ public class NewClassFragment extends Fragment implements AdapterView.OnItemSele
         ArrayList<String> locations=new ArrayList<>();
         ContentResolver resolver=getActivity().getContentResolver();
         Cursor cursor=resolver.query(DbContract.ClassEntry.CONTENT_URI,null,null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
-            if(!locations.contains(cursor.getString(2)))
-                locations.add(cursor.getString(2));
-            Log.v(TAG,"books: "+cursor.getString(2));
-            cursor.moveToNext();
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                if(!locations.contains(cursor.getString(2)))
+                    locations.add(cursor.getString(2));
+                cursor.moveToNext();
+            }
+            String[] string=new String[locations.size()];
+            return locations.toArray(string);
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
-        String[] string=new String[locations.size()];
-        return locations.toArray(string);
     }
     //---------------------------------------------------------------------------------------------
     //DialogFragment for selecting days

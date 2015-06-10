@@ -111,11 +111,16 @@ public class StudentFragment extends Fragment {
         Uri uri= DbContract.StudentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Integer.toString(mClassId)).build();
         Log.v("ClassFragment", "Uri: " + uri.toString());
         Cursor cursor=resolver.query(uri,null,null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
-            vals.add(new StudentAdapter.StudentAdapterValues(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getLong(4)));
-            cursor.moveToNext();
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                vals.add(new StudentAdapter.StudentAdapterValues(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getLong(4)));
+                cursor.moveToNext();
+            }
+            return vals;
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
-        return vals;
     }
 }

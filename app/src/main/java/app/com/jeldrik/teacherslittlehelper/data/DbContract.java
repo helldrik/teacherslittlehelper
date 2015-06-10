@@ -25,10 +25,14 @@ public class DbContract {
     // At least, let's hope not.  Don't be that dev, reader.  Don't be that dev.
     public static final String PATH_STUDENT = "student";
     public static final String PATH_STUDENT_WITH_FOREIGNKEY = "studentWithForeignKey";
+    public static final String PATH_STUDENT_WITH_TIMESTAMP = "studentWithTimestamp";
     public static final String PATH_CLASS = "class";
+    public static final String PATH_CLASS_WITH_TIMESTAMP = "classWithTimestamp";
     public static final String PATH_CLASSCONTENT = "classContent";
+    public static final String PATH_CLASSCONTENT_WITH_TIMESTAMP = "classContentWithTimestamp";
     public static final String PATH_CLASSCONTENT_WITH_FOREIGNKEY = "classContentWithForeignKey";
     public static final String PATH_STUDENT_ATTENDANCE ="studentAttendance";
+    public static final String PATH_STUDENT_ATTENDANCE_WITH_TIMESTAMP ="studentAttendanceWithTimestamp";
     public static final String PATH_STUDENT_ATTENDANCE_WITH_CLASSCONTENT_ID ="studentAttendanceWithClassContentId";
     public static final String PATH_STUDENT_ATTENDANCE_WITH_STUDENT_ID ="studentAttendanceWithStudentId";
     public static final String PATH_USER="user";
@@ -55,7 +59,7 @@ public class DbContract {
     public static final class StudentEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT).build();
-
+        public static final Uri CONTENT_URI_WITH_TIMESTAMP = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_WITH_TIMESTAMP).build();
         public static final Uri CONTENT_URI_WITH_FOREIGNKEY = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_WITH_FOREIGNKEY).build();
 
         public static final String CONTENT_TYPE =
@@ -76,6 +80,7 @@ public class DbContract {
     public static final class ClassEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CLASS).build();
+        public static final Uri CONTENT_URI_WITH_TIMESTAMP=BASE_CONTENT_URI.buildUpon().appendPath(PATH_CLASS_WITH_TIMESTAMP).build();
 
         public static final String CONTENT_TYPE =
                 "vnd.android.cursor.dir/" + AUTHORITY + "/" + PATH_CLASS;
@@ -98,7 +103,8 @@ public class DbContract {
     public static final class ClassContentEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CLASSCONTENT).build();
-    public static final Uri CONTENT_URI_WITH_FOREIGNKEY = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CLASSCONTENT_WITH_FOREIGNKEY).build();
+        public static final Uri CONTENT_URI_WITH_TIMESTAMP = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CLASSCONTENT_WITH_TIMESTAMP).build();
+        public static final Uri CONTENT_URI_WITH_FOREIGNKEY = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CLASSCONTENT_WITH_FOREIGNKEY).build();
 
         public static final String CONTENT_TYPE =
                 "vnd.android.cursor.dir/" + AUTHORITY + "/" + PATH_CLASSCONTENT;
@@ -119,6 +125,7 @@ public class DbContract {
     public static final class StudentAttendanceEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_ATTENDANCE).build();
+        public static final Uri CONTENT_URI_WITH_TIMESTAMP = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_ATTENDANCE_WITH_TIMESTAMP).build();
         public static final Uri CONTENT_URI_WITH_STUDENTKEY = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_ATTENDANCE_WITH_STUDENT_ID).build();
         public static final Uri CONTENT_URI_WITH_CLASSCONTENTKEY = BASE_CONTENT_URI.buildUpon().appendPath(PATH_STUDENT_ATTENDANCE_WITH_CLASSCONTENT_ID).build();
 

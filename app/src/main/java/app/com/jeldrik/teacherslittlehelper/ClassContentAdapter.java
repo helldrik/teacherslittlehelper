@@ -132,7 +132,7 @@ public class ClassContentAdapter extends ArrayAdapter {
                 timestamp1 = parsedDate1.getTime();
                 Date parsedDate2 = dateFormat.parse(lhs.date);
                 timestamp2 = parsedDate2.getTime();
-            }catch(ParseException e){Log.e("ClassContentAdapter"," Date is not parseable to timestamp");}
+            }catch(ParseException e){Log.e("ClassContentAdapter"," Date is not parseable to timestamp "+rhs.date+" "+lhs.date);}
 
             return Long.compare(timestamp1,timestamp2);
         }

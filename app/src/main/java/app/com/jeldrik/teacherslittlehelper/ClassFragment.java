@@ -343,37 +343,52 @@ public void updateMemberVars(String title,String days,String location,String hou
             Uri uri = DbContract.ClassEntry.CONTENT_URI.buildUpon().appendPath(Integer.toString(mID)).build();
             Log.v("ClassFragment", "Uri: " + uri.toString());
             Cursor cursor = resolver.query(uri, null, null, null, null);
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                mDays = toDays(cursor.getString(0));
-                mEndTime = cursor.getString(1);
-                mInfo = cursor.getString(2);
-                mLevel = cursor.getString(3);
-                mLocation = cursor.getString(4);
-                mHour = cursor.getString(5);
-                mTitle = cursor.getString(6);
-                mTimestamp=cursor.getLong(7);
-                cursor.moveToNext();
+            try {
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    mDays = toDays(cursor.getString(0));
+                    mEndTime = cursor.getString(1);
+                    mInfo = cursor.getString(2);
+                    mLevel = cursor.getString(3);
+                    mLocation = cursor.getString(4);
+                    mHour = cursor.getString(5);
+                    mTitle = cursor.getString(6);
+                    mTimestamp = cursor.getLong(7);
+                    cursor.moveToNext();
+                }
+            }finally{
+                if (cursor != null && !cursor.isClosed())
+                    cursor.close();
             }
             //getting classContent
             mClassContentList = new ArrayList<>();
             resolver = getActivity().getContentResolver();
             uri = DbContract.ClassContentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
             cursor = resolver.query(uri, null, null, null, null);
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                mClassContentList.add(new ClassContentAdapter.ClassContentAdapterValues(cursor.getInt(5), cursor.getString(1),cursor.getLong(2), cursor.getString(0), cursor.getString(3), cursor.getString(4)));
-                cursor.moveToNext();
+            try{
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    mClassContentList.add(new ClassContentAdapter.ClassContentAdapterValues(cursor.getInt(5), cursor.getString(1),cursor.getLong(2), cursor.getString(0), cursor.getString(3), cursor.getString(4)));
+                    cursor.moveToNext();
+                }
+            }finally{
+                if (cursor != null && !cursor.isClosed())
+                    cursor.close();
             }
             //getting Students
             mStudentList = new ArrayList<>();
             resolver=getActivity().getContentResolver();
             uri= DbContract.StudentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
             cursor=resolver.query(uri,null,null,null,null);
-            cursor.moveToFirst();
-            while(!cursor.isAfterLast()){
-                mStudentList.add(new StudentAdapter.StudentAdapterValues(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getLong(4)));
-                cursor.moveToNext();
+            try{
+                cursor.moveToFirst();
+                while(!cursor.isAfterLast()){
+                    mStudentList.add(new StudentAdapter.StudentAdapterValues(cursor.getInt(0),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getLong(4)));
+                    cursor.moveToNext();
+                }
+            }finally{
+                if (cursor != null && !cursor.isClosed())
+                    cursor.close();
             }
         }
     }
@@ -450,15 +465,20 @@ public void updateMemberVars(String title,String days,String location,String hou
                             ContentResolver resolver = getActivity().getContentResolver();
                             Uri uri = DbContract.ClassContentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
                             Cursor cursor = resolver.query(uri, null, null, null, null);
-                            if (cursor != null) {
-                                cursor.moveToFirst();
-                                while (!cursor.isAfterLast()) {
-                                    long timestamp = cursor.getLong(2);
-                                    Uri deleteUri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Long.toString(timestamp)).build();
-                                    resolver.delete(deleteUri, null, null);
-                                    cursor.moveToNext();
+                            try{
+                                if (cursor != null) {
+                                    cursor.moveToFirst();
+                                    while (!cursor.isAfterLast()) {
+                                        long timestamp = cursor.getLong(2);
+                                        Uri deleteUri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Long.toString(timestamp)).build();
+                                        resolver.delete(deleteUri, null, null);
+                                        cursor.moveToNext();
+                                    }
+                                    resolver.delete(uri, null, null);
                                 }
-                                resolver.delete(uri, null, null);
+                            }finally{
+                                if (cursor != null && !cursor.isClosed())
+                                    cursor.close();
                             }
                             Uri studentUri = DbContract.StudentEntry.CONTENT_URI_WITH_FOREIGNKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
                             resolver.delete(studentUri,null,null);

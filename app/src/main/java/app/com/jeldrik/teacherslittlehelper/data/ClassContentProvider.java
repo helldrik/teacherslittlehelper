@@ -19,14 +19,18 @@ public class ClassContentProvider extends ContentProvider {
 
     private static final int CLASS=1;
     private static final int CLASS_ID=2;
+    private static final int CLASS_TIMESTAMP=21;
     private static final int CLASS_DAY_TITLE_HOUR_ID=101;
     private static final int STUDENT=3;
+    private static final int STUDENT_TIMESTAMP=31;
     private static final int STUDENT_ID=4;
     private static final int STUDENT_CLASS_ID=401;
     private static final int CLASSCONTENT=5;
+    private static final int CLASSCONTENT_TIMESTAMP=51;
     private static final int CLASSCONTENT_ID=6;
     private static final int CLASSCONTENT_CLASS_ID=601;
     private static final int STUDENTATTENDANCE=7;
+    private static final int STUDENTATTENDANCE_TIMESTAMP=71;
     private static final int STUDENTATTENDANCE_ID=8;
     private static final int STUDENTATTENDANCE_STUDENT_ID=801;
     private static final int STUDENTATTENDANCE_CLASSCONTENT_ID=802;
@@ -38,19 +42,23 @@ public class ClassContentProvider extends ContentProvider {
     static {
         mUriMatcher.addURI(AUTHORITY,PATH_CLASS,CLASS);
         mUriMatcher.addURI(AUTHORITY,PATH_CLASS+"/#",CLASS_ID);
+        mUriMatcher.addURI(AUTHORITY,PATH_CLASS_WITH_TIMESTAMP+"/#",CLASS_TIMESTAMP);
 
         mUriMatcher.addURI(AUTHORITY,"CLASS_DAY_TITLE_HOUR_ID",CLASS_DAY_TITLE_HOUR_ID);
 
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT,STUDENT);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT+"/#",STUDENT_ID);
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_WITH_TIMESTAMP+"/#",STUDENT_TIMESTAMP);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_WITH_FOREIGNKEY+"/#",STUDENT_CLASS_ID);
 
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT,CLASSCONTENT);
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT+"/#",CLASSCONTENT_ID);
+        mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT_WITH_TIMESTAMP+"/#",CLASSCONTENT_TIMESTAMP);
         mUriMatcher.addURI(AUTHORITY,PATH_CLASSCONTENT_WITH_FOREIGNKEY+"/#",CLASSCONTENT_CLASS_ID);
 
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE,STUDENTATTENDANCE);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE+"/#",STUDENTATTENDANCE_ID);
+        mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE_WITH_TIMESTAMP+"/#",STUDENTATTENDANCE_TIMESTAMP);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE_WITH_CLASSCONTENT_ID+"/#",STUDENTATTENDANCE_CLASSCONTENT_ID);
         mUriMatcher.addURI(AUTHORITY,PATH_STUDENT_ATTENDANCE_WITH_STUDENT_ID+"/#",STUDENTATTENDANCE_STUDENT_ID);
 
@@ -324,6 +332,11 @@ public class ClassContentProvider extends ContentProvider {
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.update(ClassEntry.TABLE_NAME,values,ClassEntry._ID+" = ?",new String[]{id});
                 break;
+            case CLASS_TIMESTAMP:
+                id=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(ClassEntry.TABLE_NAME,values,ClassEntry.COLUMN_TIMESTAMP+" = ?",new String[]{id});
+                break;
             case STUDENT:
                 break;
             case STUDENT_ID:
@@ -331,12 +344,22 @@ public class ClassContentProvider extends ContentProvider {
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.update(StudentEntry.TABLE_NAME,values,StudentEntry._ID+"=?",new String[]{id});
                 break;
+            case STUDENT_TIMESTAMP:
+                id=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(StudentEntry.TABLE_NAME,values,StudentEntry.COLUMN_TIMESTAMP+"=?",new String[]{id});
+                break;
             case CLASSCONTENT:
                 break;
             case CLASSCONTENT_ID:
                 String classId=uri.getLastPathSegment();
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.update(ClassContentEntry.TABLE_NAME,values,selection,selectionArgs);
+                break;
+            case CLASSCONTENT_TIMESTAMP:
+                id=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(ClassContentEntry.TABLE_NAME,values,ClassContentEntry.COLUMN_TIMESTAMP+"=?",new String[]{id});
                 break;
             case STUDENTATTENDANCE_STUDENT_ID:
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
@@ -346,6 +369,11 @@ public class ClassContentProvider extends ContentProvider {
                 String studentAttendanceId=uri.getLastPathSegment();
                 mdataBase=new DbHelper(getContext()).getWritableDatabase();
                 affectedRows=mdataBase.update(StudentAttendanceEntry.TABLE_NAME,values,StudentAttendanceEntry._ID+" = ?",new String[]{studentAttendanceId});
+                break;
+            case STUDENTATTENDANCE_TIMESTAMP:
+                id=uri.getLastPathSegment();
+                mdataBase=new DbHelper(getContext()).getWritableDatabase();
+                affectedRows=mdataBase.update(StudentAttendanceEntry.TABLE_NAME,values,StudentAttendanceEntry.COLUMN_TIMESTAMP+" = ?",new String[]{id});
                 break;
             case USER:
                 Log.v("ClassContentProvider", "timestamp in provider: "+values.get(UserEntry.COLUMN_TIMESTAMP));

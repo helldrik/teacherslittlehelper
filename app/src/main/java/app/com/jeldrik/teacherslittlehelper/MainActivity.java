@@ -308,11 +308,16 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         startSyncing=mSettings.getBoolean("syncing",true);
         userEmail="";
         Cursor cursor= getContentResolver().query(DbContract.UserEntry.CONTENT_URI,null, null, null, null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()) {
-            userEmail=cursor.getString(1);
-            timestamp=cursor.getLong(2);
-            cursor.moveToNext();
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()) {
+                userEmail=cursor.getString(1);
+                timestamp=cursor.getLong(2);
+                cursor.moveToNext();
+            }
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
         if(userEmail.equals("")){
             SetUserData();
@@ -333,10 +338,10 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
             Log.v("MainActivity","Accounts: "+accounts[i].name);
         }
         final CharSequence[] items = list.toArray(new CharSequence[list.size()]);
-        alert.setSingleChoiceItems(items,0,new DialogInterface.OnClickListener() {
+        alert.setSingleChoiceItems(items,-1,new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.v("MAIN","Account: "+items[which].toString());
+                //Log.v("MAIN","Account: "+items[which].toString());
                 userEmail=items[which].toString();
                 timestamp=0;
                 getContentResolver().delete(DbContract.UserEntry.CONTENT_URI,null,null);
@@ -400,12 +405,12 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
          */
         public MyContentObserver(Handler handler) {
             super(handler);
-            Log.v("MainActivity", "ttt MyContentObserver");
+            //Log.v("MainActivity", "ttt MyContentObserver");
         }
         @Override
         public void onChange(boolean selfChange) {
             this.onChange(selfChange, null);
-            Log.v("MainActivity", "ttt Changing data in ContentProvider ee");
+            //Log.v("MainActivity", "ttt Changing data in ContentProvider ee");
             Cursor cursor= getContentResolver().query(DbContract.UserEntry.CONTENT_URI,null, null, null, null);
             cursor.moveToFirst();
             while(!cursor.isAfterLast()) {
@@ -422,7 +427,7 @@ public class MainActivity extends ActionBarActivity implements NewClassFragment.
         public void onChange(boolean selfChange, Uri uri) {
             // depending on the handler you might be on the UI
             // thread, so be cautious!
-            Log.v("MainActivity", "ttt Changing data in ContentProvider "+timestamp+" "+startSyncing);
+            //Log.v("MainActivity", "ttt Changing data in ContentProvider "+timestamp+" "+startSyncing);
             Cursor cursor= getContentResolver().query(DbContract.UserEntry.CONTENT_URI,null, null, null, null);
             cursor.moveToFirst();
             while(!cursor.isAfterLast()) {

@@ -42,7 +42,7 @@ public class MyAdapter extends ArrayAdapter {
 
         TextView endTime = (TextView) rowView.findViewById(R.id.classEndTime);
         endTime.setText(values.get(position).endTime);
-        Log.v("SFSF","THE ENDTIME: "+values.get(position).endTime);
+        //Log.v("SFSF","THE ENDTIME: "+values.get(position).endTime);
 
         return rowView;
     }

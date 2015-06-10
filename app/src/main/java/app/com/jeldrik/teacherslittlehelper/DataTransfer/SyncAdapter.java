@@ -97,12 +97,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
         try {
             Cursor cursor = provider.query(DbContract.UserEntry.CONTENT_URI, null, null, null, null);
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                useremail = cursor.getString(1);
-                timestamp = cursor.getLong(2);
-                cursor.moveToNext();
-            }
+            try {
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    useremail = cursor.getString(1);
+                    timestamp = cursor.getLong(2);
+                    cursor.moveToNext();
+                }
+            }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        }
         }catch(RemoteException e){Log.e(TAG, "Database error in onPerformSync " + e);}
       /*  try {
             getData(provider);
@@ -187,114 +192,134 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     }
     //--------------------------------------------------------------------------------------------------
     private void sendUserData(ContentProviderClient provider, String useremail, long timestamp) throws RemoteException,IOException{
-        Cursor cursor= provider.query(DbContract.ClassEntry.CONTENT_URI,null, null, null, null);
-        cursor.moveToFirst();
         String jsonClass="[";
-        while(!cursor.isAfterLast()) {
-            int id = cursor.getInt(0);
-            String title = cursor.getString(1);
-            String location = cursor.getString(2);
-            String endTime = cursor.getString(3);
-            String info = cursor.getString(4);
-            String level = cursor.getString(5);
-            String startTime = cursor.getString(6);
-            String date = cursor.getString(7);
-            long classTimestamp = cursor.getLong(8);
-            //date is already json formated we just have to delete the starting "{" to put it into our new jsonString
-            date=date.substring(1);
+        Cursor cursor= provider.query(DbContract.ClassEntry.CONTENT_URI,null, null, null, null);
+        try{
+            cursor.moveToFirst();
+
+            while(!cursor.isAfterLast()) {
+                int id = cursor.getInt(0);
+                String title = cursor.getString(1);
+                String location = cursor.getString(2);
+                String endTime = cursor.getString(3);
+                String info = cursor.getString(4);
+                String level = cursor.getString(5);
+                String startTime = cursor.getString(6);
+                String date = cursor.getString(7);
+                long classTimestamp = cursor.getLong(8);
+                //date is already json formated we just have to delete the starting "{" to put it into our new jsonString
+                date=date.substring(1);
 
 
-            jsonClass += "{\"" + DbContract.ClassEntry.TABLE_NAME + "\":{\"" + DbContract.ClassEntry._ID + "\":\"" + id + "\","
-                    + "\"" + DbContract.ClassEntry.COLUMN_TITLE + "\":\"" + title + "\","
-                    + "\"" + DbContract.ClassEntry.COLUMN_LOCATION + "\":\"" + location + "\","
-                    + "\"" + DbContract.ClassEntry.COLUMN_EXTRA_INFO + "\":\"" + info + "\","
-                    + "\"" + DbContract.ClassEntry.COLUMN_LEVEL + "\":\"" + level + "\","
-                    + "\"" + DbContract.ClassEntry.COLUMN_TIME + "\":\"" + startTime + "\","
-                    + "\"" + DbContract.ClassEntry.COLUMN_DURATION + "\":\"" + endTime + "\","
-                    + "\"" + DbContract.ClassEntry.COLUMN_TIMESTAMP + "\":\"" + classTimestamp + "\","
-                    + date + "}";
-            //Log.v(TAG, "JSONdata: "+json);
-            if (!cursor.isLast())
-                jsonClass += ",";
-            cursor.moveToNext();
+                jsonClass += "{\"" + DbContract.ClassEntry.TABLE_NAME + "\":{\"" + DbContract.ClassEntry._ID + "\":\"" + id + "\","
+                        + "\"" + DbContract.ClassEntry.COLUMN_TITLE + "\":\"" + title + "\","
+                        + "\"" + DbContract.ClassEntry.COLUMN_LOCATION + "\":\"" + location + "\","
+                        + "\"" + DbContract.ClassEntry.COLUMN_EXTRA_INFO + "\":\"" + info + "\","
+                        + "\"" + DbContract.ClassEntry.COLUMN_LEVEL + "\":\"" + level + "\","
+                        + "\"" + DbContract.ClassEntry.COLUMN_TIME + "\":\"" + startTime + "\","
+                        + "\"" + DbContract.ClassEntry.COLUMN_DURATION + "\":\"" + endTime + "\","
+                        + "\"" + DbContract.ClassEntry.COLUMN_TIMESTAMP + "\":\"" + classTimestamp + "\","
+                        + date + "}";
+                //Log.v(TAG, "JSONdata: "+json);
+                if (!cursor.isLast())
+                    jsonClass += ",";
+                cursor.moveToNext();
+            }
+            jsonClass+="]";
+            jsonClass=jsonClass.replace("\n","\\n");
+            Log.v(TAG,"tttjsonClass: "+jsonClass);
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
-        jsonClass+="]";
-        jsonClass=jsonClass.replace("\n","\\n");
-        Log.v(TAG,"tttjsonClass: "+jsonClass);
-
-        cursor= provider.query(DbContract.StudentEntry.CONTENT_URI,null, null, null, null);
-        cursor.moveToFirst();
         String jsonStudent="[";
-        while(!cursor.isAfterLast()) {
-            String name = cursor.getString(0);
-            String phone = cursor.getString(1);
-            String email = cursor.getString(2);
-            long foreignKey = cursor.getLong(3);
-            int id = cursor.getInt(4);
-            long studentTimestamp=cursor.getLong(5);
+        cursor= provider.query(DbContract.StudentEntry.CONTENT_URI,null, null, null, null);
+        try{
+            cursor.moveToFirst();
 
-            jsonStudent += "{\"" + DbContract.StudentEntry.TABLE_NAME + "\":{\"" + DbContract.StudentEntry._ID + "\":\"" + id + "\","
-                    + "\"" + DbContract.StudentEntry.COLUMN_STUDENT_NAME + "\":\"" + name + "\","
-                    + "\"" + DbContract.StudentEntry.COLUMN_PHONE + "\":\"" + phone + "\","
-                    + "\"" + DbContract.StudentEntry.COLUMN_EMAIL + "\":\"" + email + "\","
-                    + "\"" + DbContract.StudentEntry.COLUMN_TIMESTAMP + "\":\"" + studentTimestamp + "\","
-                    + "\"" + DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS + "\":\"" + foreignKey + "\"}}";
-           // Log.v(TAG, "JSONdata: "+jsonStudent);
-            if (!cursor.isLast())
-                jsonStudent += ",";
-            cursor.moveToNext();
+            while(!cursor.isAfterLast()) {
+                String name = cursor.getString(0);
+                String phone = cursor.getString(1);
+                String email = cursor.getString(2);
+                long foreignKey = cursor.getLong(3);
+                int id = cursor.getInt(4);
+                long studentTimestamp=cursor.getLong(5);
+
+                jsonStudent += "{\"" + DbContract.StudentEntry.TABLE_NAME + "\":{\"" + DbContract.StudentEntry._ID + "\":\"" + id + "\","
+                        + "\"" + DbContract.StudentEntry.COLUMN_STUDENT_NAME + "\":\"" + name + "\","
+                        + "\"" + DbContract.StudentEntry.COLUMN_PHONE + "\":\"" + phone + "\","
+                        + "\"" + DbContract.StudentEntry.COLUMN_EMAIL + "\":\"" + email + "\","
+                        + "\"" + DbContract.StudentEntry.COLUMN_TIMESTAMP + "\":\"" + studentTimestamp + "\","
+                        + "\"" + DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS + "\":\"" + foreignKey + "\"}}";
+               // Log.v(TAG, "JSONdata: "+jsonStudent);
+                if (!cursor.isLast())
+                    jsonStudent += ",";
+                cursor.moveToNext();
+            }
+            jsonStudent+="]";
+            jsonStudent=jsonStudent.replace("\n","\\n");
+            Log.v(TAG,"tttjsonStudent: "+jsonStudent);
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
-        jsonStudent+="]";
-        jsonStudent=jsonStudent.replace("\n","\\n");
-        Log.v(TAG,"tttjsonStudent: "+jsonStudent);
-
-        cursor= provider.query(DbContract.ClassContentEntry.CONTENT_URI,null, null, null, null);
-        cursor.moveToFirst();
         String jsonClassContent="[";
-        while(!cursor.isAfterLast()) {
-            String book = cursor.getString(0);
-            String date = cursor.getString(1);
-            long tableTimestamp = cursor.getLong(2);
-            String page = cursor.getString(3);
-            String info = cursor.getString(4);
-            int id = cursor.getInt(5);
-            long classId=cursor.getLong(6);
+        cursor= provider.query(DbContract.ClassContentEntry.CONTENT_URI,null, null, null, null);
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()) {
+                String book = cursor.getString(0);
+                String date = cursor.getString(1);
+                long tableTimestamp = cursor.getLong(2);
+                String page = cursor.getString(3);
+                String info = cursor.getString(4);
+                int id = cursor.getInt(5);
+                long classId=cursor.getLong(6);
 
-            jsonClassContent += "{\"" + DbContract.ClassContentEntry.TABLE_NAME + "\":{\"" + DbContract.ClassContentEntry._ID + "\":\"" + id + "\","
-                    + "\"" + DbContract.ClassContentEntry.COLUMN_BOOK + "\":\"" + book + "\","
-                    + "\"" + DbContract.ClassContentEntry.COLUMN_DATE + "\":\"" + date + "\","
-                    + "\"" + DbContract.ClassContentEntry.COLUMN_TIMESTAMP + "\":\"" + tableTimestamp + "\","
-                    + "\"" + DbContract.ClassContentEntry.COLUMN_INFO + "\":\"" + info + "\","
-                    + "\"" + DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS + "\":\"" + classId + "\","
-                    + "\"" + DbContract.ClassContentEntry.COLUMN_PAGE + "\":\"" + page + "\"}}";
-            // Log.v(TAG, "JSONdata: "+jsonStudent);
-            if (!cursor.isLast())
-                jsonClassContent += ",";
-            cursor.moveToNext();
+                jsonClassContent += "{\"" + DbContract.ClassContentEntry.TABLE_NAME + "\":{\"" + DbContract.ClassContentEntry._ID + "\":\"" + id + "\","
+                        + "\"" + DbContract.ClassContentEntry.COLUMN_BOOK + "\":\"" + book + "\","
+                        + "\"" + DbContract.ClassContentEntry.COLUMN_DATE + "\":\"" + date + "\","
+                        + "\"" + DbContract.ClassContentEntry.COLUMN_TIMESTAMP + "\":\"" + tableTimestamp + "\","
+                        + "\"" + DbContract.ClassContentEntry.COLUMN_INFO + "\":\"" + info + "\","
+                        + "\"" + DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS + "\":\"" + classId + "\","
+                        + "\"" + DbContract.ClassContentEntry.COLUMN_PAGE + "\":\"" + page + "\"}}";
+                // Log.v(TAG, "JSONdata: "+jsonStudent);
+                if (!cursor.isLast())
+                    jsonClassContent += ",";
+                cursor.moveToNext();
+            }
+            jsonClassContent+="]";
+            jsonClassContent=jsonClassContent.replace("\n","\\n");
+            Log.v(TAG,"tttjsonClassContent: "+jsonClassContent);
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
-        jsonClassContent+="]";
-        jsonClassContent=jsonClassContent.replace("\n","\\n");
-        Log.v(TAG,"tttjsonClassContent: "+jsonClassContent);
-
-        cursor= provider.query(DbContract.StudentAttendanceEntry.CONTENT_URI,null, null, null, null);
-        cursor.moveToFirst();
         String jsonStudentAttendance="[";
-        while(!cursor.isAfterLast()) {
-            String foreignKeyClassContent = cursor.getString(0);
-            String status = cursor.getString(1);
-            long foreignKeyStudent = cursor.getLong(2);
-            int id = cursor.getInt(3);
-            long studentAttTimestamp=cursor.getLong(4);
+        cursor= provider.query(DbContract.StudentAttendanceEntry.CONTENT_URI,null, null, null, null);
+        try{
+            cursor.moveToFirst();
 
-            jsonStudentAttendance += "{\"" + DbContract.StudentAttendanceEntry.TABLE_NAME + "\":{\"" +  DbContract.StudentAttendanceEntry._ID + "\":\"" + id + "\","
-                    + "\"" +  DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT + "\":\"" + foreignKeyClassContent + "\","
-                    + "\"" + DbContract.StudentAttendanceEntry.COLUMN_STATUS + "\":\"" + status + "\","
-                    + "\"" + DbContract.StudentAttendanceEntry.COLUMN_TIMESTAMP + "\":\"" + studentAttTimestamp + "\","
-                    + "\"" + DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT + "\":\"" + foreignKeyStudent + "\"}}";
-            // Log.v(TAG, "JSONdata: "+jsonStudent);
-            if (!cursor.isLast())
-                jsonStudentAttendance += ",";
-            cursor.moveToNext();
+            while(!cursor.isAfterLast()) {
+                String foreignKeyClassContent = cursor.getString(0);
+                String status = cursor.getString(1);
+                long foreignKeyStudent = cursor.getLong(2);
+                int id = cursor.getInt(3);
+                long studentAttTimestamp=cursor.getLong(4);
+
+                jsonStudentAttendance += "{\"" + DbContract.StudentAttendanceEntry.TABLE_NAME + "\":{\"" +  DbContract.StudentAttendanceEntry._ID + "\":\"" + id + "\","
+                        + "\"" +  DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT + "\":\"" + foreignKeyClassContent + "\","
+                        + "\"" + DbContract.StudentAttendanceEntry.COLUMN_STATUS + "\":\"" + status + "\","
+                        + "\"" + DbContract.StudentAttendanceEntry.COLUMN_TIMESTAMP + "\":\"" + studentAttTimestamp + "\","
+                        + "\"" + DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_STUDENT + "\":\"" + foreignKeyStudent + "\"}}";
+                // Log.v(TAG, "JSONdata: "+jsonStudent);
+                if (!cursor.isLast())
+                    jsonStudentAttendance += ",";
+                cursor.moveToNext();
+            }
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
         jsonStudentAttendance+="]";
         Log.v(TAG,"tttjsonStudentAttendance: "+jsonStudentAttendance);
@@ -370,8 +395,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     Log.v(TAG,"ttt "+classObj.getString("endTime"));
                     Log.v(TAG,"ttt "+classObj.getString("level"));
                     Log.v(TAG,"ttt "+classObj.getString("info"));
+                    Log.v(TAG,"tttttttttttttttttttttttttttt ");
                     */
-
                     String dateAsJson="{\"selectedDays\":"+classObj.getString("date")+"}";
 
                     ContentValues vals = new ContentValues();
@@ -385,11 +410,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     vals.put(DbContract.ClassEntry.COLUMN_EXTRA_INFO, classObj.getString("info"));
                     vals.put(DbContract.ClassEntry.COLUMN_TIMESTAMP, classObj.getLong("timestamp"));
 
-                    Uri uri= DbContract.ClassEntry.CONTENT_URI.buildUpon().appendPath(classObj.getString("_id")).build();
+                    Uri uri= DbContract.ClassEntry.CONTENT_URI_WITH_TIMESTAMP.buildUpon().appendPath(Long.toString(classObj.getLong("timestamp"))).build();
 
                     if(provider.update(uri,vals,null,null)==0) {
                         provider.insert(DbContract.ClassEntry.CONTENT_URI, vals);
-                        //Log.v(TAG,"ttt "+classObj.getString("title")+" inserted");
+                        Log.v(TAG,classObj.getString("title")+" inserted");
                     }
                     else
                         Log.v(TAG,"getUserData() "+classObj.getString("title")+" updated");
@@ -411,13 +436,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     vals.put(DbContract.ClassContentEntry.COLUMN_INFO, classContentObj.getString("info"));
                     vals.put(DbContract.ClassContentEntry.COLUMN_FOREIGN_KEY_CLASS, classContentObj.getLong("classID"));
 
-                    Uri uri = DbContract.ClassContentEntry.CONTENT_URI.buildUpon().appendPath(classContentObj.getString("_id")).build();
+                    Uri uri = DbContract.ClassContentEntry.CONTENT_URI_WITH_TIMESTAMP.buildUpon().appendPath(Long.toString(classContentObj.getLong("timestamp"))).build();
 
                     if (provider.update(uri, vals, null, null) == 0) {
                         provider.insert(DbContract.ClassContentEntry.CONTENT_URI, vals);
-                        Log.v(TAG, "ttt " + classContentObj.getString("_id") + " inserted");
+                        Log.v(TAG, "ClassContent " + classContentObj.getString("_id") + " inserted");
                     } else
-                        Log.v(TAG, "ttt " + classContentObj.getString("_id") + " updated");
+                        Log.v(TAG, "ClassContent " + classContentObj.getString("_id") + " updated");
                 }
 
             }else
@@ -436,13 +461,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     vals.put(DbContract.StudentEntry.COLUMN_FOREIGN_KEY_CLASS, studentObj.getLong("classID"));
                     vals.put(DbContract.StudentEntry.COLUMN_TIMESTAMP, studentObj.getLong("timestamp"));
 
-                    Uri uri = DbContract.StudentEntry.CONTENT_URI.buildUpon().appendPath(studentObj.getString("_id")).build();
+                    Uri uri = DbContract.StudentEntry.CONTENT_URI_WITH_TIMESTAMP.buildUpon().appendPath(Long.toString(studentObj.getLong("timestamp"))).build();
 
                     if (provider.update(uri, vals, null, null) == 0) {
                         provider.insert(DbContract.StudentEntry.CONTENT_URI, vals);
-                        Log.v(TAG, "ttt " + studentObj.getString("_id") + " inserted");
+                        Log.v(TAG, "Student " + studentObj.getString("_id") + " inserted");
                     } else
-                        Log.v(TAG, "ttt " + studentObj.getString("_id") + " updated");
+                        Log.v(TAG, "Student " + studentObj.getString("_id") + " updated");
                 }
 
             }else
@@ -460,13 +485,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_FOREIGN_KEY_CLASSCONTENT, studentAttendanceObj.getLong("classContentId"));
                     vals.put(DbContract.StudentAttendanceEntry.COLUMN_TIMESTAMP, studentAttendanceObj.getLong("timestamp"));
 
-                    Uri uri = DbContract.StudentAttendanceEntry.CONTENT_URI.buildUpon().appendPath(studentAttendanceObj.getString("_id")).build();
+                    Uri uri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_TIMESTAMP.buildUpon().appendPath(Long.toString(studentAttendanceObj.getLong("timestamp"))).build();
 
                     if (provider.update(uri, vals, null, null) == 0) {
                         provider.insert(DbContract.StudentAttendanceEntry.CONTENT_URI, vals);
-                        Log.v(TAG, "ttt " + studentAttendanceObj.getString("_id") + " inserted");
+                        Log.v(TAG, "StudentAttendance " + studentAttendanceObj.getString("_id") + " inserted");
                     } else
-                        Log.v(TAG, "ttt " + studentAttendanceObj.getString("_id") + " updated");
+                        Log.v(TAG, "StudentAttendance " + studentAttendanceObj.getString("_id") + " updated");
                 }
 
             }else

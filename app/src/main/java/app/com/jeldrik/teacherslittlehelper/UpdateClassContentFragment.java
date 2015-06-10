@@ -109,18 +109,23 @@ public class UpdateClassContentFragment extends Fragment {
         ContentResolver resolver=getActivity().getContentResolver();
         Uri uri= DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
         Cursor cursor=resolver.query(uri,null,null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
-            int id=cursor.getInt(3);
-            String status=cursor.getString(2);
-            String name=cursor.getString(4);
-            Long studentTimestamp=cursor.getLong(1);
-            //Log.v(TAG,"theStatus: "+id+" "+status+" "+name);
-            mAttendingStudents.add(new AttendingStudentsAdapter.AttendingStudentsAdapterValues(id,name,status,studentTimestamp));
-            cursor.moveToNext();
-            Log.v(TAG,"Data: "+id+status+studentTimestamp);
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                int id=cursor.getInt(3);
+                String status=cursor.getString(2);
+                String name=cursor.getString(4);
+                Long studentTimestamp=cursor.getLong(1);
+                //Log.v(TAG,"theStatus: "+id+" "+status+" "+name);
+                mAttendingStudents.add(new AttendingStudentsAdapter.AttendingStudentsAdapterValues(id,name,status,studentTimestamp));
+                cursor.moveToNext();
+                //Log.v(TAG,"Data: "+id+status+studentTimestamp);
+            }
+            //Log.v(TAG,"Class Content timestamp: "+mTimestamp);
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
-        Log.v(TAG,"Class Content timestamp: "+mTimestamp);
     }
 
     @Override
@@ -261,14 +266,19 @@ public class UpdateClassContentFragment extends Fragment {
         ArrayList<String> books=new ArrayList<>();
         ContentResolver resolver=getActivity().getContentResolver();
         Cursor cursor=resolver.query(DbContract.ClassContentEntry.CONTENT_URI,null,null,null,null);
-        cursor.moveToFirst();
-        while(!cursor.isAfterLast()){
-            if(!books.contains(cursor.getString(0)))
-                books.add(cursor.getString(0));
-            cursor.moveToNext();
+        try{
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                if(!books.contains(cursor.getString(0)))
+                    books.add(cursor.getString(0));
+                cursor.moveToNext();
+            }
+            String[] string=new String[books.size()];
+            return books.toArray(string);
+        }finally{
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
         }
-        String[] string=new String[books.size()];
-        return books.toArray(string);
     }
  //--------------------------------------------------------------------------------------------------
     private void showAlertDialog(){
@@ -288,7 +298,7 @@ public class UpdateClassContentFragment extends Fragment {
                         if (resolver.delete(uri, DbContract.ClassContentEntry._ID + " = ?", new String[]{Integer.toString(mId)}) > 0) {
 
                             //Delete all students in StudentAttendance associated with this classcontent
-                            uri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Integer.toString(mId)).build();
+                            uri = DbContract.StudentAttendanceEntry.CONTENT_URI_WITH_CLASSCONTENTKEY.buildUpon().appendPath(Long.toString(mTimestamp)).build();
                             resolver.delete(uri, null, null);
                             ClassContentAdapter.ClassContentAdapterValues deletedObj = new ClassContentAdapter.ClassContentAdapterValues(mId, mSDate,mTimestamp, mSBook, mSPages, mSInfo);
                             mListener.onDeleteClassContent(deletedObj);
