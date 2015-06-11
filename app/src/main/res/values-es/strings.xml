@@ -5,6 +5,9 @@
     <string name="hello_world">Hola Mundo!</string>
     <string name="action_settings">Adjustes</string>
 
+    <string name="aboutContent">TeachersLittleHelper es una aplicación de organizador para los profesores e instructores que les ayude a mantener el control sobre todas las clases y los estudiantes y el contenido hecho de cada clase.\n
+Sincronización en línea le permite compartir sus datos con varios dispositivos (por ejemplo, entre Smartphone y Tablet).</string>
+
     <string name="selectAccount">Elige Cuenta para sincronizar:</string>
     <string name="about">acerca de</string>
     <string name="aboutTitle">Acerca de TeachersLittleHelper</string>
@@ -17,10 +20,17 @@
     <string name="saturday">Sabado</string>
     <string name="sunday">Domingo</string>
 
+    <string name="cancel">Cancelar</string>
+
     <string name="add_class">Añadir Clase</string>
     <string name="delete_Class">Borrar Clase</string>
     <string name="updateClass">Actualizar Clase</string>
 
+    <string name="newClass">Nueva Clase</string>
+    <string name="newClassContent">Nueva Fecha</string>
+    <string name="updateClassContent">Actualizar Contenido</string>
+    <string name="newStudent">Nuevo Alumno</string>
+    <string name="updateStudent">Actualizar Alumno</string>
     <string name="newClassTitle">Titulo</string>
     <string name="newClassLevel">Nivel</string>
     <string name="newClassDays">Días</string>
@@ -85,6 +95,12 @@
         <item>C1</item>
         <item>C1+</item>
         <item>C2</item>
+    </string-array>
+
+    <string-array name="attendance">
+        <item>atendiendo</item>
+        <item>excusado</item>
+        <item>no atendiendo</item>
     </string-array>
 
 </resources>

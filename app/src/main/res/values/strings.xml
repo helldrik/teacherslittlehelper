@@ -3,15 +3,14 @@
 
 
     <string name="hello_world">Hello world!</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="app_name">TeachersLittleHelper</string>
     <string name="action_settings">Settings</string>
 
     <string name="selectAccount">Choose account for syncing:</string>
     <string name="about">about</string>
     <string name="aboutTitle">About TeachersLittleHelper</string>
-    <string name="aboutContent">Organize your classes and students in an easy way.\nKeep track of what you are doing\nSend notifications to one or all students of a class</string>
+    <string name="aboutContent">TeachersLittleHelper is an organiser app for teachers and instructors helping them to maintain control over all there different classes and students and the taught content of each class.\n
+Online syncing allows you to share your data with various devices (e.g between Smartphone and Tablet).</string>
 
     <string name="monday">Monday</string>
     <string name="tuesday">Tuesday</string>
