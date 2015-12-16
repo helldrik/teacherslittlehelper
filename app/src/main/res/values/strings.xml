@@ -63,7 +63,7 @@ Online syncing allows you to share your data with various devices (e.g between S
     <string name="contentTitle">Dates</string>
 
     <string name="updateContent">Update</string>
-   <string name="deleteContent">Delete</string>
+    <string name="deleteContent">Delete</string>
 
     <string name="newStudentName">Name</string>
     <string name="newStudentPhone">Phone</string>
@@ -104,5 +104,6 @@ Online syncing allows you to share your data with various devices (e.g between S
         <item>excused</item>
         <item>not attending</item>
     </string-array>
+    <string name="title_activity_launcher">LauncherActivity</string>
 
 </resources>

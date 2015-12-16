@@ -5,7 +5,8 @@
       <module fileurl="file://$PROJECT_DIR$/org.lucasr.twowayview/twowayview/0.1.4/0.1.4.iml" filepath="$PROJECT_DIR$/org.lucasr.twowayview/twowayview/0.1.4/0.1.4.iml" />
       <module fileurl="file://$PROJECT_DIR$/TeachersLittleHelper.iml" filepath="$PROJECT_DIR$/TeachersLittleHelper.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.lucasr.twowayview/org.lucasr.twowayview.iml" filepath="$PROJECT_DIR$/org.lucasr.twowayview/org.lucasr.twowayview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/org.lucasr.twowayview/twowayview/twowayview.iml" filepath="$PROJECT_DIR$/org.lucasr.twowayview/twowayview/twowayview.iml" />
     </modules>
   </component>
 </project>
-
