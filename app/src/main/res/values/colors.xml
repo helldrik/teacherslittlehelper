@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="lightBlue">#6699CC</color>
+    <color name="lightBlue">#A5D0D8</color>
     <color name="BabyBlue">#cdffff</color>
     <color name="Brown">#400d12</color>
     <color name="White">#ffffff</color>
     <color name="LightGrey">#d3d3d3</color>
 
-    <color name="background">#E6E6CC</color>
+    <color name="darkText">#30404F</color>
+    <color name="background">#F3F4D5</color>
+    <color name="weekend">#EAC2DD</color>
     <color name="textBgr">#CCCC99</color>
     <color name="line">#9C9284</color>
-    <color name="header">#FF9900</color>
+    <color name="header">#3F6D85</color>
 </resources>
