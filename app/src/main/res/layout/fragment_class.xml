@@ -213,7 +213,7 @@
                         android:id="@+id/studentListView"
                         style="@style/TwoWayView"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="180dp"
                         android:drawSelectorOnTop="false"/>
                 </LinearLayout>
             </TableRow>
@@ -260,7 +260,7 @@
                         android:id="@+id/classContentListView"
                         style="@style/TwoWayView"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="270dp"
                         android:drawSelectorOnTop="false"/>
                 </LinearLayout>
             </TableRow>
