@@ -3,7 +3,7 @@
 
 
     <string name="hello_world">Hello world!</string>
-    <string name="app_name">TeachersLittleHelper</string>
+    <string name="app_name">Teachers Little Helper</string>
     <string name="action_settings">Settings</string>
 
     <string name="selectAccount">Choose account for syncing:</string>
